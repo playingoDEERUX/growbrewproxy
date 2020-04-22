@@ -28,7 +28,7 @@ https://imgur.com/a/lP7lxSI
 - Version spoofer
 - Integrated HTTP Server
 - Player Manager
-- Growbrew Network
+- Growbrew Network (chatting etc, you must register first, in order to register, contact my discord which is stated in the Proxy Main Page)
 - many more, might even add something soon to this open src project.
 ---------------------------------------------------------------
 
