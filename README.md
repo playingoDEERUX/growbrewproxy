@@ -4,6 +4,13 @@ NOTE: has growbrew server/client part for chatting etc., you can remove that tho
 
 - The first Growtopia Proxy coded in c# - not affiliated with ama6nen/enetproxy
 
+NOTE: ama's proxy is more development oriented while Growbrew was aimed at release since its beginning, means it contains a lot more
+features and more features that would actually be undetected to avoid ban chance, as this proxy initially was also aimed to not ban as much as ama's proxy, even though there is server sided checking, there are few things we rather didnt add like unlimited zoom punching to avoid people getting banned this easily, however, this was initially not aimed for development or private servers as stated, therefore it should also be more stable as well, which I would not guarantee. Performance wise I have heard better feed back for Growbrew than from ama's enetproxy. 
+people who bought it are saying that growbrew is slightly faster than ama's enetproxy, which is weird cause I serialize world packet
+and c++ should be faster in general, but heres proof of 1 guy saying that growbrew has a better overall performance:
+https://imgur.com/a/lP7lxSI
+
+
 # Features:
 ---------------------------------------------------------------
 - GUI
@@ -25,10 +32,6 @@ NOTE: has growbrew server/client part for chatting etc., you can remove that tho
 - many more, might even add something soon to this open src project.
 ---------------------------------------------------------------
 
-REPORT: people who bought it are saying that growbrew is slightly faster than ama's enetproxy, which is weird cuz i serialize world packet
-and c++ should be faster in general, but heres proof of 1 guy saying that growbrew has a better overall performance:
-https://imgur.com/a/lP7lxSI
-
 # Usage:
 ---------------------------------------------------------------
 To use, add this into your hosts:
@@ -43,16 +46,19 @@ To use, add this into your hosts:
 
 OPEN THE .sln file in order to begin without further issues
 If you just want to use the growbrew proxy program it self, without doing any modifications or any coding,
-the .exe file and binaries are located at GrowbrewProxy/bin/Debug
+the .exe file and binaries are located at GrowbrewProxy/bin/Debug. Changelogs are in the .EXE file itself.
 
 Click Start HTTP server and Start Proxy and you can start.
 ---------------------------------------------------------------
 
-# TODO
+# TODO:
 ---------------------------------------------------------------
 - Bug fixes
 - Cleaning code mess and maybe better UI
 ---------------------------------------------------------------
+
+# Pictures/GIFs:
+https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 
 # Tested with Visual Studio 2017
 
