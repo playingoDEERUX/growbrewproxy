@@ -19,8 +19,10 @@ features:
 
 REPORT: people who bought it are saying that growbrew is slightly faster than ama's enetproxy, which is weird cuz i serialize world packet
 and c++ should be faster in general, but heres proof of 1 guy saying that growbrew has a better overall performance:
+https://imgur.com/a/lP7lxSI
+
 
 current version: 1.5.1
 # MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
-https://imgur.com/a/lP7lxSI
+Subscribe to support me :)
