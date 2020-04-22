@@ -37,6 +37,8 @@ To use, add this into your hosts:
 
 ########################
 
+OPEN THE .csproj FILE!
+
 Click Start HTTP server and Start Proxy and you can start.
 
 current version: 1.5.1
