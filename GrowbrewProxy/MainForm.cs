@@ -443,7 +443,7 @@ namespace GrowbrewProxy
                                     }
                                     else
                                     {
-                                        Environment.Exit(authState);
+                                        //Environment.Exit(authState);
                                     }
                                     break;
                                 }
