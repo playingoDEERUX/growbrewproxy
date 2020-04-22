@@ -30,6 +30,7 @@ https://imgur.com/a/lP7lxSI
 - RGB Skin (somewhat, was too lazy to fix having too dark / light skin)
 - Magplant hack (pickup range 11 blocks exploit)
 - overall better and more cheats/features (it used to be a paid hack anyway, therefore has "premium quality")
+- Ability to send any action packet to server and to client. (message type 2 and 3)
 - Some nuker hack (inspired from minecraft)
 - Speed hack on all versions
 - Version spoofer
