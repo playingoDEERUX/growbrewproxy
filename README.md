@@ -22,6 +22,8 @@ https://imgur.com/a/lP7lxSI
 - Safe vault bypass
 - Ignore Autoban packet by client
 - Multiselection of players, seeing invisible mods in Player Manager
+- Modified Dialog sender
+- Tile-o-meter
 - Can ignore set back packet when using speed hack (must be selected in "Internal Extra") tab
 - Print all variant list functions sent by server.
 - AAP bypass no infos, only password and growid. (SPOOF YOUR MAC TO 02:00:00:00:00:00 (it has ":00" missing so add that before clicking change mac button) (EDIT: used ios platform id, since it got patched it uses android platform id now)
