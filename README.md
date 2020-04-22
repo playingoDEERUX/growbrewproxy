@@ -14,7 +14,7 @@ features:
 - AAP bypass
 - RGB Skin
 - Magplant hack (pickup range 11 blocks exploit)
-- overall better cheats
+- overall better and more cheats/features
 
 REPORT: people who bought it are saying that growbrew is slightly faster than ama's enetproxy, which is weird cuz i serialize world packet
 and c++ should be faster in general, but heres proof of 1 guy saying that growbrew has a better overall performance:
