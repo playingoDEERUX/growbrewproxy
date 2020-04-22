@@ -52,6 +52,11 @@ Click Start HTTP server and Start Proxy and you can start.
 - Cleaning code mess and maybe better UI
 ---------------------------------------------------------------
 
+# Tested with Visual Studio 2017
+
+Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
+
+
 current version: 1.5.1
 # MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
