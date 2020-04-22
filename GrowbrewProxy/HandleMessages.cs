@@ -482,6 +482,7 @@ namespace GrowbrewProxy
                             if (VarListFetched.FunctionName == "OnSendToServer") return "Server switching forced, not continuing as Proxy Client has to deal with this.";
                             if (VarListFetched.FunctionName == "onShowCaptcha") return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
                             if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("captcha")) return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
+                            if (VarListFetched.FunctionName == "OnSetPos" && MainForm.ignoreonsetpos) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
                             break;
                         case NetTypes.PacketTypes.APPLY_LOCK:
                             {
@@ -497,7 +498,7 @@ namespace GrowbrewProxy
                         case NetTypes.PacketTypes.PING_REQ:
                             SpoofedPingReply();
                             break;
-                        case NetTypes.PacketTypes.LOAD_MAP: // todo
+                        case NetTypes.PacketTypes.LOAD_MAP:
                             if (MainForm.LogText.Length >= 65536) MainForm.LogText = string.Empty;
                             worldMap.Dispose();
                             worldMap = worldMap.LoadMap(tankPacket);
