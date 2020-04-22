@@ -15,6 +15,7 @@ features:
 - RGB Skin (somewhat, was too lazy to fix having too dark / light skin)
 - Magplant hack (pickup range 11 blocks exploit)
 - overall better and more cheats/features (it used to be a paid hack anyway, therefore has "premium quality")
+- many more.
 
 REPORT: people who bought it are saying that growbrew is slightly faster than ama's enetproxy, which is weird cuz i serialize world packet
 and c++ should be faster in general, but heres proof of 1 guy saying that growbrew has a better overall performance:
