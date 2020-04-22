@@ -29,8 +29,10 @@ https://imgur.com/a/lP7lxSI
 
 To use, add this into your hosts:
 
-```127.0.0.1 growtopia1.com
-127.0.0.1 growtopia2.com```
+########################
+127.0.0.1 growtopia1.com
+127.0.0.1 growtopia2.com
+########################
 
 current version: 1.5.1
 # MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
