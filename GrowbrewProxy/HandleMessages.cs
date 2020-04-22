@@ -483,6 +483,16 @@ namespace GrowbrewProxy
                             if (VarListFetched.FunctionName == "onShowCaptcha") return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
                             if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("captcha")) return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
                             if (VarListFetched.FunctionName == "OnSetPos" && MainForm.ignoreonsetpos) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
+                            
+                            string argText = string.Empty;
+
+                            for (int i = 0; i < VarListFetched.functionArgs.Count(); i++)
+                            {
+                                argText += " [" + i.ToString() + "]: " + (string)VarListFetched.functionArgs[i].ToString();
+                            }
+                            
+                            MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): A function call was requested, see log infos below:\nFunction Name: " + VarListFetched.FunctionName + " parameters: " + argText + " \n");
+                            
                             break;
                         case NetTypes.PacketTypes.APPLY_LOCK:
                             {
