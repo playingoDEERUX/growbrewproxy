@@ -30,8 +30,11 @@ https://imgur.com/a/lP7lxSI
 To use, add this into your hosts:
 
 ########################
+
 127.0.0.1 growtopia1.com
+
 127.0.0.1 growtopia2.com
+
 ########################
 
 current version: 1.5.1
