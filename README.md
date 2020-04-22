@@ -15,7 +15,7 @@ https://imgur.com/a/lP7lxSI
 # Features:
 ---------------------------------------------------------------
 - GUI
-- world parsing, has many many visuals included
+- world serialization, has many many visuals included in form of serialization in order to keep track of world packet values
 - Showing players in world list
 - Subserver switching is supported
 - Name Changer
@@ -24,6 +24,7 @@ https://imgur.com/a/lP7lxSI
 - Multiselection of players, seeing invisible mods in Player Manager
 - Modified Dialog sender
 - Tile-o-meter
+- able to send custom states etc. already (Super Speed and Mod Noclip so far)
 - Can ignore set back packet when using speed hack (must be selected in "Internal Extra") tab
 - Print all variant list functions sent by server.
 - AAP bypass no infos, only password and growid. (SPOOF YOUR MAC TO 02:00:00:00:00:00 (it has ":00" missing so add that before clicking change mac button) (EDIT: used ios platform id, since it got patched it uses android platform id now)
@@ -36,6 +37,7 @@ https://imgur.com/a/lP7lxSI
 - Version spoofer
 - Integrated HTTP Server
 - Player Manager
+- Several GTPS Crash methods
 - Growbrew Network (chatting etc, you must register first, in order to register, contact my discord which is stated in the Proxy Main Page)
 - many more, might even add something soon to this open src project.
 ---------------------------------------------------------------
