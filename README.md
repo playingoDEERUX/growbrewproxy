@@ -62,6 +62,7 @@ Click Start HTTP server and Start Proxy and you can start.
 # TODO:
 ---------------------------------------------------------------
 - Refactor code and maybe better UI
+- Add vector2, rect and vector3 support for receiving func call packets
 ---------------------------------------------------------------
 
 # Pictures/GIFs:
