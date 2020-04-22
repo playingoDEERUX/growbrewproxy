@@ -2,7 +2,7 @@
 growbrew got leaked once (1.4) so now releasing source code cuz some skids got it someone must have told the link...
 NOTE: has growbrew server/client part for chatting etc., you can remove that though.
 
-- The first Growtopia Proxy coded in c# - not affialited with ama6nen/enetproxy
+- The first Growtopia Proxy coded in c# - not affiliated with ama6nen/enetproxy
 
 features:
 - GUI
