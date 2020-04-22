@@ -3,7 +3,7 @@ growbrew got leaked once (1.4) so now releasing source code cuz some skids got i
 NOTE: has growbrew server/client part for chatting etc., you can remove that though.
 
 - The first Growtopia Proxy coded in c# - not affiliated with ama6nen/enetproxy
-- Reminder: A proxy actually has NOTHING to do with an internal. A proxy works via pure networking. The naming of the tabs is pure marketing startegy. Otherwise, a solid and good proxy with many many features.
+- Reminder: A proxy actually has NOTHING to do with an internal. A proxy works via pure networking. The naming of the tabs is pure marketing strategy. Otherwise, a solid and good proxy with many many features.
 
 NOTE: ama's proxy is more development oriented while Growbrew was aimed at release since its beginning, means it contains a lot more
 features and more features that would actually be undetected to avoid ban chance, as this proxy initially was also aimed to not ban as much as ama's proxy, even though there is server sided checking, there are few things we rather didnt add like unlimited zoom punching to avoid people getting banned this easily, however, this was initially not aimed for development or private servers as stated, therefore it should also be more stable as well, which I would not guarantee. Performance wise I have heard better feed back for Growbrew than from ama's enetproxy. 
