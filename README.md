@@ -32,6 +32,7 @@ To use, add this into your hosts:
 ########################
 
 127.0.0.1 growtopia1.com
+
 127.0.0.1 growtopia2.com
 
 ########################
