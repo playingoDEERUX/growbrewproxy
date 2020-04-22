@@ -53,8 +53,7 @@ Click Start HTTP server and Start Proxy and you can start.
 
 # TODO:
 ---------------------------------------------------------------
-- Bug fixes
-- Cleaning code mess and maybe better UI
+- Refactor code and maybe better UI
 ---------------------------------------------------------------
 
 # Pictures/GIFs:
