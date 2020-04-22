@@ -96,6 +96,8 @@ namespace GrowbrewProxy
         // CHEAT VARS/DEFS
         public static string macc = "02:15:01:20:30:05";
         public static string doorid = "";
+        public static bool ignoreonsetpos = false;
+        
         ItemDatabase itemDB = new ItemDatabase();
 
         public static HandleMessages messageHandler = new HandleMessages();
