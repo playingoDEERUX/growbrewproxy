@@ -12,7 +12,7 @@ NOTE: has growbrew server/client part for chatting etc., you can remove that tho
 - Subserver switching
 - Name Changer
 - Safe vault bypass
-- AAP bypass no infos, only password and growid. (EDIT: used ios platform id, since it got patched it uses android platform id now)
+- AAP bypass no infos, only password and growid. (SPOOF YOUR MAC TO 02:00:00:00:00:00 (it has ":00" missing so add that before clicking change mac button) (EDIT: used ios platform id, since it got patched it uses android platform id now)
 - RGB Skin (somewhat, was too lazy to fix having too dark / light skin)
 - Magplant hack (pickup range 11 blocks exploit)
 - overall better and more cheats/features (it used to be a paid hack anyway, therefore has "premium quality")
