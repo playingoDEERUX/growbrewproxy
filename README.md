@@ -37,7 +37,7 @@ To use, add this into your hosts:
 
 ########################
 
-OPEN THE .csproj FILE!
+OPEN THE .csproj FILE; To build, save your own .sln file after using  the .csproj file and start compiling, remember you will need include folder and ENet.Managed.dll file in the Debug folder, you can do release too just dont forget to add the extra files!
 
 Click Start HTTP server and Start Proxy and you can start.
 
