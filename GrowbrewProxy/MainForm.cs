@@ -1219,5 +1219,12 @@ namespace GrowbrewProxy
                 e.Handled = true;
             }
         }
+        
+        private void chatcontent_TextChanged(object sender, EventArgs e)
+        {
+            chatcontent.SelectionStart = chatcontent.Text.Length;
+            // scroll it automatically
+            chatcontent.ScrollToCaret();
+        }
     }
 }
