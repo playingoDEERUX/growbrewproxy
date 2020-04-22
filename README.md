@@ -42,6 +42,8 @@ https://imgur.com/a/lP7lxSI
 - many more, might even add something soon to this open src project.
 ---------------------------------------------------------------
 
+NOTE: Click "Update IP/Port" once without actually changing any IP or Port if you want to switch or change alts/account.
+
 # Usage:
 ---------------------------------------------------------------
 To use, add this into your hosts:
