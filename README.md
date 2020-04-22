@@ -16,7 +16,7 @@ NOTE: has growbrew server/client part for chatting etc., you can remove that tho
 - RGB Skin (somewhat, was too lazy to fix having too dark / light skin)
 - Magplant hack (pickup range 11 blocks exploit)
 - overall better and more cheats/features (it used to be a paid hack anyway, therefore has "premium quality")
-- Some nuker (inspired from minecraft)
+- Some nuker hack (inspired from minecraft)
 - Speed hack on all versions
 - Version spoofer
 - Integrated HTTP Server
