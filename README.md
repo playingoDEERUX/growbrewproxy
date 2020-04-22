@@ -82,3 +82,6 @@ current version: 1.5.1
 
 Subscribe to support me :)
 Credits to Vyte for AAP Bypass
+Enjoy the **ultimate** haXing in Growtopia :)
+
+NOTE: can be combined with any trainer of your choice, this is a proxy and not a trainer so this will only offer exclusive proxy / networking features
