@@ -1,5 +1,5 @@
 # growbrewproxy
-Growbrew - An advanced Growtopia ENet Proxy
+Growbrew - An advanced Growtopia ENet Proxy, giving you the advantage of networking for superior and good exploits/cheats!
 
 growbrew got leaked once (1.4) so now releasing source code cuz some skids got it someone must have told the link...
 NOTE: has growbrew server/client part for chatting etc., you can remove that though.
