@@ -79,7 +79,7 @@ https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 
 # Tested with Visual Studio 2017 and 2019
 
-Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
+Other versions may work too, they are not tested. Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
 
 
 current version: 1.5.1
