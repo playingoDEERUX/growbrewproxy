@@ -1187,7 +1187,7 @@
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(128, 39);
             this.label14.TabIndex = 9;
-            this.label14.Text = "Creator: playingo \r\nalias DEERUX or discord:\r\nDEERUX#3722";
+            this.label14.Text = "Creator: playingo \r\nalias DEERUX or discord:\r\nDEERUX#1041";
             // 
             // getUsersOnline
             // 
