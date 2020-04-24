@@ -15,7 +15,7 @@ https://imgur.com/a/lP7lxSI
 
 
 # Compatibility:
-- Windows 7 - Windows 10, .NET Framework 4.5, I have heard reports from people that this does not work on .NET Framework 4.8, it may work on older .NET Framework versions but this has been tested without any issues on .NET 4.5
+- Windows 7 - Windows 10 (windows versions older than than that may work with modifications and such, this is not supported by default thouh. .NET requirements: .NET Framework 4.5, I have heard reports from people that this does not work on .NET Framework 4.8, it may work on older .NET Framework versions but this has been tested without any issues on .NET 4.5
 
 # Features:
 ---------------------------------------------------------------
