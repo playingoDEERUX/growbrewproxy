@@ -512,7 +512,12 @@ namespace GrowbrewProxy
                     MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): A game_msg packet was sent: " + str + "\n");
                     if (str.Contains("Server requesting that you re-logon..."))
                     {
-                        
+                        MainForm.token = 0;
+                        MainForm.doorid = "";
+
+                        SwitchServers("209.59.191.76", 17126);
+
+                        return "Server forces logon request, switching server automatically so user does not have to cancel to login menu and reconnect.";
                     }
                     break;
                 case NetTypes.NetMessages.GAME_PACKET:
