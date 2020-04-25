@@ -634,7 +634,7 @@ namespace GrowbrewProxy
                 }
                 
 
-                /*return "Log of potentially wanted received GAME_PACKET Data:" +
+                return "Log of potentially wanted received GAME_PACKET Data:" +
                     "\npackettype: " + actualData[0].ToString() +
                     "\npadding byte 1|2|3: " + actualData[1].ToString() + "|" + actualData[2].ToString() + "|" + actualData[3].ToString() +      
                     "\nnetID: " + p.NetID +
@@ -648,7 +648,7 @@ namespace GrowbrewProxy
                     "\nSecondaryPadding: " + p.SecondaryPadding +
                     "\nPunchX|PunchY: " + p.PunchX + "|" + p.PunchY +
                     "\nExtended Packet Data Length: " + extDataSize.ToString() +
-                    "\nExtended Packet Data:\n" + extDataStr + "\n";*/
+                    "\nExtended Packet Data:\n" + extDataStr + "\n";
                 return string.Empty;
             }
             else
