@@ -60,7 +60,7 @@ namespace GrowbrewProxy
             IPWithExtraData = 4
             lmode = 5 (Used for determining how client should behave when leaving, and could also influence the connection after.
             */
-        private void OperateVariant(VariantList.VarList vList)
+        private int OperateVariant(VariantList.VarList vList)
         {                      
             switch (vList.FunctionName)
             {
@@ -73,12 +73,12 @@ namespace GrowbrewProxy
                             gp.AppendString("OnRequestWorldSelectMenu");
                             PacketSending.SendData(gp.GetBytes(), MainForm.proxyPeer);
                         }
-                        break;
+                        return -1;
                     }
                 case "OnZoomCamera":
                     {
                         MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): Camera zoom parameters (" + vList.functionArgs.Length + "): v1: " + ((float)vList.functionArgs[1] / 1000).ToString() + " v2: " + vList.functionArgs[2].ToString());
-                        break;
+                        return -1;
                     }
                 case "onShowCaptcha":
                     ((string)vList.functionArgs[1]).Replace("PROCESS_LOGON_PACKET_TEXT_42", "");// make captcha completable
@@ -100,16 +100,16 @@ namespace GrowbrewProxy
                                 PacketSending.SendPacket(2, resultingPacket, MainForm.realPeer);
                             }
                         }
-                        return;
+                        return -1;
                     }
                     catch
                     {
-                        return; // Give this to user.
+                        return -1; // Give this to user.
                     }
                 case "OnDialogRequest":
                     MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): OnDialogRequest called, logging its params here:\n" +
                            (string)vList.functionArgs[1] + "\n");
-                    if (!((string)vList.functionArgs[1]).ToLower().Contains("captcha")) return; // Send Client Dialog
+                    if (!((string)vList.functionArgs[1]).ToLower().Contains("captcha")) return -1; // Send Client Dialog
                     ((string)vList.functionArgs[1]).Replace("PROCESS_LOGON_PACKET_TEXT_42", "");// make captcha completable
                     try
                     {
@@ -129,11 +129,11 @@ namespace GrowbrewProxy
                                 PacketSending.SendPacket(2, resultingPacket, MainForm.realPeer);
                             }
                         }
-                        return;
+                        return -1;
                     }
                     catch
                     {
-                        return; // Give this to user.
+                        return -1; // Give this to user.
                     }
             
                 case "OnSendToServer":
@@ -171,15 +171,18 @@ namespace GrowbrewProxy
                         MainForm.Growtopia_IP = ip; // proper sub server switching
                         MainForm.Growtopia_Port = port;
 
-                        break;
+                        return -1;
                     }
                 case "OnSpawn":
                     {
                         worldMap.playerCount++;
                         string onspawnStr = (string)vList.functionArgs[1];
+                        //MessageBox.Show(onspawnStr);
                         string[] tk = onspawnStr.Split('|');
                         Player p = new Player();
                         string[] lines = onspawnStr.Split('\n');
+
+                        bool localplayer = false;
 
                         foreach (string line in lines)
                         {
@@ -208,6 +211,10 @@ namespace GrowbrewProxy
                                 case "smstate":
                                     p.mstate = Convert.ToInt32(lineToken[1]);
                                     break;
+                                case "type":
+                                    if (lineToken[1] == "local") localplayer = true;
+                                    break;
+                                    
                             }
                         }
                         //MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): " + onspawnStr);
@@ -215,18 +222,62 @@ namespace GrowbrewProxy
                         if (p.name.Length > 2) worldMap.AddPlayerControlToBox(p);
 
 
-                        if (p.name.Contains(MainForm.tankIDName))
+                        /*if (p.name.Contains(MainForm.tankIDName))
                         {
-                            MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): World player objects loaded! Your NetID:  " + p.netID + " -- Your UserID: " + p.userID + "\n");
-                            worldMap.netID = p.netID;
-                            worldMap.userID = p.userID;
-                        }
+                           
+                        }*/ //crappy code
+
                         if (p.mstate > 0 || p.smstate > 0 || p.invis > 0)
                         {
                             if (MainForm.cheat_autoworldban_mod) banEveryoneInWorld();
                             MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): A moderator or developer seems to have joined your world!\n");
                         }
-                        break;
+
+                        if (localplayer)
+                        {
+                            string lestring = (string)vList.functionArgs[1];
+
+                            string[] avatardata = lestring.Split('\n');
+                            string modified_avatardata = string.Empty;
+                           
+                            foreach (string av in avatardata)
+                            {
+                                if (av.Length <= 0) continue;
+
+                                string key = av.Substring(0, av.IndexOf('|'));
+                                string value = av.Substring(av.IndexOf('|') + 1);
+
+                                switch (key)
+                                {
+                                    case "mstate": // unlimited punch/place range edit smstate, but is dangerous/detectable and can autoban!
+                                        value = "1";
+                                        break;
+                                }
+
+                                modified_avatardata += key + "|" + value + "\n";
+                            }
+
+                            //lestring = lestring.Replace("mstate|0", "mstate|1");
+
+                            GamePacketProton gp = new GamePacketProton();
+                            gp.AppendString("OnSpawn");
+                            gp.AppendString(modified_avatardata);
+                            gp.delay = -1;
+                            gp.NetID = -1;
+
+                            PacketSending.SendData(gp.GetBytes(), MainForm.proxyPeer);
+
+                            Thread.Sleep(300);
+                          
+                            MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): World player objects loaded! Your NetID:  " + p.netID + " -- Your UserID: " + p.userID + "\n");
+                            worldMap.netID = p.netID;
+                            worldMap.userID = p.userID;
+                            return -2;
+                        }
+                        else
+                        {
+                            return p.netID;
+                        }
                     }
                 case "OnRemove":
                     {
@@ -244,12 +295,12 @@ namespace GrowbrewProxy
                             }
                         }
                         worldMap.RemovePlayerControl(netID);
+                        return netID;
                     }
-                    
-                    break;
                 default:
-                    break;
+                    return -1;
             }
+            return 0;
         }
 
     string GetProperGenericText(byte[] data)
