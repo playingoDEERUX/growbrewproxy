@@ -267,7 +267,7 @@ namespace GrowbrewProxy
 
                             PacketSending.SendData(gp.GetBytes(), MainForm.proxyPeer);
 
-                            Thread.Sleep(300); // hacky solution, had to do this otherwise gt wouldnt load clothes for some weird reason...
+                            Thread.Sleep(500); // hacky solution, had to do this otherwise gt wouldnt load clothes for some weird reason...
                           
                             MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): World player objects loaded! Your NetID:  " + p.netID + " -- Your UserID: " + p.userID + "\n");
                             worldMap.netID = p.netID;
