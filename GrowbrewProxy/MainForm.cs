@@ -1080,6 +1080,10 @@ namespace GrowbrewProxy
         private void changelog_Click(object sender, EventArgs e)
         {
             this.BeginInvoke((Action)(() => MessageBox.Show("Growbrew Proxy Changelogs:\n" +
+                "\n1.5.2\n--------------------------\n" +
+                "- Added unlimited zoom\n" +
+                "- Fixed server requests logon" +
+                "- Fixed logging in over growid but 'has GrowID' checkbox wasnt checked\n" +
                 "\n1.5.1\n--------------------------\n" +
                 "- [Hacker Network] Added Enter to conversate\n" +
                 "- [Hacker Network] Added clear all messages\n" +
@@ -1088,7 +1092,7 @@ namespace GrowbrewProxy
                 "\n1.5\n--------------------------\n" +
                 "- Added Mod Noclip (can ban)\n" +
                 "- Added Ignore Setback (can ban)\n" +
-                "- Added HWID Lock\n" +
+                "- Added HWID Lock (1.5.1 -> removed)\n" +
                 "- Added Hacker Network (growbrew users can talk there)\n" +
                 "- Captcha should never show up anymore to client and be instantly solved by proxy!\n" +
                 "- Some bug fixes, fixed aap bypass not working and worlds crashing rarely.\n" +
