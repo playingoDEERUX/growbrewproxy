@@ -389,7 +389,8 @@ namespace GrowbrewProxy
                     {
                        // for (int i = 0; i < 1000; i++) PacketSending.SendPacket(2, "action|refresh_item_data\n", MainForm.realPeer);
                         string[] lines = str.Split('\n');
-                        
+
+                        string tankIDName = "";
                         foreach (string line in lines)
                         {
                             string[] lineToken = line.Split('|');
@@ -397,8 +398,7 @@ namespace GrowbrewProxy
                             switch (lineToken[0])
                             {
                                 case "tankIDName":
-                                    MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): Account name is: " + lineToken[1] + "\n");
-                                    MainForm.tankIDName = lineToken[1];
+                                    tankIDName = lineToken[1];
                                     break;
                                 case "tankIDPass":
                                     MainForm.tankIDPass = lineToken[1];
@@ -409,8 +409,10 @@ namespace GrowbrewProxy
                                 
                             }
                         }
+                        MainForm.tankIDName = tankIDName;
+
                         bool hasAcc = false;
-                        if (MainForm.tankIDName.Length > 0) hasAcc = true;
+                        if (tankIDName.Length > 0) hasAcc = true;
                         PacketSending.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, MainForm.CreateLogonPacket(hasAcc), MainForm.realPeer);
                         return "Sent logon packet!"; // handling logon over proxy
                     }
