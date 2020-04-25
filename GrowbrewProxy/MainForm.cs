@@ -161,7 +161,7 @@ namespace GrowbrewProxy
             Random rand = new Random();
             bool requireAdditionalData = false; if (token > 0 || token < 0) requireAdditionalData = true;
 
-            if (hasGrowId)
+            if (tankIDName != "")
             {
                 p += "tankIDName|" + (tankIDName + "\n");
                 p += "tankIDPass|" + (tankIDPass + "\n");
@@ -189,7 +189,7 @@ namespace GrowbrewProxy
             //p += "zf|-1576181843";
             return p;
         }
-
+        
         void AppendLog(string text)
         {
             if (text == string.Empty) return;
