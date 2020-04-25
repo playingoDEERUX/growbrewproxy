@@ -47,7 +47,7 @@ https://imgur.com/a/lP7lxSI
 - many more, might even add something soon to this open src project.
 ---------------------------------------------------------------
 
-NOTE: Click "Update IP/Port" once without actually changing any IP or Port if you want to switch or change alts/account.
+NOTE: Click "Update IP/Port" once without actually changing IP if you are stuck at Server request logon (which should actually never happen anymore as it was fixed in 1.5.2)
 
 # Usage:
 ---------------------------------------------------------------
@@ -82,7 +82,7 @@ https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 Other versions may work too, they are not tested. Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
 
 
-current version: 1.5.1
+current version: 1.5.2
 # MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 Subscribe to support me :)
