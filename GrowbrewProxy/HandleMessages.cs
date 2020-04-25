@@ -527,35 +527,26 @@ namespace GrowbrewProxy
                     {
                         
                         case NetTypes.PacketTypes.CALL_FUNCTION:
-                            //MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): A function call packet was sent." + "\n");
                             VariantList.VarList VarListFetched = VariantList.GetCall(VariantList.get_extended_data(tankPacket));
-                            OperateVariant(VarListFetched);
-                            if (VarListFetched.FunctionName == "OnSendToServer") return "Server switching forced, not continuing as Proxy Client has to deal with this.";
-                            if (VarListFetched.FunctionName == "onShowCaptcha") return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
-                            if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("captcha")) return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
-                            if (VarListFetched.FunctionName == "OnSetPos" && MainForm.ignoreonsetpos) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
+                            VarListFetched.netID = BitConverter.ToInt32(tankPacket, 4); // add netid
+                            VarListFetched.delay = BitConverter.ToUInt32(tankPacket, 20); // add keep track of delay modifier
                             
+                            int netID = OperateVariant(VarListFetched);
                             string argText = string.Empty;
 
                             for (int i = 0; i < VarListFetched.functionArgs.Count(); i++)
                             {
                                 argText += " [" + i.ToString() + "]: " + (string)VarListFetched.functionArgs[i].ToString();
                             }
-                            
+
                             MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): A function call was requested, see log infos below:\nFunction Name: " + VarListFetched.FunctionName + " parameters: " + argText + " \n");
-                            
+
+                            if (VarListFetched.FunctionName == "OnSendToServer") return "Server switching forced, not continuing as Proxy Client has to deal with this.";
+                            if (VarListFetched.FunctionName == "onShowCaptcha") return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
+                            if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("captcha")) return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
+                            if (VarListFetched.FunctionName == "OnSetPos" && MainForm.ignoreonsetpos && netID == worldMap.netID) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
+                            if (VarListFetched.FunctionName == "OnSpawn" && netID == -2) return "Modified OnSpawn for unlimited zoom (mstate|1)"; // only doing unlimited zoom and not unlimited punch/place to be sure that no bans occur due to this. If you wish to use unlimited punching/placing as well, change the smstate in OperateVariant function instead.
                             break;
-                        case NetTypes.PacketTypes.APPLY_LOCK:
-                            {
-                                
-                                    
-                                break;
-                            }
-                        case NetTypes.PacketTypes.ARROW_TO_ITEM:
-                            {
-                                
-                                break;
-                            }
                         case NetTypes.PacketTypes.PING_REQ:
                             SpoofedPingReply();
                             break;
