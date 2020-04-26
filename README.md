@@ -43,6 +43,9 @@ https://imgur.com/a/lP7lxSI
 - Integrated HTTP Server
 - Player Manager
 - Several GTPS Crash methods
+- Unlimited Zoom
+- Packet Logger (supports extended data too) (will be logged in proxy tab)
+- RGB Skin
 - Growbrew Network (chatting etc, you must register first, in order to register, contact my discord which is stated in the Proxy Main Page)
 - many more, might even add something soon to this open src project.
 ---------------------------------------------------------------
