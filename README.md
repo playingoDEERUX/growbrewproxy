@@ -47,6 +47,10 @@ https://imgur.com/a/lP7lxSI
 - Packet Logger (supports extended data too) (will be logged in proxy tab)
 - RGB Skin
 - Growbrew Network (chatting etc, you must register first, in order to register, contact my discord which is stated in the Proxy Main Page)
+- Ignore autoban packets by client (if the check was server sided, you can still get banned)
+- Ignore tracking packets and crash log requests
+- Spoofed RID all the time, and login packet is made so most identifiers/information wont be included.
+- Instant MAC Spoofer
 - many more, might even add something soon to this open src project.
 ---------------------------------------------------------------
 
