@@ -76,7 +76,7 @@ namespace GrowbrewProxy
         // internal variables =>
         public static string tankIDName = "";
         public static string tankIDPass = "";
-        public static string game_version = "3.32";
+        public static string game_version = "3.35";
         public static string country = "de";
         public static string requestedName = "";
         public static int token = 0;
@@ -137,22 +137,11 @@ namespace GrowbrewProxy
 
         public static string GenerateMACAddress()
         {
-            Random rand = new Random();
-            byte[] macAddr = new byte[6];
-            rand.NextBytes(macAddr);
-            macAddr[0] = (byte)(macAddr[0] & (byte)254);  //zeroing last 2 bytes to make it unicast and locally adminstrated
-            StringBuilder sb = new StringBuilder(18);
-            foreach (byte b in macAddr)
-            {
-
-                if (sb.Length > 0)
-                    sb.Append(":");
-
-                sb.Append(String.Format("%02x", b));
-            }
-            string str = sb.ToString();
-            str = str.ToLower();
-            return str;
+            var random = new Random();
+            var buffer = new byte[6];
+            random.NextBytes(buffer);
+            var result = String.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
+            return result.TrimEnd(':');
         }
         
         public static string CreateLogonPacket(bool hasGrowId = false)
@@ -477,7 +466,7 @@ namespace GrowbrewProxy
       
         private void MainForm_Load(object sender, EventArgs e)
         {
-
+            macc = GenerateMACAddress();
 
             DialogResult dr = MessageBox.Show("Proceeding will connect you to the Growbrew Network!\nGROWBREW MAY USE ANY OF YOUR HARDWARE IDENTIFIERS AND YOUR IP WHICH ARE USED TO SECURE THE PRODUCT E.G FOR BANS AND ANTI-CRACK SOLUTIONS! \nRead more in 'Growbrew Policies'\nContinue?", "Growbrew Proxy", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dr == DialogResult.No)
