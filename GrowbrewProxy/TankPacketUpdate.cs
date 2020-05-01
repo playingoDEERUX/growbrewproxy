@@ -1,5 +1,5 @@
-﻿// thanks to iProgramInCpp#0489, most things are made by him in the GrowtopiaCustomClient, I have just rewritten it into c# and maybe also improved. -playingo
-// edit: this is ACTUALLY not rewritten and straight taken from iProgramInCpp#0489 !
+﻿// thanks to iProgramInCpp#0001, most things are made by him in the GrowtopiaCustomClient, I have just rewritten it into c# and maybe also improved. -playingo
+// edit: this is ACTUALLY not rewritten and straight taken from iProgramInCpp#0001!
 using System;
 using System.Collections.Generic;
 using System.Linq;
