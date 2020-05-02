@@ -480,8 +480,7 @@ namespace GrowbrewProxy
 
             playerLogicUpdate.Start();
             itemDB.SetupItemDefs();
-            LibENet.Load();
-            LibENet.Initialize();
+            ManagedENet.Startup();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
