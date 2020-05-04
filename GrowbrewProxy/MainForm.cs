@@ -1070,6 +1070,10 @@ namespace GrowbrewProxy
         private void changelog_Click(object sender, EventArgs e)
         {
             this.BeginInvoke((Action)(() => MessageBox.Show("Growbrew Proxy Changelogs:\n" +
+                "\n1.5.3\n--------------------------\n" +
+                "- Added usage of 2 channels instead of 1 (stability)" +
+                "- Removed Hacker Network, discontinued, won't ever add again" +
+                "- General bug fixes and changes done in earlier build versions, but didn't update the version before already\n" +
                 "\n1.5.2\n--------------------------\n" +
                 "- Added unlimited zoom\n" +
                 "- Fixed server requests logon" +
