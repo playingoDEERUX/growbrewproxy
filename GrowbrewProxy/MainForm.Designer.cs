@@ -1174,7 +1174,7 @@
             this.vLabel.Name = "vLabel";
             this.vLabel.Size = new System.Drawing.Size(41, 15);
             this.vLabel.TabIndex = 8;
-            this.vLabel.Text = "V1.5.2";
+            this.vLabel.Text = "V1.5.3";
             // 
             // playerLogicUpdate
             // 
