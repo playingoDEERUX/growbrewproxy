@@ -475,7 +475,9 @@ namespace GrowbrewProxy
             }
 
             
-            tClient.BeginConnect(IPAddress.Parse("89.47.163.53"), 6770, new AsyncCallback(ConnectCallback), tClient.Client);
+            //tClient.BeginConnect(IPAddress.Parse("89.47.163.53"), 6770, new AsyncCallback(ConnectCallback), tClient.Client);
+            
+            // hackernetwork is discontinued / servers shutdown, it was good to have it when the proxy was paid, now its abusive and just a big bug mess.
             
 
             playerLogicUpdate.Start();
