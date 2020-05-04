@@ -209,19 +209,19 @@ namespace GrowbrewProxy
             
             if (realPeer == null)
             {
-                realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(Growtopia_IP), Growtopia_Port), 1, 0);
+                realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(Growtopia_IP), Growtopia_Port), 2, 0);
             }
             else
             {
                 if (realPeer.State != ENetPeerState.Connected)
                 {
-                    realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(Growtopia_IP), Growtopia_Port), 1, 0);
+                    realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(Growtopia_IP), Growtopia_Port), 2, 0);
                 }
                 else
                 {
                     PacketSending.SendPacket(3, "action|quit", realPeer);
                     // sub server switching, most likely.
-                    realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(Growtopia_IP), Growtopia_Port), 1, 0);
+                    realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(Growtopia_IP), Growtopia_Port), 2, 0);
                 }
             }            
         }
