@@ -79,6 +79,7 @@ Click Start HTTP server and Start Proxy and you can start.
 # TODO:
 ---------------------------------------------------------------
 - Refactor code and maybe better UI
+- Known bug: Worlds with very much data / many unique blocks that require much data can result into a crash of the proxy (Service failure).
 - Add vector2, rect and vector3 support for receiving func call packets
 ---------------------------------------------------------------
 
