@@ -49,7 +49,7 @@ namespace GrowbrewProxy
             PARTICLE_EFFECT_V2,
             ARROW_TO_ITEM,
             TILE_INDEX_SELECTION,
-            ADDITIONAL_SEQUENCE
+            UPDATE_PLAYER_TRIBUTE
         };
 
         public enum NetMessages
