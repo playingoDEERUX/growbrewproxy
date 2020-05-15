@@ -47,7 +47,7 @@ If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Man
 - Unlimited Zoom
 - Packet Logger (supports extended data too) (will be logged in proxy tab)
 - RGB Skin
-- Growbrew Network (chatting etc, you must register first, in order to register, contact my discord which is stated in the Proxy Main Page)
+- Growbrew Network (chatting etc, you must register first, in order to register, contact my discord which is stated in the Proxy Main Page) (removed, discontinuing this the proxy itself is enough.)
 - Ignore autoban packets by client (if the check was server sided, you can still get banned)
 - Ignore tracking packets and crash log requests
 - Spoofed RID all the time, and login packet is made so most identifiers/information wont be included.
