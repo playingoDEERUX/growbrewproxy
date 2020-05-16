@@ -91,7 +91,7 @@ https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 Other versions may work too, they are not tested. Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
 
 
-current version: 1.5.2
+current version: 1.5.3
 # MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 Subscribe to support me :)
