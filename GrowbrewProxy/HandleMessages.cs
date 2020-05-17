@@ -611,7 +611,7 @@ namespace GrowbrewProxy
                 case NetTypes.NetMessages.TRACK:
                 case NetTypes.NetMessages.LOG_REQ:
                 case NetTypes.NetMessages.ERROR:
-                    break;
+                    return "Blocked track/logreq/error message type by server.";
                 default:
                     return "(SERVER): An unknown event occured. Message Type: " + msgType.ToString() + "\n";
                     break;
