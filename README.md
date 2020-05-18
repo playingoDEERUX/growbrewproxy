@@ -4,16 +4,6 @@ Growbrew - An advanced Growtopia ENet Proxy made in C#, giving you the advantage
 growbrew got leaked once (1.4) so now releasing source code cuz some skids got it someone must have told the link...
 NOTE: has growbrew server/client part for chatting etc., you can remove that though.
 
-- The first Growtopia Proxy coded in c# - not affiliated with ama6nen/enetproxy
-- Reminder: A proxy actually has NOTHING to do with an internal. A proxy works via pure networking. The naming of the tabs is pure marketing strategy. Otherwise, a solid and good proxy with many many features.
-
-NOTE: ama's proxy is more development oriented while Growbrew was aimed at release since its beginning, means it contains a lot more
-features and more features that would actually be undetected to avoid ban chance, as this proxy initially was also aimed to not ban as much as ama's proxy, even though there is server sided checking, there are few things we rather didnt add like unlimited zoom punching to avoid people getting banned this easily, however, this was initially not aimed for development or private servers as stated, therefore it should also be more stable as well, which I would not guarantee. Performance wise I have heard better feed back for Growbrew than from ama's enetproxy. 
-people who bought it are saying that growbrew is slightly faster than ama's enetproxy, which is weird cause I serialize world packet
-and c++ should be faster in general, but heres proof of 1 guy saying that growbrew has a better overall performance:
-https://imgur.com/a/lP7lxSI
-
-
 # Compatibility:
 - Windows 7 - Windows 10 (windows versions older than than that may work with modifications and such, this is not supported by default thouh. .NET requirements: .NET Framework 4.6.1, I have heard reports from people that this does not work on .NET Framework 4.8, it may work on older .NET Framework versions but this has been tested without any issues on .NET 4.5
 If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Managed please!
