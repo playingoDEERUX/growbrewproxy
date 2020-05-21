@@ -264,13 +264,13 @@ namespace GrowbrewProxy
             //messageHandler.HandlePacketFromClient(e);
             
             string str = messageHandler.HandlePacketFromClient(e);
-            if (str != "_none_") AppendLog(str);
+            if (str != "_none_" && str != "") AppendLog(str);
         }
 
         private void Peer_OnReceive_Client(object sender, ENetPacket e)
         {
             string str = messageHandler.HandlePacketFromServer(e);
-            if (str != "_none_") AppendLog(str);
+            if (str != "_none_" && str != "") AppendLog(str);
         }
 
         private void Peer_OnDisconnect_Client(object sender, uint e)
@@ -313,14 +313,14 @@ namespace GrowbrewProxy
                 clientRunning = true;
 
                 // Setting up ENet-Server ->
-                m_Host = new ENetHost(new IPEndPoint(IPAddress.Any, 2), 512, 10); // allow only 1 peer to be connected at the same time
+                m_Host = new ENetHost(new IPEndPoint(IPAddress.Any, 2), 16, 10); // allow only 1 peer to be connected at the same time
                 m_Host.OnConnect += Host_OnConnect;
                 m_Host.ChecksumWithCRC32();
                 m_Host.CompressWithRangeCoder();
                 m_Host.StartServiceThread();
                 
                 // Setting up ENet-Client ->
-                client = new ENetHost(512, 10);
+                client = new ENetHost(16, 10);
                 client.OnConnect += Client_OnConnect;
                 client.ChecksumWithCRC32();
                 client.CompressWithRangeCoder();
