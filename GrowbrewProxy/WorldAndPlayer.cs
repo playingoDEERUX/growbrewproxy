@@ -44,31 +44,12 @@ namespace GrowbrewProxy
         public int id;
     };
 
-    public class World : IDisposable
+    public class World
     {
         // from docs.microsoft.com, used for implementing a disposable class.
-        bool disposed = false;
+       
         
-        SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);     
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
         
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposed)
-                return;
-
-            if (disposing)
-            {
-                handle.Dispose();
-                ResetAndInit();
-            }
-
-            disposed = true;
-        }
 
         /* (object map) */
         public List<Player> players = new List<Player>();
