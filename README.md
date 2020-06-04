@@ -86,7 +86,6 @@ current version: 1.5.3
 # MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 Subscribe to support me :)
-Credits to Vyte for AAP Bypass
 
 Enjoy the **ultimate** haXing in Growtopia :) Star this if you liked my project, thanks!
 
