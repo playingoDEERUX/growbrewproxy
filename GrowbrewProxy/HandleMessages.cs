@@ -562,7 +562,7 @@ namespace GrowbrewProxy
                             break;
                         case NetTypes.PacketTypes.LOAD_MAP:
                             if (MainForm.LogText.Length >= 65536) MainForm.LogText = string.Empty;
-                            worldMap.Dispose();
+                            
                             worldMap = worldMap.LoadMap(tankPacket);
                             
                             break;
