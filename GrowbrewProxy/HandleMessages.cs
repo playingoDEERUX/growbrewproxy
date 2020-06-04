@@ -165,7 +165,7 @@ namespace GrowbrewProxy
                         variantPacket2.AppendInt(userID);
                         variantPacket2.AppendString("127.0.0.1|" + MainForm.doorid);
                         variantPacket2.AppendInt(lmode);
-                        MainForm.doorid = "";
+                       // MainForm.doorid = ""; fix cant enter door with link to other door in other subserver/world
                         PacketSending.SendData(variantPacket2.GetBytes(), MainForm.proxyPeer);
                         
                         MainForm.Growtopia_IP = ip; // proper sub server switching
