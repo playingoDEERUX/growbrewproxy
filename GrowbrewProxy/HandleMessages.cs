@@ -556,13 +556,21 @@ namespace GrowbrewProxy
                             if (VarListFetched.FunctionName == "OnSpawn" && netID == -2) return "Modified OnSpawn for unlimited zoom (mstate|1)"; // only doing unlimited zoom and not unlimited punch/place to be sure that no bans occur due to this. If you wish to use unlimited punching/placing as well, change the smstate in OperateVariant function instead.
                             if (VarListFetched.FunctionName == "OnSetClothing" && VarListFetched.netID == worldMap.netID)
                             {
-                                Task.Delay(400).ContinueWith(t => PacketSending.SendData(data, MainForm.proxyPeer)); // better than freezing entire service thread
-                                return "applying onsetclothing delayed...";
+                                if (!worldMap.player.didClothingLoad)
+                                {
+                                    worldMap.player.didClothingLoad = true;
+                                    Task.Delay(400).ContinueWith(t => PacketSending.SendData(data, MainForm.proxyPeer));
+                                    return "applying onsetclothing delayed...";
+                                }
                             }
                             break;
-                        case NetTypes.PacketTypes.SET_CHARACTER_STATE:
-                            Task.Delay(400).ContinueWith(t => PacketSending.SendData(data, MainForm.proxyPeer));
-                            return "";
+                         case NetTypes.PacketTypes.SET_CHARACTER_STATE:
+                            if (!worldMap.player.didCharacterStateLoad)
+                            {
+                                worldMap.player.didCharacterStateLoad = true; // optimization
+                                Task.Delay(400).ContinueWith(t => PacketSending.SendData(data, MainForm.proxyPeer));
+                            }
+                            break;
                         case NetTypes.PacketTypes.PING_REQ:
                             SpoofedPingReply();
                             break;
