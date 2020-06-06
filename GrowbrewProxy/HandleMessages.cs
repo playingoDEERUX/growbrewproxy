@@ -633,7 +633,7 @@ namespace GrowbrewProxy
             }
 
             PacketSending.SendData(data, MainForm.proxyPeer, ENetPacketFlags.Reliable);
-            if (msgType == NetTypes.NetMessages.GAME_PACKET && data[4] != 0 && data[4] != (byte)NetTypes.PacketTypes.UPDATE_ITEMS_DATA && data[4] != 1 && data[4] != 3 && data[4] != 7 && data[4] != 4 && data[4] != 6 && data[4] != 8 && data[4] != 9 && data[4] != 6 && data[4] != 10 && data[4] != 14 && data[4] != 34)
+            if (msgType == NetTypes.NetMessages.GAME_PACKET && data[4] != 0 && data[4] != (byte)NetTypes.PacketTypes.UPDATE_ITEMS_DATA && data[4] != 1 && data[4] != 3 && data[4] != 7 && data[4] != 4 && data[4] != 6 && data[4] != 8 && data[4] != 9 && data[4] != 6 && data[4] != 10 && data[4] != 14 && data[4] != 34 && data[4] != 18)
             {
                 TankPacket p = TankPacket.UnpackFromPacket(data);
                 uint extDataSize = BitConverter.ToUInt32(data, 56);
