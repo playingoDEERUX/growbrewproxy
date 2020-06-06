@@ -23,6 +23,8 @@ namespace GrowbrewProxy
         public int mstate = 0;
         public int smstate = 0;
         public int X, Y = 0;
+        public bool didClothingLoad = false;
+        public bool didCharacterStateLoad = false;
     };
 
     public struct Tile
