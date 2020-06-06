@@ -562,7 +562,7 @@ namespace GrowbrewProxy
                             break;
                         case NetTypes.PacketTypes.SET_CHARACTER_STATE:
                             Task.Delay(400).ContinueWith(t => PacketSending.SendData(data, MainForm.proxyPeer));
-                            break;
+                            return "";
                         case NetTypes.PacketTypes.PING_REQ:
                             SpoofedPingReply();
                             break;
