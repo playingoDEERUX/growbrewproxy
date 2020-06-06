@@ -860,7 +860,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(69, 20);
             this.textBox2.TabIndex = 20;
-            this.textBox2.Text = "3.33";
+            this.textBox2.Text = "3.37";
             // 
             // textBox1
             // 
@@ -896,7 +896,7 @@
             this.setMac.Name = "setMac";
             this.setMac.Size = new System.Drawing.Size(100, 20);
             this.setMac.TabIndex = 7;
-            this.setMac.Text = "02:00:00:00:00";
+            this.setMac.Text = "02:00:00:00:00:00";
             // 
             // custom_collect_y
             // 
@@ -1174,7 +1174,7 @@
             this.vLabel.Name = "vLabel";
             this.vLabel.Size = new System.Drawing.Size(41, 15);
             this.vLabel.TabIndex = 8;
-            this.vLabel.Text = "V1.5.3";
+            this.vLabel.Text = "V1.5.4";
             // 
             // playerLogicUpdate
             // 
