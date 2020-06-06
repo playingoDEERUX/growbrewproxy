@@ -537,14 +537,6 @@ namespace GrowbrewProxy
                 {
                     ActiveForm.Text = "Growbrew Proxy - HNetwork";
                     logniasuserlabel.Text = "Logged in as: " + userInfo.username;
-                    if (!getUsersOnline.Enabled) getUsersOnline.Start();
-
-                    BSONObject request = new BSONObject();
-                    request["msg"] = "get_online";
-                    request["note"] = "(none)";
-                    byte[] requestData = SimpleBSON.Dump(request);
-
-                    stateObj.workSocket.BeginSend(requestData, 0, requestData.Length, SocketFlags.None, new AsyncCallback(SendCallback), stateObj);
                 }
             }
             catch
