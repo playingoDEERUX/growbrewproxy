@@ -17,7 +17,7 @@ namespace GrowbrewProxy
             if (peer.State != ENetPeerState.Connected) return;
             int loadb = rand.Next(0, 1);
             if (loadb == 0) peer.Send(data, 0, flag);
-            else peer.Send(data, 0, flag);
+            else peer.Send(data, 1, flag);
         }
 
         public static void SendPacketRaw(int type, byte[] data, ENetPeer peer, ENetPacketFlags flag = ENetPacketFlags.Reliable)
