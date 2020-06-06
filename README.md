@@ -44,6 +44,7 @@ If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Man
 - Spoofed RID all the time, and login packet is made so most identifiers/information wont be included.
 - Instant MAC Spoofer
 - many more, might even add something soon to this open src project.
+- *NEW* Very simple packet "load balancer"
 ---------------------------------------------------------------
 
 NOTE: Click "Update IP/Port" once without actually changing IP if you are stuck at Server request logon (which should actually never happen anymore as it was fixed in 1.5.2)
@@ -82,7 +83,7 @@ https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 Other versions may work too, they are not tested. Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
 
 
-current version: 1.5.3
+current version: 1.5.4
 # MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 Subscribe to support me :)
