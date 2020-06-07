@@ -31,7 +31,7 @@ namespace GrowbrewProxy
                         "type|1\n" +
                         "beta_server|127.0.0.1\n" +
                         "beta_port|2\n" +
-                        "meta|growbrew\n");
+                        "meta|growbrew.com\n");
 
                     response.ContentLength64 = buffer.Length;
                     System.IO.Stream output = response.OutputStream;
