@@ -1,9 +1,6 @@
 # growbrewproxy
 Growbrew - An advanced Growtopia ENet Proxy made in C#, giving you the advantage of networking for superior and good exploits/cheats!
 
-growbrew got leaked once (1.4) so now releasing source code cuz some skids got it someone must have told the link...
-NOTE: has growbrew server/client part for chatting etc., you can remove that though.
-
 # Compatibility:
 - Windows 7 - Windows 10 (windows versions older than than that may work with modifications and such, this is not supported by default though.)
 .NET requirements: .NET Framework 4.6.1, I have heard reports from people that this does not work on .NET Framework 4.8, it may work on older .NET Framework versions but this has been tested without any issues on .NET 4.5
