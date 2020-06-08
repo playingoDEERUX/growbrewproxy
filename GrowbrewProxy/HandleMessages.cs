@@ -578,6 +578,8 @@ namespace GrowbrewProxy
                             if (MainForm.LogText.Length >= 65536) MainForm.LogText = string.Empty;
                             
                             worldMap = worldMap.LoadMap(tankPacket);
+                            worldMap.player.didCharacterStateLoad = false;
+                            worldMap.player.didClothingLoad = false;
                             
                             break;
                         case NetTypes.PacketTypes.MODIFY_ITEM_OBJ:
