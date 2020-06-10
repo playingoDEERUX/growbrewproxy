@@ -81,7 +81,7 @@ Other versions may work too, they are not tested. Credits to moien007 for ENet.M
 
 
 current version: 1.5.4
-# MADE BY DEERUX AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
+# MADE BY DEERUX (quit) AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 Subscribe to support me :)
 
