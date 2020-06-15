@@ -262,7 +262,7 @@ namespace GrowbrewProxy
                             GamePacketProton gp = new GamePacketProton();
                             gp.AppendString("OnSpawn");
                             gp.AppendString(modified_avatardata);
-                            gp.delay = -1;
+                            gp.delay = -1; // -1 delay for clothing fix, which should now get copied properly and avoids confusion in VariantList.GetBytes() [1.5.5]
                             gp.NetID = -1;
 
                             PacketSending.SendData(gp.GetBytes(), MainForm.proxyPeer);
@@ -554,7 +554,7 @@ namespace GrowbrewProxy
                             if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("captcha")) return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
                             if (VarListFetched.FunctionName == "OnSetPos" && MainForm.ignoreonsetpos && netID == worldMap.netID) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
                             if (VarListFetched.FunctionName == "OnSpawn" && netID == -2) return "Modified OnSpawn for unlimited zoom (mstate|1)"; // only doing unlimited zoom and not unlimited punch/place to be sure that no bans occur due to this. If you wish to use unlimited punching/placing as well, change the smstate in OperateVariant function instead.
-                            if (VarListFetched.FunctionName == "OnSetClothing" && VarListFetched.netID == worldMap.netID)
+                            /*if (VarListFetched.FunctionName == "OnSetClothing" && VarListFetched.netID == worldMap.netID)
                             {
                                 if (!worldMap.player.didClothingLoad)
                                 {
@@ -562,14 +562,16 @@ namespace GrowbrewProxy
                                     Task.Delay(400).ContinueWith(t => PacketSending.SendData(data, MainForm.proxyPeer));
                                     return "applying onsetclothing delayed...";
                                 }
-                            }
+                            }*/
+                            // unused since 1.5.5
                             break;
                          case NetTypes.PacketTypes.SET_CHARACTER_STATE:
-                            if (!worldMap.player.didCharacterStateLoad)
+                            /*if (!worldMap.player.didCharacterStateLoad)
                             {
                                 worldMap.player.didCharacterStateLoad = true; // optimization
                                 Task.Delay(400).ContinueWith(t => PacketSending.SendData(data, MainForm.proxyPeer));
-                            }
+                            }*/
+                            // unused since 1.5.5
                             break;
                         case NetTypes.PacketTypes.PING_REQ:
                             SpoofedPingReply();
