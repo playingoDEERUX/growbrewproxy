@@ -83,7 +83,7 @@ namespace GrowbrewProxy
             bytesArray[4] = 1; // TankPacket type
             Array.Copy(BitConverter.GetBytes(NetID), 0, bytesArray, 8, 4);
             Array.Copy(BitConverter.GetBytes(8), 0, bytesArray, 16, 4);
-            if (delay > 0) Array.Copy(BitConverter.GetBytes(delay), 0, bytesArray, 24, 4);
+            Array.Copy(BitConverter.GetBytes(delay), 0, bytesArray, 24, 4);
             Array.Copy(BitConverter.GetBytes(objects.Count), 0, bytesArray, 56, 4);
 
             List<byte> bytes = new List<byte>();
