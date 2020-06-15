@@ -1061,14 +1061,18 @@ namespace GrowbrewProxy
 
         private void changelog_Click(object sender, EventArgs e)
         {
-            this.BeginInvoke((Action)(() => MessageBox.Show("Growbrew Proxy Changelogs:\n" +
+            MessageBox.Show("Growbrew Proxy Changelogs:\n" +
+                "\n1.5.4/1.5.5\n--------------------------\n" +
+                "- DoorID with Subserver switching not working has been fixed (works now)\n" +
+                "- Best OnSetClothing fix, earlier versions than 1.5.5 had bad attempts to fix it (like delaying onsetclothing), when it was easily fixable by allowing VariantList to copy 'negativeOne' delay\n" +
+                "- Some other minor fixes in this 1.5.4 were pushed.\n" +
                 "\n1.5.3\n--------------------------\n" +
-                "- Added usage of 2 channels instead of 1 (stability)" +
-                "- Removed Hacker Network, discontinued, won't ever add again" +
+                "- Added usage of 2 channels instead of 1 (stability)\n" +
+                "- Removed Hacker Network, discontinued, won't ever add again\n" +
                 "- General bug fixes and changes done in earlier build versions, but didn't update the version before already\n" +
                 "\n1.5.2\n--------------------------\n" +
                 "- Added unlimited zoom\n" +
-                "- Fixed server requests logon" +
+                "- Fixed server requests logon\n" +
                 "- Fixed logging in over growid but 'has GrowID' checkbox wasnt checked\n" +
                 "\n1.5.1\n--------------------------\n" +
                 "- [Hacker Network] Added Enter to conversate\n" +
@@ -1083,7 +1087,7 @@ namespace GrowbrewProxy
                 "- Captcha should never show up anymore to client and be instantly solved by proxy!\n" +
                 "- Some bug fixes, fixed aap bypass not working and worlds crashing rarely.\n" +
                 "- Added Changelogs (all changes since 1.5 will be logged here)\n" +
-                "\n~playingo/DEERUX")));
+                "\n~playingo/DEERUX");
         }
 
         private void button13_Click(object sender, EventArgs e)
