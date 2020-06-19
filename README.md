@@ -15,7 +15,7 @@ If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Man
 - Name Changer
 - Safe vault bypass
 - Ignore Autoban packet by client
-- Multiselection of players, seeing invisible mods in Player Manager
+- Multiselection of players, seeing invisible mods/developers in Player Manager
 - Modified Dialog sender
 - Tile-o-meter
 - able to send custom states etc. already (Super Speed and Mod Noclip so far)
@@ -39,12 +39,11 @@ If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Man
 - Ignore autoban packets by client (if the check was server sided, you can still get banned)
 - Ignore tracking packets and crash log requests
 - Spoofed RID all the time, and login packet is made so most identifiers/information wont be included.
-- Instant MAC Spoofer
+- Instant MAC Spoofer (use mac 02:00:00:00:00:00 for AAP bypass)
 - many more, might even add something soon to this open src project.
-- *NEW* Very simple packet "load balancer"
+- *NEW* Very simple packet load balancer
 ---------------------------------------------------------------
 
-NOTE: Click "Update IP/Port" once without actually changing IP if you are stuck at Server request logon (which should actually never happen anymore as it was fixed in 1.5.2)
 
 # Usage:
 ---------------------------------------------------------------
