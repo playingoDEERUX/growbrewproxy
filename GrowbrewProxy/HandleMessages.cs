@@ -518,7 +518,7 @@ namespace GrowbrewProxy
                         MainForm.token = 0;
                         MainForm.doorid = "";
 
-                        SwitchServers("209.59.191.76", 17126);
+                        SwitchServers("213.179.209.168", 17274);
 
                         return "Server forces logon request, switching server automatically so user does not have to cancel to login menu and reconnect.";
                     }
