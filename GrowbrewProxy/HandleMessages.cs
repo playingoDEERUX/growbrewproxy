@@ -424,8 +424,8 @@ namespace GrowbrewProxy
                         if (actionExecuted == "quit")
                         {
                             MainForm.token = 0;
-                            MainForm.Growtopia_IP = "209.59.191.76";
-                            MainForm.Growtopia_Port = 17126;
+                            MainForm.Growtopia_IP = "213.179.209.168";
+                            MainForm.Growtopia_Port = 17274;
                             MainForm.realPeer.DisconnectLater(100);
                             MainForm.proxyPeer.DisconnectLater(100);
                         }
@@ -518,7 +518,7 @@ namespace GrowbrewProxy
                         MainForm.token = 0;
                         MainForm.doorid = "";
 
-                        SwitchServers("209.59.191.76", 17126);
+                        SwitchServers("213.179.209.168", 17274);
 
                         return "Server forces logon request, switching server automatically so user does not have to cancel to login menu and reconnect.";
                     }

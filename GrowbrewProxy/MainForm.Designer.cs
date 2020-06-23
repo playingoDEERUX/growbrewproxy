@@ -308,7 +308,7 @@
             this.portBox.Size = new System.Drawing.Size(81, 20);
             this.portBox.TabIndex = 12;
             this.portBox.Value = new decimal(new int[] {
-            17126,
+            17274,
             0,
             0,
             0});
@@ -357,7 +357,7 @@
             this.ipaddrBox.Name = "ipaddrBox";
             this.ipaddrBox.Size = new System.Drawing.Size(100, 20);
             this.ipaddrBox.TabIndex = 6;
-            this.ipaddrBox.Text = "209.59.191.76";
+            this.ipaddrBox.Text = "213.179.209.168";
             // 
             // cheatPage
             // 
