@@ -308,7 +308,7 @@
             this.portBox.Size = new System.Drawing.Size(81, 20);
             this.portBox.TabIndex = 12;
             this.portBox.Value = new decimal(new int[] {
-            17274,
+            17234,
             0,
             0,
             0});
