@@ -76,7 +76,7 @@ namespace GrowbrewProxy
         // internal variables =>
         public static string tankIDName = "";
         public static string tankIDPass = "";
-        public static string game_version = "3.36";
+        public static string game_version = "3.37";
         public static string country = "de";
         public static string requestedName = "";
         public static int token = 0;
