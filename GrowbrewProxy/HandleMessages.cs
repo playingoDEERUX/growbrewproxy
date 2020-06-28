@@ -425,7 +425,7 @@ namespace GrowbrewProxy
                         {
                             MainForm.token = 0;
                             MainForm.Growtopia_IP = "213.179.209.168";
-                            MainForm.Growtopia_Port = 17274;
+                            MainForm.Growtopia_Port = 17234;
                             MainForm.realPeer.DisconnectLater(100);
                             MainForm.proxyPeer.DisconnectLater(100);
                         }
