@@ -67,7 +67,7 @@ namespace GrowbrewProxy
         public bool mayContinue = false;
         public bool srvRunning = false;
         public bool clientRunning = false;
-        public static int Growtopia_Port = 17274; // todo auto get port
+        public static int Growtopia_Port = 17234; // todo auto get port
         public static string Growtopia_IP = "213.179.209.168";
         public static bool isSwitchingServer = false;
         public static bool blockEnterGame = false;
