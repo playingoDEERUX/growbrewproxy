@@ -42,6 +42,13 @@ If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Man
 - Instant MAC Spoofer (use mac 02:00:00:00:00:00 for AAP bypass)
 - many more, might even add something soon to this open src project.
 - *NEW* Very simple packet load balancer
+
+ADDED SINCE V2:
+- *NEW* Account Checker
+- *NEW* Red damage to block exploit (NOT VISUAL, EVERYONE SEES IT: 
+- *NEW* Drop entire inventory with spreading
+- *NEW* Config exporting/saving
+- A few fixes.
 ---------------------------------------------------------------
 
 
