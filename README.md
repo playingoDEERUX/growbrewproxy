@@ -49,6 +49,7 @@ ADDED SINCE V2:
 - *NEW* Drop entire inventory with spreading
 - *NEW* Config exporting/saving
 - A few fixes.
+- Many more
 ---------------------------------------------------------------
 
 
@@ -85,7 +86,7 @@ https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 Other versions may work too, they are not tested. Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
 
 
-current version: 1.5.4
+current version: V2
 # MADE BY DEERUX (quit) AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 (IMPORTANT: THIS DEERUX IS A FAKER/IMPERSONATOR): https://www.youtube.com/channel/UCjUmKOedwc7gDa8Fl9E5HMA If you have subbed to him, unsubscribe now and this is my real channel: https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
