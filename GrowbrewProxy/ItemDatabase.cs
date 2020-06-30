@@ -61,6 +61,12 @@ namespace GrowbrewProxy
 
         public static List<ItemDefinition> itemDefs = new List<ItemDefinition>();
 
+        public static bool isBackground(int itemID) // thanks for the dev iProgramInCpp for telling me a reliable method on how to determine between foreground and background in GT.
+        {
+            ItemDefinition def = GetItemDef(itemID);
+            byte actType = def.actionType;
+            return (actType == 18 || actType == 23 || actType == 28);
+        }
         public static ItemDefinition GetItemDef(int itemID)
         {
             if (itemID < 0 || itemID > (int)itemDefs.Count()) return itemDefs[0];
@@ -164,6 +170,8 @@ namespace GrowbrewProxy
                    
                     def.id = short.Parse(infos[1]);
                     def.actionType = byte.Parse(infos[4]);
+                    def.itemName = infos[6];
+
                     if (def.id != id)
                     {
                         // unordered db item, can cause problems!!

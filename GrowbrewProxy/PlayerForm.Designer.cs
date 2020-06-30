@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.playerBox = new System.Windows.Forms.GroupBox();
-            this.updateControls = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // playerBox
@@ -43,11 +41,6 @@
             this.playerBox.TabStop = false;
             this.playerBox.Text = "Player Box";
             // 
-            // updateControls
-            // 
-            this.updateControls.Interval = 1000;
-            this.updateControls.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -59,6 +52,7 @@
             this.ShowIcon = false;
             this.Text = "All players in EXIT";
             this.Load += new System.EventHandler(this.PlayerForm_Load);
+            
             this.ResumeLayout(false);
 
         }
@@ -66,6 +60,5 @@
         #endregion
 
         public System.Windows.Forms.GroupBox playerBox;
-        private System.Windows.Forms.Timer updateControls;
     }
 }

@@ -44,7 +44,8 @@ namespace GrowbrewProxy
             Array.Copy(BitConverter.GetBytes(PunchY), 0, b, 48, 4);
             Array.Copy(BitConverter.GetBytes(ExtDataSize), 0, b, 52, 4);
             byte[] dat = ExtData.ToArray();
-            Array.Copy(dat, 0, b, 56, ExtData.Count);
+            int datLength = dat.Length;
+            if (datLength > 0) Buffer.BlockCopy(dat, 0, b, 56, datLength);
 
             return b;
         }

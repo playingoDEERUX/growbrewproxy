@@ -15,6 +15,8 @@ namespace GrowbrewProxy
 {
     public class Player //NetAvatar
     {
+        
+
         public string name = "";
         public string country = "";
         public int netID = 0;
@@ -23,14 +25,44 @@ namespace GrowbrewProxy
         public int mstate = 0;
         public int smstate = 0;
         public int X, Y = 0;
-        public bool didClothingLoad = false;
-        public bool didCharacterStateLoad = false;
+        public bool didClothingLoad = false; // unused now
+        public bool didCharacterStateLoad = false; // unused now
+        public Inventory inventory; // should only not be null if player is local.
+        public void SerializePlayerInventory(byte[] inventoryData)
+        {
+            int invPacketSize = inventoryData.Length;
+            inventory.version = inventoryData[0];
+            inventory.backpackSpace = BitConverter.ToInt16(inventoryData, 1);
+            int inventoryitemCount = BitConverter.ToInt16(inventoryData, 5); // trade exceeding
+            inventory.items = new InventoryItem[inventoryitemCount];
+
+            for (int i = 0; i < inventoryitemCount; i++)
+            {
+                int pos = 7 + i * 4;
+                inventory.items[i].itemID = BitConverter.ToUInt16(inventoryData, pos);
+                inventory.items[i].amount = BitConverter.ToInt16(inventoryData, pos + 2);
+            }
+        }
     };
+    
+    
+    public struct Inventory
+    {
+        public byte version;
+        public short backpackSpace;
+        public InventoryItem[] items;
+    }
+    public struct InventoryItem
+    {
+        public short amount;
+        public ushort itemID;
+        public byte flags; // 8-bits reserved.
+    }
 
     public struct Tile
     {
         public int x, y;
-        public short fg, bg;
+        public ushort fg, bg;
         public int tileState;
         public byte[] tileExtra; // might be unused.
         public string str_1; // might be unused.
@@ -63,7 +95,7 @@ namespace GrowbrewProxy
         int dropped_TOTALUIDS = 0;
         internal int tilesProperlySerialized = 0;
         public string currentWorld = "EXIT";
-        int width, height;
+        public int width, height;
         public int playerCount = 0;
         public int netID = 0;
         public int userID = 0; // better keep track of userid too :D
@@ -108,57 +140,46 @@ namespace GrowbrewProxy
         private Point GetPlayerBtnLocation()
         {
             int x = 32, y = 32;
-            lock (PlayerForm.controlsToLoad)
+
+            if (MainForm.pForm == null) return new Point(x, y);
+            var playerControls = MainForm.pForm.playerBox.Controls;
+
+
+            for (int i = 0; i < playerControls.Count; i++)
             {
-                var pControls = PlayerForm.controlsToLoad;
-                
-                for (int i = 0; i < pControls.Count; i++)
+                y += 32 * 2;
+                if (y >= PlayerForm.updatedHeight - 100) // ghetto, no rescaling after control has been set. too lazy rn
                 {
-                    y += 32 * 2;
-                    if (y >= PlayerForm.updatedHeight - 100) // ghetto, no rescaling after control has been set. too lazy rn
-                    {
-                        y = 32;
-                        x += 136 * 2;
-                    }
+                    y = 32;
+                    x += 86 * 2;
                 }
             }
+        
             return new Point(x, y);
         }
 
         public void AddPlayerControlToBox(Player pl) // todo - universally add player...
         {
-            lock (PlayerForm.controlsToLoad)
-            {
-                PlayerForm.ControlWithMetaData btn = new PlayerForm.ControlWithMetaData();
-                btn.netID = pl.netID;
-                Button btnx = new Button();
-                btnx.Location = GetPlayerBtnLocation();
-                btnx.Text = pl.name.Substring(0, pl.name.Length - 2);
-                btnx.Width = 128;
-                btn.control = btnx;
-                PlayerForm.controlsToLoad.Add(btn);
-            }
+            string username = pl.name.Substring(0, pl.name.Length - 2);
+
+            MainForm.pForm.AddPlayerBtnToForm(username, pl.netID, GetPlayerBtnLocation());
             //MainForm.pControls.Add()
         }
 
         public void RemovePlayerControl(int netID)
         {
+            var playerForm = MainForm.pForm;
             
-            var controls = PlayerForm.controlsToLoad;
-            lock (controls)
+            for (int i = 0; i < playerForm.Controls.Count; i++)
             {
-                for (int i = 0; i < controls.Count; i++)
+                var control = playerForm.Controls[i];
+                if (control.Name == netID.ToString())
                 {
-                    var control = controls[i];
-                    if (control.netID == netID)
-                    {
-                        MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): Removed player from player control box with netID: " + netID.ToString() + "\n");
-                        controls.RemoveAt(i);
-                        break;
-                    }
+                    MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): Removed player from player control box with netID: " + netID.ToString() + "\n");
+                    playerForm.Controls.RemoveAt(i);
+                    break;
                 }
             }
-            PlayerForm.requireClear = true;
         }
 
         private void TileExtra_Serialize(byte[] dataPassed, int loc)
@@ -473,9 +494,9 @@ namespace GrowbrewProxy
             try
             {
                 if (readPos >= dataPassed.Length) return -1;
-                short fg = BitConverter.ToInt16(dataPassed, readPos); readPos += 2; // sizeof short
+                ushort fg = BitConverter.ToUInt16(dataPassed, readPos); readPos += 2; // sizeof short
                 tiles[loc].fg = fg;
-                short bg = BitConverter.ToInt16(dataPassed, readPos); readPos += 2;
+                ushort bg = BitConverter.ToUInt16(dataPassed, readPos); readPos += 2;
                 tiles[loc].bg = bg;
                 int add = BitConverter.ToInt32(dataPassed, readPos);
                 tiles[loc].tileState = add;
@@ -541,10 +562,6 @@ namespace GrowbrewProxy
             netID = -1;
             width = 0;
             height = 0;
-              
-            PlayerForm.controlsToLoad.Clear();
-            PlayerForm.requireClear = true;
-            
         }
 
         public World LoadMap(byte[] packet)
@@ -555,6 +572,7 @@ namespace GrowbrewProxy
                 byte[] data = VariantList.get_extended_data(packet); // agh, maybe puublically declare and use then like that but too late, too lazy  to refactor now.
                 if (data.Length < 8192) return this;
                 if (data.Length > 200000) return this; // 200kb too big not gonna do that...
+
                 readPos += 6;
                 short pLen = BitConverter.ToInt16(data, readPos); readPos += sizeof(short); // 2
 
@@ -568,6 +586,11 @@ namespace GrowbrewProxy
                 tiles = new Tile[tileCount]; // allocate exact tile data.
 
                 MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): Loading world: " + currentWorld + ", total tile count is: " + tileCount.ToString() + "\n");
+                if (!MainForm.serializeWorldsAdvanced)
+                {
+                    MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): NOTE: Advanced world serialization was disabled, not continuing to load tiles.\n");
+                    return this;
+                }
 
                 for (int i = 0; i < tileCount; i++)
                 {

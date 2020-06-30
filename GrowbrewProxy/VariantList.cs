@@ -101,7 +101,7 @@ namespace GrowbrewProxy
                     Array.Copy(data, 0, data2, 2, 4);
                     data2[0] = ind;
                     data2[1] = 0x9;
-                    foreach (byte b in data2) bytes.Add(b);
+                    bytes.AddRange(data2);
                 }
                 else
                 if (obj is uint)
@@ -112,7 +112,7 @@ namespace GrowbrewProxy
                     Array.Copy(data, 0, data2, 2, 4);
                     data2[0] = ind;
                     data2[1] = 0x5;
-                    foreach (byte b in data2) bytes.Add(b);
+                    bytes.AddRange(data2);
                 }
                 else
                 if (obj is string)
@@ -126,7 +126,7 @@ namespace GrowbrewProxy
                     Array.Copy(data, 0, data2, 6, data.Length);
                     data2[0] = ind;
                     data2[1] = 0x2;
-                    foreach (byte b in data2) bytes.Add(b);
+                    bytes.AddRange(data2);
                 }
                 else
                 if (obj is float)
@@ -137,7 +137,7 @@ namespace GrowbrewProxy
                     Array.Copy(data, 0, data2, 2, 4);
                     data2[0] = ind;
                     data2[1] = 0x1;
-                    foreach (byte b in data2) bytes.Add(b);
+                    bytes.AddRange(data2);
                 }
                 else
                 if (obj is Vector2)
@@ -151,7 +151,7 @@ namespace GrowbrewProxy
                     Array.Copy(data_2, 0, data2, 6, 4);
                     data2[0] = ind;
                     data2[1] = 0x3;
-                    foreach (byte b in data2) bytes.Add(b);
+                    bytes.AddRange(data2);
                 }
                 else
                 if (obj is Vector3)
@@ -167,7 +167,7 @@ namespace GrowbrewProxy
                     Array.Copy(data_3, 0, data2, 10, 4);
                     data2[0] = ind;
                     data2[1] = 0x4;
-                    foreach (byte b in data2) bytes.Add(b);
+                    bytes.AddRange(data2);
                 }
                 // idk about rectangle but it's not really used anyway so meh
                 else
@@ -218,7 +218,7 @@ namespace GrowbrewProxy
             if (packetLen >= 0x3c)
             {
                 byte[] structPackage = new byte[packetLen - 4];
-                Buffer.BlockCopy(package, 4, structPackage, 0, packetLen - 4);
+                Array.Copy(package, 4, structPackage, 0, packetLen - 4);
                 int p2Len = BitConverter.ToInt32(package, 56);
                 if (((byte)(package[16]) & 8) != 0)
                 {
@@ -229,7 +229,7 @@ namespace GrowbrewProxy
                 }
                 else
                 {
-                    Buffer.BlockCopy(BitConverter.GetBytes(0), 0, package, 56, 4);
+                    Array.Copy(BitConverter.GetBytes(0), 0, package, 56, 4);
                 }
                 return structPackage;
             }
@@ -246,8 +246,6 @@ namespace GrowbrewProxy
             //varList.delay = BitConverter.ToUInt32(package, 24);
             byte argsTotal = package[pos];
             pos++;
-            try
-            {
                 if (argsTotal > 7) return varList;
                 varList.functionArgs = new object[argsTotal];
 
@@ -272,12 +270,8 @@ namespace GrowbrewProxy
                             v = Encoding.ASCII.GetString(package, pos, strLen); pos += strLen;
 
                             if (index == 0)
-                            {
-                                varList.FunctionName = v;
-                                //MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): Function '" + v + "' called!\n");
+                                 varList.FunctionName = v;
 
-
-                            }
                             if (index > 0)
                             {
                                 if (varList.FunctionName == "OnSendToServer") // exceptionary function, having it easier like this :)
@@ -294,7 +288,7 @@ namespace GrowbrewProxy
                             uint vUInt = BitConverter.ToUInt32(package, pos); pos += 4;
                             varList.functionArgs[index] = vUInt;
                             break;
-                        case 9: // int (can hold negative values, of course they are always be casted but its just a sign from the server that the value was intended to hold negative values as well)
+                        case 9: // int (can hold negative values, of course they are always casted but its just a sign from the server that the value was intended to hold negative values as well)
                             int vInt = BitConverter.ToInt32(package, pos); pos += 4;
                             varList.functionArgs[index] = vInt;
                             break;
@@ -302,11 +296,6 @@ namespace GrowbrewProxy
                             break;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                // log error here...
-            }
             return varList;
         }
     }
