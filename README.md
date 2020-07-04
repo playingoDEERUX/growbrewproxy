@@ -67,7 +67,7 @@ To use, add this into your hosts:
 
 OPEN THE .sln file in order to begin without further issues
 If you just want to use the growbrew proxy program it self, without doing any modifications or any coding,
-the .exe file and binaries are located at GrowbrewProxy/bin/Debug, they might be a bit older version though (1.5.1) Changelogs are in the .EXE file itself.
+the .exe file and binaries are currently located at https://github.com/playingoDEERUX/growbrewproxy/releases/
 
 Click Start HTTP server and Start Proxy and you can start.
 ---------------------------------------------------------------
