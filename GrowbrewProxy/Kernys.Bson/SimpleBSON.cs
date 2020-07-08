@@ -1,13 +1,42 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace Kernys.Bson
+namespace GrowbrewProxy.Kernys.Bson
 {
     public class BSONValue
     {
+        protected bool Equals(BSONValue other)
+        {
+            return Equals(_binary, other._binary) && _bool == other._bool && _dateTime.Equals(other._dateTime) && _double.Equals(other._double) && _int32 == other._int32 && _int64 == other._int64 && _string == other._string && valueType == other.valueType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((BSONValue) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = _binary != null ? _binary.GetHashCode() : 0;
+                hashCode = (hashCode * 397) ^ _bool.GetHashCode();
+                hashCode = (hashCode * 397) ^ _dateTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ _double.GetHashCode();
+                hashCode = (hashCode * 397) ^ _int32;
+                hashCode = (hashCode * 397) ^ _int64.GetHashCode();
+                hashCode = (hashCode * 397) ^ (_string != null ? _string.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (int) valueType;
+                return hashCode;
+            }
+        }
+
         public enum ValueType
         {
             Double,
@@ -20,16 +49,68 @@ namespace Kernys.Bson
             Int32,
             Int64,
             Object
-        };
+        }
 
-        private ValueType mValueType;
-        private Double _double;
-        private string _string;
-        private byte[] _binary;
-        private bool _bool;
-        private DateTime _dateTime;
-        private Int32 _int32;
-        private Int64 _int64;
+        private readonly byte[] _binary;
+        private readonly bool _bool;
+        private readonly DateTime _dateTime;
+        private readonly double _double;
+        private readonly int _int32;
+        private readonly long _int64;
+        private readonly string _string;
+
+        ///
+        protected BSONValue(ValueType valueType)
+        {
+            this.valueType = valueType;
+        }
+
+        public BSONValue()
+        {
+            valueType = ValueType.None;
+        }
+
+        public BSONValue(double v)
+        {
+            valueType = ValueType.Double;
+            _double = v;
+        }
+
+        public BSONValue(string v)
+        {
+            valueType = ValueType.String;
+            _string = v;
+        }
+
+        public BSONValue(byte[] v)
+        {
+            valueType = ValueType.Binary;
+            _binary = v;
+        }
+
+        public BSONValue(bool v)
+        {
+            valueType = ValueType.Boolean;
+            _bool = v;
+        }
+
+        public BSONValue(DateTime dt)
+        {
+            valueType = ValueType.UTCDateTime;
+            _dateTime = dt;
+        }
+
+        public BSONValue(int v)
+        {
+            valueType = ValueType.Int32;
+            _int32 = v;
+        }
+
+        public BSONValue(long v)
+        {
+            valueType = ValueType.Int64;
+            _int64 = v;
+        }
 
         /*
 		protected static BSONValue convert(object obj) {
@@ -56,154 +137,156 @@ namespace Kernys.Bson
 		*/
 
         /// Properties
-        public ValueType valueType { get { return mValueType; } }
-        public Double doubleValue
+        public ValueType valueType { get; }
+
+        public double doubleValue
         {
             get
             {
-                switch (mValueType)
+                return valueType switch
                 {
-                    case ValueType.Int32:
-                        return (double)_int32;
-                    case ValueType.Int64:
-                        return (double)_int64;
-                    case ValueType.Double:
-                        return _double;
-                    case ValueType.None:
-                        return float.NaN;
-                }
-
-                throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to double", mValueType));
+                    ValueType.Int32 => _int32,
+                    ValueType.Int64 => _int64,
+                    ValueType.Double => _double,
+                    ValueType.None => float.NaN,
+                    _ => throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to double",
+                        valueType))
+                };
             }
         }
-        public Int32 int32Value
+
+        public int int32Value
         {
             get
             {
-                switch (mValueType)
+                return valueType switch
                 {
-                    case ValueType.Int32:
-                        return (Int32)_int32;
-                    case ValueType.Int64:
-                        return (Int32)_int64;
-                    case ValueType.Double:
-                        return (Int32)_double;
-                }
-
-                throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to Int32", mValueType));
+                    ValueType.Int32 => _int32,
+                    ValueType.Int64 => (int) _int64,
+                    ValueType.Double => (int) _double,
+                    _ => throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to Int32",
+                        valueType))
+                };
             }
         }
-        public Int64 int64Value
+
+        public long int64Value
         {
             get
             {
-                switch (mValueType)
+                return valueType switch
                 {
-                    case ValueType.Int32:
-                        return (Int64)_int32;
-                    case ValueType.Int64:
-                        return (Int64)_int64;
-                    case ValueType.Double:
-                        return (Int64)_double;
-                }
-
-                throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to Int64", mValueType));
+                    ValueType.Int32 => _int32,
+                    ValueType.Int64 => _int64,
+                    ValueType.Double => (long) _double,
+                    _ => throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to Int64",
+                        valueType))
+                };
             }
         }
+
         public byte[] binaryValue
         {
             get
             {
-                switch (mValueType)
+                return valueType switch
                 {
-                    case ValueType.Binary:
-                        return _binary;
-                }
-
-                throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to binary", mValueType));
+                    ValueType.Binary => _binary,
+                    _ => throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to binary",
+                        valueType))
+                };
             }
         }
+
         public DateTime dateTimeValue
         {
             get
             {
-                switch (mValueType)
+                return valueType switch
                 {
-                    case ValueType.UTCDateTime:
-                        return _dateTime;
-                }
-
-                throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to DateTime", mValueType));
+                    ValueType.UTCDateTime => _dateTime,
+                    _ => throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to DateTime",
+                        valueType))
+                };
             }
         }
-        public String stringValue
+
+        public string stringValue
         {
             get
             {
-                switch (mValueType)
+                return valueType switch
                 {
-                    case ValueType.Int32:
-                        return Convert.ToString(_int32);
-                    case ValueType.Int64:
-                        return Convert.ToString(_int64);
-                    case ValueType.Double:
-                        return Convert.ToString(_double);
-                    case ValueType.String:
-                        return _string != null ? _string.TrimEnd(new char[] { (char)0 }) : null;
-                    case ValueType.Boolean:
-                        return _bool == true ? "true" : "false";
-                    case ValueType.Binary:
-                        return Encoding.UTF8.GetString(_binary).TrimEnd(new char[] { (char)0 });
-                }
-
-                throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to string", mValueType));
+                    ValueType.Int32 => Convert.ToString(_int32),
+                    ValueType.Int64 => Convert.ToString(_int64),
+                    ValueType.Double => Convert.ToString(_double, CultureInfo.InvariantCulture),
+                    ValueType.String => _string?.TrimEnd((char) 0),
+                    ValueType.Boolean => _bool ? "true" : "false",
+                    ValueType.Binary => Encoding.UTF8.GetString(_binary).TrimEnd((char) 0),
+                    _ => throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to string",
+                        valueType))
+                };
             }
         }
+
         public bool boolValue
         {
             get
             {
-                switch (mValueType)
+                return valueType switch
                 {
-                    case ValueType.Boolean:
-                        return _bool;
-                }
-
-                throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to bool", mValueType));
+                    ValueType.Boolean => _bool,
+                    _ => throw new Exception(string.Format("Original type is {0}. Cannot convert from {0} to bool",
+                        valueType))
+                };
             }
-        }
-        public bool isNone
-        {
-            get { return mValueType == ValueType.None; }
         }
 
         public virtual BSONValue this[string key]
         {
-            get { return null; }
+            get => null;
             set { }
         }
+
         public virtual BSONValue this[int index]
         {
-            get { return null; }
+            get => null;
             set { }
         }
-        public virtual void Clear() { }
-        public virtual void Add(string key, BSONValue value) { }
-        public virtual void Add(BSONValue value) { }
-        public virtual bool Contains(BSONValue v) { return false; }
-        public virtual bool ContainsKey(string key) { return false; }
+
+        public virtual void Clear()
+        {
+        }
+
+        public virtual void Add(string key, BSONValue value)
+        {
+        }
+
+        public virtual void Add(BSONValue value)
+        {
+        }
+
+        public virtual bool Contains(BSONValue v)
+        {
+            return false;
+        }
+
+        public virtual bool ContainsKey(string key)
+        {
+            return false;
+        }
 
         public static implicit operator BSONValue(double v)
         {
             return new BSONValue(v);
         }
 
-        public static implicit operator BSONValue(Int32 v)
+        public static implicit operator BSONValue(int v)
         {
             return new BSONValue(v);
         }
 
-        public static implicit operator BSONValue(Int64 v)
+        public static implicit operator BSONValue(long v)
         {
             return new BSONValue(v);
         }
@@ -228,23 +311,22 @@ namespace Kernys.Bson
             return new BSONValue(v);
         }
 
-
         public static implicit operator double(BSONValue v)
         {
             return v.doubleValue;
         }
 
-        public static implicit operator Int32(BSONValue v)
+        public static implicit operator int(BSONValue v)
         {
             return v.int32Value;
         }
 
-        public static implicit operator Int64(BSONValue v)
+        public static implicit operator long(BSONValue v)
         {
             return v.int64Value;
         }
 
-        public static implicit operator byte[] (BSONValue v)
+        public static implicit operator byte[](BSONValue v)
         {
             return v.binaryValue;
         }
@@ -264,63 +346,9 @@ namespace Kernys.Bson
             return v.boolValue;
         }
 
-        ///
-        protected BSONValue(ValueType valueType)
-        {
-            mValueType = valueType;
-        }
-
-        public BSONValue()
-        {
-            mValueType = ValueType.None;
-        }
-
-        public BSONValue(double v)
-        {
-            mValueType = ValueType.Double;
-            _double = v;
-        }
-
-        public BSONValue(String v)
-        {
-            mValueType = ValueType.String;
-            _string = v;
-        }
-
-        public BSONValue(byte[] v)
-        {
-            mValueType = ValueType.Binary;
-            _binary = v;
-        }
-
-        public BSONValue(bool v)
-        {
-            mValueType = ValueType.Boolean;
-            _bool = v;
-        }
-
-        public BSONValue(DateTime dt)
-        {
-            mValueType = ValueType.UTCDateTime;
-            _dateTime = dt;
-        }
-
-        public BSONValue(Int32 v)
-        {
-            mValueType = ValueType.Int32;
-            _int32 = v;
-        }
-
-        public BSONValue(Int64 v)
-        {
-            mValueType = ValueType.Int64;
-            _int64 = v;
-        }
-
-
         public static bool operator ==(BSONValue a, object b)
         {
-            return System.Object.ReferenceEquals(a, b);
+            return ReferenceEquals(a, b);
         }
 
         public static bool operator !=(BSONValue a, object b)
@@ -329,38 +357,34 @@ namespace Kernys.Bson
         }
     }
 
-
     public class BSONObject : BSONValue, IEnumerable
     {
-        private Dictionary<string, BSONValue> mMap = new Dictionary<string, BSONValue>();
+        private readonly Dictionary<string, BSONValue> mMap = new Dictionary<string, BSONValue>();
 
         public BSONObject()
-            : base(BSONValue.ValueType.Object)
+            : base(ValueType.Object)
         {
         }
 
         //
         // Properties
         //
-        public ICollection<string> Keys
-        {
-            get { return mMap.Keys; }
-        }
-
-        public ICollection<BSONValue> Values
-        {
-            get { return mMap.Values; }
-        }
-        public int Count { get { return mMap.Count; } }
+        public ICollection<string> Keys => mMap.Keys;
 
         //
         // Indexer
         //
         public override BSONValue this[string key]
         {
-            get { return mMap[key]; }
-            set { mMap[key] = value; }
+            get => mMap[key];
+            set => mMap[key] = value;
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return mMap.GetEnumerator();
+        }
+
         //
         // Methods
         //
@@ -368,46 +392,29 @@ namespace Kernys.Bson
         {
             mMap.Clear();
         }
+
         public override void Add(string key, BSONValue value)
         {
             mMap.Add(key, value);
         }
 
-
         public override bool Contains(BSONValue v)
         {
             return mMap.ContainsValue(v);
         }
+
         public override bool ContainsKey(string key)
         {
             return mMap.ContainsKey(key);
         }
-
-        public bool Remove(string key)
-        {
-            return mMap.Remove(key);
-        }
-
-        public bool TryGetValue(string key, out BSONValue value)
-        {
-            return mMap.TryGetValue(key, out value);
-        }
-
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return mMap.GetEnumerator();
-        }
     }
-
 
     public class BSONArray : BSONValue, IEnumerable
     {
-
-        List<BSONValue> mList = new List<BSONValue>();
+        private readonly List<BSONValue> mList = new List<BSONValue>();
 
         public BSONArray()
-            : base(BSONValue.ValueType.Array)
+            : base(ValueType.Array)
         {
         }
 
@@ -416,10 +423,16 @@ namespace Kernys.Bson
         //
         public override BSONValue this[int index]
         {
-            get { return mList[index]; }
-            set { mList[index] = value; }
+            get => mList[index];
+            set => mList[index] = value;
         }
-        public int Count { get { return mList.Count; } }
+
+        public int Count => mList.Count;
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return mList.GetEnumerator();
+        }
 
         //
         // Methods
@@ -429,44 +442,22 @@ namespace Kernys.Bson
             mList.Add(v);
         }
 
-        public int IndexOf(BSONValue item)
-        {
-            return mList.IndexOf(item);
-        }
-        public void Insert(int index, BSONValue item)
-        {
-            mList.Insert(index, item);
-        }
-        public bool Remove(BSONValue v)
-        {
-            return mList.Remove(v);
-        }
-        public void RemoveAt(int index)
-        {
-            mList.RemoveAt(index);
-        }
         public override void Clear()
         {
             mList.Clear();
-        }
-
-        public virtual bool Contains(BSONValue v)
-        {
-            return mList.Contains(v);
-        }
-
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return mList.GetEnumerator();
         }
     }
 
     public class SimpleBSON
     {
-        private MemoryStream mMemoryStream;
-        private BinaryReader mBinaryReader;
-        private BinaryWriter mBinaryWriter;
+        private readonly BinaryReader mBinaryReader;
+
+        private SimpleBSON(byte[] buf = null)
+        {
+            if (buf == null) return;
+            MemoryStream mMemoryStream = new MemoryStream(buf);
+            mBinaryReader = new BinaryReader(mMemoryStream);
+        }
 
         public static BSONObject Load(byte[] buf)
         {
@@ -477,7 +468,6 @@ namespace Kernys.Bson
 
         public static byte[] Dump(BSONObject obj)
         {
-
             SimpleBSON bson = new SimpleBSON();
             MemoryStream ms = new MemoryStream();
 
@@ -490,87 +480,81 @@ namespace Kernys.Bson
             return buf;
         }
 
-        private SimpleBSON(byte[] buf = null)
-        {
-            if (buf != null)
-            {
-                mMemoryStream = new MemoryStream(buf);
-                mBinaryReader = new BinaryReader(mMemoryStream);
-            }
-            else
-            {
-                mMemoryStream = new MemoryStream();
-                mBinaryWriter = new BinaryWriter(mMemoryStream);
-            }
-        }
-
         private BSONValue decodeElement(out string name)
         {
             byte elementType = mBinaryReader.ReadByte();
 
             if (elementType == 0x01)
-            { // Double
+            {
+                // Double
                 name = decodeCString();
                 return new BSONValue(mBinaryReader.ReadDouble());
-
             }
-            else if (elementType == 0x02)
-            { // String
+
+            if (elementType == 0x02)
+            {
+                // String
                 name = decodeCString();
                 return new BSONValue(decodeString());
-
             }
-            else if (elementType == 0x03)
-            { // Document
+
+            if (elementType == 0x03)
+            {
+                // Document
                 name = decodeCString();
                 return decodeDocument();
-
             }
-            else if (elementType == 0x04)
-            { // Array
+
+            if (elementType == 0x04)
+            {
+                // Array
                 name = decodeCString();
                 return decodeArray();
-
             }
-            else if (elementType == 0x05)
-            { // Binary
+
+            if (elementType == 0x05)
+            {
+                // Binary
                 name = decodeCString();
                 int length = mBinaryReader.ReadInt32();
-                byte binaryType = mBinaryReader.ReadByte();
 
                 return new BSONValue(mBinaryReader.ReadBytes(length));
-
             }
-            else if (elementType == 0x08)
-            { // Boolean
+
+            if (elementType == 0x08)
+            {
+                // Boolean
                 name = decodeCString();
                 return new BSONValue(mBinaryReader.ReadBoolean());
-
             }
-            else if (elementType == 0x09)
-            { // DateTime
+
+            if (elementType == 0x09)
+            {
+                // DateTime
                 name = decodeCString();
-                Int64 time = mBinaryReader.ReadInt64();
+                long time = mBinaryReader.ReadInt64();
                 return new BSONValue(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc) + new TimeSpan(time * 10000));
             }
-            else if (elementType == 0x0A)
-            { // None
+
+            if (elementType == 0x0A)
+            {
+                // None
                 name = decodeCString();
                 return new BSONValue();
             }
-            else if (elementType == 0x10)
-            { // Int32
+
+            if (elementType == 0x10)
+            {
+                // Int32
                 name = decodeCString();
                 return new BSONValue(mBinaryReader.ReadInt32());
             }
-            else if (elementType == 0x12)
-            { // Int64
-                name = decodeCString();
-                return new BSONValue(mBinaryReader.ReadInt64());
-            }
 
+            if (elementType != 0x12) throw new Exception($"Don't know elementType={elementType}");
+            // Int64
+            name = decodeCString();
+            return new BSONValue(mBinaryReader.ReadInt64());
 
-            throw new Exception(string.Format("Don't know elementType={0}", elementType));
         }
 
         private BSONObject decodeDocument()
@@ -579,13 +563,11 @@ namespace Kernys.Bson
 
             BSONObject obj = new BSONObject();
 
-            int i = (int)mBinaryReader.BaseStream.Position;
+            int i = (int) mBinaryReader.BaseStream.Position;
             while (mBinaryReader.BaseStream.Position < i + length - 1)
             {
-                string name;
-                BSONValue value = decodeElement(out name);
+                BSONValue value = decodeElement(out string name);
                 obj.Add(name, value);
-
             }
 
             mBinaryReader.ReadByte(); // zero
@@ -618,19 +600,17 @@ namespace Kernys.Bson
 
         private string decodeCString()
         {
-
-            var ms = new MemoryStream();
+            MemoryStream ms = new MemoryStream();
             while (true)
             {
-                byte buf = (byte)mBinaryReader.ReadByte();
+                byte buf = mBinaryReader.ReadByte();
                 if (buf == 0)
                     break;
                 ms.WriteByte(buf);
             }
 
-            return Encoding.UTF8.GetString(ms.GetBuffer(), 0, (int)ms.Position);
+            return Encoding.UTF8.GetString(ms.GetBuffer(), 0, (int) ms.Position);
         }
-
 
         private void encodeElement(MemoryStream ms, string name, BSONValue v)
         {
@@ -641,81 +621,84 @@ namespace Kernys.Bson
                     encodeCString(ms, name);
                     encodeDouble(ms, v.doubleValue);
                     return;
+
                 case BSONValue.ValueType.String:
                     ms.WriteByte(0x02);
                     encodeCString(ms, name);
                     encodeString(ms, v.stringValue);
                     return;
+
                 case BSONValue.ValueType.Object:
                     ms.WriteByte(0x03);
                     encodeCString(ms, name);
                     encodeDocument(ms, v as BSONObject);
                     return;
+
                 case BSONValue.ValueType.Array:
                     ms.WriteByte(0x04);
                     encodeCString(ms, name);
                     encodeArray(ms, v as BSONArray);
                     return;
+
                 case BSONValue.ValueType.Binary:
                     ms.WriteByte(0x05);
                     encodeCString(ms, name);
                     encodeBinary(ms, v.binaryValue);
                     return;
+
                 case BSONValue.ValueType.Boolean:
                     ms.WriteByte(0x08);
                     encodeCString(ms, name);
                     encodeBool(ms, v.boolValue);
                     return;
+
                 case BSONValue.ValueType.UTCDateTime:
                     ms.WriteByte(0x09);
                     encodeCString(ms, name);
                     encodeUTCDateTime(ms, v.dateTimeValue);
                     return;
+
                 case BSONValue.ValueType.None:
                     ms.WriteByte(0x0A);
                     encodeCString(ms, name);
                     return;
+
                 case BSONValue.ValueType.Int32:
                     ms.WriteByte(0x10);
                     encodeCString(ms, name);
                     encodeInt32(ms, v.int32Value);
                     return;
+
                 case BSONValue.ValueType.Int64:
                     ms.WriteByte(0x12);
                     encodeCString(ms, name);
                     encodeInt64(ms, v.int64Value);
                     return;
-            };
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
-        private void encodeDocument(MemoryStream ms, BSONObject obj)
+        private void encodeDocument(Stream ms, BSONObject obj)
         {
-
             MemoryStream dms = new MemoryStream();
-            foreach (string str in obj.Keys)
-            {
-                encodeElement(dms, str, obj[str]);
-            }
+            foreach (string str in obj.Keys) encodeElement(dms, str, obj[str]);
 
             BinaryWriter bw = new BinaryWriter(ms);
-            bw.Write((Int32)(dms.Position + 4 + 1));
-            bw.Write(dms.GetBuffer(), 0, (int)dms.Position);
-            bw.Write((byte)0);
+            bw.Write((int) (dms.Position + 4 + 1));
+            bw.Write(dms.GetBuffer(), 0, (int) dms.Position);
+            bw.Write((byte) 0);
         }
 
-        private void encodeArray(MemoryStream ms, BSONArray lst)
+        private void encodeArray(Stream ms, BSONArray lst)
         {
-
-            var obj = new BSONObject();
-            for (int i = 0; i < lst.Count; ++i)
-            {
-                obj.Add(Convert.ToString(i), lst[i]);
-            }
+            BSONObject obj = new BSONObject();
+            for (int i = 0; i < lst.Count; ++i) obj.Add(Convert.ToString(i), lst[i]);
 
             encodeDocument(ms, obj);
         }
 
-        private void encodeBinary(MemoryStream ms, byte[] buf)
+        private static void encodeBinary(Stream ms, byte[] buf)
         {
             byte[] aBuf = BitConverter.GetBytes(buf.Length);
             ms.Write(aBuf, 0, aBuf.Length);
@@ -752,30 +735,27 @@ namespace Kernys.Bson
             ms.Write(buf, 0, buf.Length);
         }
 
-        private void encodeInt32(MemoryStream ms, Int32 v)
+        private void encodeInt32(MemoryStream ms, int v)
         {
             byte[] buf = BitConverter.GetBytes(v);
             ms.Write(buf, 0, buf.Length);
         }
-        private void encodeInt64(MemoryStream ms, Int64 v)
+
+        private void encodeInt64(MemoryStream ms, long v)
         {
             byte[] buf = BitConverter.GetBytes(v);
             ms.Write(buf, 0, buf.Length);
         }
+
         private void encodeUTCDateTime(MemoryStream ms, DateTime dt)
         {
             TimeSpan span;
             if (dt.Kind == DateTimeKind.Local)
-            {
-                span = (dt - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).ToLocalTime());
-            }
+                span = dt - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).ToLocalTime();
             else
-            {
                 span = dt - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            }
-            byte[] buf = BitConverter.GetBytes((Int64)(span.TotalSeconds * 1000));
+            byte[] buf = BitConverter.GetBytes((long) (span.TotalSeconds * 1000));
             ms.Write(buf, 0, buf.Length);
         }
     }
 }
-

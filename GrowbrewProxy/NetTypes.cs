@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GrowbrewProxy
+﻿namespace GrowbrewProxy
 {
     public class NetTypes
     {
+        public enum NetMessages
+        {
+            UNKNOWN = 0,
+            SERVER_HELLO,
+            GENERIC_TEXT,
+            GAME_MESSAGE,
+            GAME_PACKET,
+            ERROR,
+            TRACK,
+            LOG_REQ,
+            LOG_RES
+        }
+
         public enum PacketTypes
         {
             PLAYER_LOGIC_UPDATE = 0,
@@ -50,20 +57,6 @@ namespace GrowbrewProxy
             ARROW_TO_ITEM,
             TILE_INDEX_SELECTION,
             UPDATE_PLAYER_TRIBUTE
-        };
-
-        public enum NetMessages
-        {
-            UNKNOWN = 0,
-            SERVER_HELLO,
-            GENERIC_TEXT,
-            GAME_MESSAGE,
-            GAME_PACKET,
-            ERROR,
-            TRACK,
-            LOG_REQ,
-            LOG_RES
-        };
-
+        }
     }
 }

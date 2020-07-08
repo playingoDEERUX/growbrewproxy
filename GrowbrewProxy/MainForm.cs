@@ -1,200 +1,162 @@
 ﻿// (C) Made, programmed and designed by PlayIngoHD/PlayIngoHD Gaming/playingo/DEERUX and iProgramInCpp/iProgramMC only.
 // Reselling this is illegal, because this is free-opensource-ware and credits are appreciated :)
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using ENet.Managed;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Windows.Forms;
-using System.Drawing;
-using GrowbrewProxy;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Sockets;
-using Kernys.Bson;
-using System.Security;
-using System.ComponentModel;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using ENet.Managed;
+using GrowbrewProxy.Kernys.Bson;
 
 namespace GrowbrewProxy
 {
     public partial class MainForm : Form
     {
-
-        public class StateObject
-        {
-            // Client socket.  
-            public Socket workSocket = null;
-            // Size of receive buffer.  
-            public const int BufferSize = 1024;
-            // Receive buffer.  
-            public byte[] buffer = new byte[BufferSize];
-            // Received data string.  
-            public StringBuilder sb = new StringBuilder();
-        }
-
-        public struct UserData
-        {
-            public string username;
-            public int paddingInt;
-        }
-
-
         public static byte GrowbrewHNetVersion = 1;
-        static bool isHTTPRunning = false;
+        private static bool isHTTPRunning;
         public static PlayerForm pForm = new PlayerForm();
 
         public static UserData userInfo = new UserData();
 
-        public static bool skipCache = false;
-        public static bool logallpackettypes = false;
+        public static bool skipCache;
+        public static bool logallpackettypes;
 
         public static TcpClient tClient = new TcpClient();
         public static StateObject stateObj = new StateObject();
 
-
         public static string LogText = string.Empty;
 
-        private delegate void SafeCallDelegate(string text);
-
         private static ENetHost client;
-        private ENetHost m_Host;
 
         public static ENetPeer realPeer;
         public static ENetPeer proxyPeer;
-
-        public bool mayContinue = false;
-        public bool srvRunning = false;
-        public bool clientRunning = false;
         public static int Growtopia_Port = 17279; // todo auto get port
         public static string Growtopia_IP = "213.179.209.168";
         public static string Growtopia_Master_IP = "213.179.209.168";
         public static int Growtopia_Master_Port = 17279;
 
         public static bool isSwitchingServer = false;
-        public static bool blockEnterGame = false;
+        public static bool blockEnterGame;
         public static bool serializeWorldsAdvanced = true;
 
         // internal variables =>
         public static string tankIDName = "";
+
         public static string tankIDPass = "";
-        public static string game_version = "3.37";
-        public static string country = "de";
+        public static string game_version = "3.38";
+        public static string country = "lt";
         public static string requestedName = "";
-        public static int token = 0;
+        public static int token;
         public static bool resetStuffNextLogon = false;
-        public static int userID = 0;
-        public static int lmode = 0;
+        public static int userID;
+        public static int lmode;
         public static byte[] skinColor = new byte[4];
         public static bool hasLogonAlready = false;
         public static bool hasUpdatedItemsAlready = false;
-        public static bool bypassAAP = false;
+        public static bool bypassAAP;
         public static bool ghostSkin = false;
+
         // CHEAT VARS/DEFS
-        public static bool cheat_magplant = false;
-        public static bool cheat_rgbSkin = false;
-        public static bool cheat_autoworldban_mod = false;
-        public static bool cheat_speedy = false;
-        public static bool isAutofarming = false;
-        public static bool cheat_Autofarm_magplant_mode = false;
-        public static bool redDamageToBlock = false; // exploit discovered in servers at time of client being in version 3.36/3.37
+        public static bool cheat_magplant;
+
+        public static bool cheat_rgbSkin;
+        public static bool cheat_autoworldban_mod;
+        public static bool cheat_speedy;
+        public static bool isAutofarming;
+        public static bool cheat_Autofarm_magplant_mode;
+
+        public static bool
+            redDamageToBlock; // exploit discovered in servers at time of client being in version 3.36/3.37
+
         // CHEAT VARS/DEFS
         public static string macc = "02:15:01:20:30:05";
+
         public static string doorid = "";
-        public static bool ignoreonsetpos = false;
-        public static bool unlimitedZoom = false;
+        public static bool ignoreonsetpos;
+        public static bool unlimitedZoom;
         public static bool isFacingSwapped = false;
-        public static bool blockCollecting = false;
-
-
-        ItemDatabase itemDB = new ItemDatabase();
-
+        public static bool blockCollecting;
 
         public static HandleMessages messageHandler = new HandleMessages();
+
+        private static readonly Random random = new Random();
+        public bool clientRunning;
+
+        private readonly ItemDatabase itemDB = new ItemDatabase();
+        private ENetHost m_Host;
+
+        public bool mayContinue = false;
+
+        // adding rgb to version label :)
+        private int r = 244, g = 65, b = 65;
+
+        private int rgbTransitionState;
+        public bool srvRunning;
 
         public MainForm()
         {
             InitializeComponent();
         }
 
-        // adding rgb to version label :)
-        int r = 244, g = 65, b = 65;
-        int rgbTransitionState = 0;
-        int doTransitionRed()
+        private int doTransitionRed()
         {
             if (b >= 250)
             {
                 r -= 1; // red uses -1 / +1, doing it cuz red is a more dominant color imo
 
-                if (r <= 65)
-                {
-                    rgbTransitionState = 1;
-                }
+                if (r <= 65) rgbTransitionState = 1;
             }
 
-            if (b <= 65)
-            {
-                r += 1;
+            if (b > 65) return r;
+            r += 1;
 
-                if (r >= 250)
-                {
-                    rgbTransitionState = 1;
-                }
-            }
+            if (r >= 250) rgbTransitionState = 1;
+
             return r;
         }
 
-        int doTransitionGreen()
+        private int doTransitionGreen()
         {
             if (r <= 65)
             {
                 g += 2;
 
-                if (g >= 250)
-                {
-                    rgbTransitionState = 2;
-                }
+                if (g >= 250) rgbTransitionState = 2;
             }
 
-            if (r >= 250)
-            {
-                g -= 2;
+            if (r < 250) return g;
+            g -= 2;
 
-                if (g <= 65)
-                {
-                    rgbTransitionState = 2;
-                }
-            }
+            if (g <= 65) rgbTransitionState = 2;
+
             return g;
         }
-        int doTransitionBlue()
+
+        private int doTransitionBlue()
         {
             if (g <= 65)
             {
                 b += 2;
 
-                if (b >= 250)
-                {
-                    rgbTransitionState = 0;
-                }
+                if (b >= 250) rgbTransitionState = 0;
             }
 
-            if (g >= 250)
-            {
-                b -= 2;
+            if (g < 250) return b;
+            b -= 2;
 
-                if (b <= 65)
-                {
-                    rgbTransitionState = 0;
-                }
-            }
+            if (b <= 65) rgbTransitionState = 0;
+
             return b;
         }
-
 
         public static string GenerateRID()
         {
@@ -202,16 +164,15 @@ namespace GrowbrewProxy
             Random random = new Random();
             const string chars = "ABCDEF0123456789";
             str += new string(Enumerable.Repeat(chars, 31)
-               .Select(s => s[random.Next(s.Length)]).ToArray());
+                .Select(s => s[random.Next(s.Length)]).ToArray());
             return str;
         }
 
-        private static Random random = new Random();
         public static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         public static string GenerateUniqueWinKey()
@@ -220,16 +181,16 @@ namespace GrowbrewProxy
             Random random = new Random();
             const string chars = "ABCDEF0123456789";
             str += new string(Enumerable.Repeat(chars, 31)
-               .Select(s => s[random.Next(s.Length)]).ToArray());
+                .Select(s => s[random.Next(s.Length)]).ToArray());
             return str;
         }
 
         public static string GenerateMACAddress()
         {
-            var random = new Random();
-            var buffer = new byte[6];
+            Random random = new Random();
+            byte[] buffer = new byte[6];
             random.NextBytes(buffer);
-            var result = String.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
+            string result = string.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
             return result.TrimEnd(':');
         }
 
@@ -237,57 +198,55 @@ namespace GrowbrewProxy
         {
             string p = string.Empty;
             Random rand = new Random();
-            bool requireAdditionalData = false; if (token > 0 || token < 0) requireAdditionalData = true;
+            bool requireAdditionalData = false;
+            if (token > 0 || token < 0) requireAdditionalData = true;
 
             if (customGrowID == "")
             {
                 if (tankIDName != "")
                 {
-                    p += "tankIDName|" + (tankIDName + "\n");
-                    p += "tankIDPass|" + (tankIDPass + "\n");
+                    p += "tankIDName|" + tankIDName + "\n";
+                    p += "tankIDPass|" + tankIDPass + "\n";
                 }
             }
             else
             {
-                p += "tankIDName|" + (customGrowID + "\n");
-                p += "tankIDPass|" + (customPass + "\n");
+                p += "tankIDName|" + customGrowID + "\n";
+                p += "tankIDPass|" + customPass + "\n";
             }
 
-            p += "requestedName|" + ("Growbrew" + rand.Next(0, 255).ToString() + "\n"); //"Growbrew" + rand.Next(0, 255).ToString() + "\n"
+            p += "requestedName|" + "Growbrew" + rand.Next(0, 255) +
+                 "\n"; //"Growbrew" + rand.Next(0, 255).ToString() + "\n"
             p += "f|1\n";
             p += "protocol|94\n";
-            p += "game_version|" + (game_version + "\n");
+            p += "game_version|" + game_version + "\n";
             if (requireAdditionalData) p += "lmode|" + lmode + "\n";
             p += "cbits|0\n";
             p += "player_age|100\n";
             p += "GDPR|1\n";
-            p += "hash2|" + rand.Next(-777777777, 777777777).ToString() + "\n";
+            p += "hash2|" + rand.Next(-777777777, 777777777) + "\n";
             p += "meta|localhost\n"; // soon auto fetch meta etc.
             p += "fhash|-716928004\n";
             p += "platformID|4\n";
             p += "deviceVersion|0\n";
-            p += "country|" + (country + "\n");
-            p += "hash|" + rand.Next(-777777777, 777777777).ToString() + "\n";
+            p += "country|" + country + "\n";
+            p += "hash|" + rand.Next(-777777777, 777777777) + "\n";
             p += "mac|" + macc + "\n";
-            if (requireAdditionalData) p += "user|" + (userID.ToString() + "\n");
-            if (requireAdditionalData) p += "token|" + (token.ToString() + "\n");
-            if (doorid != "") p += "doorID|" + doorid.ToString() + "\n";
-            p += "wk|" + ("NONE0\n");
+            if (requireAdditionalData) p += "user|" + userID + "\n";
+            if (requireAdditionalData) p += "token|" + token + "\n";
+            if (doorid != "") p += "doorID|" + doorid + "\n";
+            p += "wk|" + "NONE0\n";
             //p += "zf|-1576181843";
             return p;
         }
 
-        void AppendLog(string text)
+        private void AppendLog(string text)
         {
             if (text == string.Empty) return;
             if (logBox.InvokeRequired)
-                logBox.Invoke(new SafeCallDelegate(AppendLog), new object[] { text });
-            else logBox.Text += (text + "\n");
+                logBox.Invoke(new SafeCallDelegate(AppendLog), text);
+            else logBox.Text += text + "\n";
         }
-
-
-
-
 
         public static void ConnectToServer()
         {
@@ -315,33 +274,30 @@ namespace GrowbrewProxy
             }
             catch
             {
-
             }
         }
 
         private void Host_OnConnect(object sender, ENetConnectEventArgs e)
         {
-
             proxyPeer = e.Peer;
             e.Peer.OnReceive += Peer_OnReceive;
             e.Peer.OnDisconnect += Peer_OnDisconnect;
             e.Peer.Timeout(1000, 5000, 8000);
 
-
             AppendLog("A new client connected from {0} " + e.Peer.RemoteEndPoint);
             //e.Peer.Timeout(30000, 25000, 30000);
 
-            AppendLog("Connecting to gt servers at " + Growtopia_IP + ":" + Growtopia_Port.ToString() + "...");
+            AppendLog("Connecting to gt servers at " + Growtopia_IP + ":" + Growtopia_Port + "...");
             ConnectToServer();
-
         }
 
         private void Peer_OnDisconnect(object sender, uint e)
         {
             unsafe
             {
-                if (((ENetPeer)sender).Unsafe->ConnectID != realPeer.Unsafe->ConnectID) return;
+                if (((ENetPeer) sender).Unsafe->ConnectID != realPeer.Unsafe->ConnectID) return;
             }
+
             //if (((ENetPeer)sender) != null) ((ENetPeer)sender).Host.Dispose();
             try
             {
@@ -350,15 +306,14 @@ namespace GrowbrewProxy
             catch
             {
                 if (proxyPeer != null)
-                {
                     if (proxyPeer.State == ENetPeerState.Connected)
                     {
                         GamePacketProton variantPacket = new GamePacketProton();
                         variantPacket.AppendString("OnConsoleMessage");
-                        variantPacket.AppendString("`6(PROXY) `![GROWBREW SILENT RECONNECT]: `wGrowbrew detected an unexpected disconnection, silently reconnecting...``");
-                        messageHandler.packetSender.SendData(variantPacket.GetBytes(), MainForm.proxyPeer);
+                        variantPacket.AppendString(
+                            "`6(PROXY) `![GROWBREW SILENT RECONNECT]: `wGrowbrew detected an unexpected disconnection, silently reconnecting...``");
+                        messageHandler.packetSender.SendData(variantPacket.GetBytes(), proxyPeer);
                     }
-                }
 
                 token = 0;
                 userID = 0;
@@ -370,7 +325,8 @@ namespace GrowbrewProxy
             }
 
             messageHandler.enteredGame = false;
-            AppendLog("An internal disconnection was triggered in the proxy, you may want to reconnect your GT Client if you are not being disconnected by default (maybe because of sub-server switching?)");
+            AppendLog(
+                "An internal disconnection was triggered in the proxy, you may want to reconnect your GT Client if you are not being disconnected by default (maybe because of sub-server switching?)");
         }
 
         private void Peer_OnReceive(object sender, ENetPacket e)
@@ -382,7 +338,6 @@ namespace GrowbrewProxy
 
             //messageHandler.HandlePacketFromClient(e);
 
-
             string str = messageHandler.HandlePacketFromClient(e);
 
             if (str != "_none_" && str != "") AppendLog(str);
@@ -390,22 +345,16 @@ namespace GrowbrewProxy
 
         private void Peer_OnReceive_Client(object sender, ENetPacket e)
         {
-
             string str = messageHandler.HandlePacketFromServer(e);
             if (str != "_none_" && str != "") AppendLog(str);
         }
 
-        private void Peer_OnDisconnect_Client(object sender, uint e)
+        private static void Peer_OnDisconnect_Client(object sender, uint e)
         {
-            var peer = sender as ENetPeer;
-            var data = e;
-
             // MainForm.hasLogonAlready = false;
-
         }
 
-
-        void loadLogs(bool requireReloadFromFile = false)
+        private void loadLogs(bool requireReloadFromFile = false)
         {
             if (requireReloadFromFile)
             {
@@ -413,9 +362,9 @@ namespace GrowbrewProxy
                 entireLog.Text = LogText;
                 return;
             }
+
             entireLog.Text = LogText;
         }
-
 
         private void Client_OnConnect(object sender, ENetConnectEventArgs e)
         {
@@ -427,35 +376,32 @@ namespace GrowbrewProxy
             AppendLog("The growtopia client just connected successfully.");
         }
 
-
-        void LaunchProxy()
+        private void LaunchProxy()
         {
-            if (!srvRunning)
-            {
-                srvRunning = true;
-                clientRunning = true;
+            if (srvRunning) return;
+            srvRunning = true;
+            clientRunning = true;
 
-                // Setting up ENet-Server ->
-                m_Host = new ENetHost(new IPEndPoint(IPAddress.Any, 2), 32, 2);
-                m_Host.OnConnect += Host_OnConnect;
-                m_Host.ChecksumWithCRC32();
-                m_Host.CompressWithRangeCoder();
-                m_Host.StartServiceThread();
+            // Setting up ENet-Server ->
+            m_Host = new ENetHost(new IPEndPoint(IPAddress.Any, 2), 32, 2);
+            m_Host.OnConnect += Host_OnConnect;
+            m_Host.ChecksumWithCRC32();
+            m_Host.CompressWithRangeCoder();
+            m_Host.StartServiceThread();
 
-                // Setting up ENet-Client ->
-                client = new ENetHost(96, 2); // for multibotting, coming soon.
-                client.OnConnect += Client_OnConnect;
-                client.ChecksumWithCRC32();
-                client.CompressWithRangeCoder();
-                client.StartServiceThread();
+            // Setting up ENet-Client ->
+            client = new ENetHost(96, 2); // for multibotting, coming soon.
+            client.OnConnect += Client_OnConnect;
+            client.ChecksumWithCRC32();
+            client.CompressWithRangeCoder();
+            client.StartServiceThread();
 
-                // Setting up controls
-                runproxy.Enabled = false; // too lazy to make it so u can disable it via button
-                labelsrvrunning.Text = "Server is running!";
-                labelsrvrunning.ForeColor = Color.Green;
-                labelclientrunning.Text = "Client is running!";
-                labelclientrunning.ForeColor = Color.Green;
-            }
+            // Setting up controls
+            runproxy.Enabled = false; // too lazy to make it so u can disable it via button
+            labelsrvrunning.Text = "Server is running!";
+            labelsrvrunning.ForeColor = Color.Green;
+            labelclientrunning.Text = "Client is running!";
+            labelclientrunning.ForeColor = Color.Green;
         }
 
         private void runproxy_Click(object sender, EventArgs e)
@@ -465,6 +411,7 @@ namespace GrowbrewProxy
                 Growtopia_IP = ipaddrBox.Text;
                 Growtopia_Port = Convert.ToInt32(portBox.Text);
             }
+
             LaunchProxy();
         }
 
@@ -472,15 +419,13 @@ namespace GrowbrewProxy
         {
             try
             {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
+                // Retrieve the socket from the state object.
+                Socket client = (Socket) ar.AsyncState;
                 if (client == null) return;
-                // Complete sending the data to the remote device.  
+                // Complete sending the data to the remote device.
                 int bytesSent = client.EndSend(ar);
 
-
-                // Signal that all bytes have been sent.  
-
+                // Signal that all bytes have been sent.
             }
             catch (Exception e)
             {
@@ -488,29 +433,24 @@ namespace GrowbrewProxy
             }
         }
 
-        void doRGBEverything()
+        private void doRGBEverything()
         {
             while (true)
             {
-                switch (rgbTransitionState)
+                vLabel.ForeColor = rgbTransitionState switch
                 {
-                    case 0:
-                        this.vLabel.ForeColor = Color.FromArgb(doTransitionRed(), g, b);
-                        break;
-                    case 1:
-                        this.vLabel.ForeColor = Color.FromArgb(r, doTransitionGreen(), b);
-                        break;
-                    case 2:
-                        this.vLabel.ForeColor = Color.FromArgb(r, g, doTransitionBlue());
-                        break;
-                }
+                    0 => Color.FromArgb(doTransitionRed(), g, b),
+                    1 => Color.FromArgb(r, doTransitionGreen(), b),
+                    2 => Color.FromArgb(r, g, doTransitionBlue()),
+                    _ => vLabel.ForeColor
+                };
 
                 if (cheat_rgbSkin)
                 {
                     skinColor[0] = 200; // slight transparent alpha
-                    skinColor[1] = (byte)r;
-                    skinColor[2] = (byte)g;
-                    skinColor[3] = (byte)b;
+                    skinColor[1] = (byte) r;
+                    skinColor[2] = (byte) g;
+                    skinColor[3] = (byte) b;
 
                     GamePacketProton variantPacket = new GamePacketProton();
                     variantPacket.AppendString("OnChangeSkin");
@@ -518,10 +458,10 @@ namespace GrowbrewProxy
                     variantPacket.NetID = messageHandler.worldMap.netID;
                     messageHandler.packetSender.SendData(variantPacket.GetBytes(), proxyPeer);
                 }
+
                 Thread.Sleep(30);
             }
         }
-
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -534,14 +474,12 @@ namespace GrowbrewProxy
             if (!Directory.Exists("stored"))
                 Directory.CreateDirectory("stored");
 
-            DialogResult dr = MessageBox.Show("Proceeding will connect you to the Growbrew Network!\nGROWBREW MAY USE ANY OF YOUR HARDWARE IDENTIFIERS AND YOUR IP WHICH ARE USED TO SECURE THE PRODUCT E.G FOR BANS AND ANTI-CRACK SOLUTIONS! \nRead more in 'Growbrew Policies'\nContinue?", "Growbrew Proxy", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (dr == DialogResult.No)
-            {
-                Environment.Exit(-1);
-            }
+            DialogResult dr = MessageBox.Show(
+                "Proceeding will connect you to the Growbrew Network!\nGROWBREW MAY USE ANY OF YOUR HARDWARE IDENTIFIERS AND YOUR IP WHICH ARE USED TO SECURE THE PRODUCT E.G FOR BANS AND ANTI-CRACK SOLUTIONS! \nRead more in 'Growbrew Policies'\nContinue?",
+                "Growbrew Proxy", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dr == DialogResult.No) Environment.Exit(-1);
 
             if (File.Exists("stored/config.gbrw"))
-            {
                 try
                 {
                     /*BSONObject bsonObj = new BSONObject();
@@ -573,36 +511,30 @@ namespace GrowbrewProxy
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"tried to load config from stored/config.gbrw, failed due to: {ex.Message}, please re-export.");
+                    Console.WriteLine(
+                        $"tried to load config from stored/config.gbrw, failed due to: {ex.Message}, please re-export.");
                 }
-            }
             //tClient.BeginConnect(IPAddress.Parse("89.47.163.53"), 6770, new AsyncCallback(ConnectCallback), tClient.Client);
 
             // hackernetwork is discontinued / servers shutdown, it was good to have it when the proxy was paid, now its abusive and just a big bug mess.
 
-
             playerLogicUpdate.Start();
             itemDB.SetupItemDefs();
             ManagedENet.Startup();
-
 
             Task.Run(() => doRGBEverything());
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-
             srvRunning = false;
             clientRunning = false;
 
             Environment.Exit(0);
-
         }
 
         private void logBox_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void formTabs_SelectedIndexChanged(object sender, EventArgs e)
@@ -611,9 +543,13 @@ namespace GrowbrewProxy
             {
                 if (ActiveForm == null) return;
                 if (multibotPage.SelectedTab == multibotPage.TabPages["proxyPage"])
+                {
                     ActiveForm.Text = "Growbrew Proxy - Main Page";
+                }
                 else if (multibotPage.SelectedTab == multibotPage.TabPages["cheatPage"])
+                {
                     ActiveForm.Text = "Growbrew Proxy - Cheats and more";
+                }
                 else if (multibotPage.SelectedTab == multibotPage.TabPages["extraPage"])
                 {
                     loadLogs();
@@ -626,7 +562,6 @@ namespace GrowbrewProxy
             }
             catch
             {
-
             }
         }
 
@@ -637,26 +572,20 @@ namespace GrowbrewProxy
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            if (ipaddrBox.Text != "" && portBox.Value != 0)
-            {
-                token = 0;
-                Growtopia_IP = ipaddrBox.Text;
-                Growtopia_Port = (int)portBox.Value;
-            }
+            if (ipaddrBox.Text == "" || portBox.Value == 0) return;
+            token = 0;
+            Growtopia_IP = ipaddrBox.Text;
+            Growtopia_Port = (int) portBox.Value;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             if (realPeer != null)
-            {
                 if (realPeer.State == ENetPeerState.Connected)
                     realPeer.DisconnectNow(0);
-            }
-            if (proxyPeer != null)
-            {
-                if (proxyPeer.State == ENetPeerState.Connected)
-                    proxyPeer.DisconnectNow(0);
-            }
+            if (proxyPeer == null) return;
+            if (proxyPeer.State == ENetPeerState.Connected)
+                proxyPeer.DisconnectNow(0);
         }
 
         private void changeNameBox_TextChanged(object sender, EventArgs e)
@@ -667,9 +596,8 @@ namespace GrowbrewProxy
             variantPacket.NetID = messageHandler.worldMap.netID;
             messageHandler.packetSender.SendData(variantPacket.GetBytes(), proxyPeer);
             //variantPacket.NetID =
-
-
         }
+
         private void rgbSkinHack_CheckedChanged(object sender, EventArgs e)
         {
             cheat_rgbSkin = !cheat_rgbSkin; // keeping track
@@ -688,7 +616,7 @@ namespace GrowbrewProxy
 
         private void aboutlabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://github.com/iProgramMC");  // iprogramincpp
+            Process.Start("http://github.com/iProgramMC"); // iprogramincpp
             Process.Start("http://github.com/playingoDEERUX");
         }
 
@@ -702,7 +630,7 @@ namespace GrowbrewProxy
             try
             {
                 TankPacket p2 = new TankPacket();
-                p2.PacketType = (int)NetTypes.PacketTypes.ITEM_ACTIVATE_OBJ;
+                p2.PacketType = (int) NetTypes.PacketTypes.ITEM_ACTIVATE_OBJ;
                 if (messageHandler.worldMap == null) return;
                 custom_collect_x.Text = messageHandler.worldMap.player.X.ToString(); // crahp
                 custom_collect_y.Text = messageHandler.worldMap.player.Y.ToString(); // crahp
@@ -710,60 +638,49 @@ namespace GrowbrewProxy
                 p2.Y = int.Parse(custom_collect_y.Text);
                 p2.MainValue = int.Parse(custom_collect_uid.Text);
 
-                messageHandler.packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, p2.PackForSendingRaw(), MainForm.realPeer);
+                messageHandler.packetSender.SendPacketRaw((int) NetTypes.NetMessages.GAME_PACKET,
+                    p2.PackForSendingRaw(), realPeer);
             }
             catch // ignore exception
             {
-
             }
         }
 
         private void playerLogicUpdate_Tick(object sender, EventArgs e)
         {
-            if (messageHandler.worldMap != null) // checking if we have it setup
-            {
-                Player playerObject = messageHandler.worldMap.player;
-                posXYLabel.Text = "X: " + playerObject.X.ToString() + " Y: " + playerObject.Y.ToString();
-            }
+            if (messageHandler.worldMap == null) return;
+            Player playerObject = messageHandler.worldMap.player;
+            posXYLabel.Text = "X: " + playerObject.X + " Y: " + playerObject.Y;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             cheat_speedy = !cheat_speedy;
 
-            TankPacket p = new TankPacket();
-            p.PacketType = (int)NetTypes.PacketTypes.SET_CHARACTER_STATE;
-            p.X = 1000;
-            p.Y = 300;
-            p.YSpeed = 1000;
-            p.NetID = messageHandler.worldMap.netID;
-            if (cheat_speed.Checked)
+            TankPacket p = new TankPacket
             {
-                p.XSpeed = 100000;
-            }
-            else
-            {
-                p.XSpeed = 300;
-            }
+                PacketType = (int) NetTypes.PacketTypes.SET_CHARACTER_STATE,
+                X = 1000,
+                Y = 300,
+                YSpeed = 1000,
+                NetID = messageHandler.worldMap.netID,
+                XSpeed = cheat_speed.Checked ? 100000 : 300
+            };
             byte[] data = p.PackForSendingRaw();
             Buffer.BlockCopy(BitConverter.GetBytes(8487168), 0, data, 1, 3);
-            messageHandler.packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, data, proxyPeer);
+            messageHandler.packetSender.SendPacketRaw((int) NetTypes.NetMessages.GAME_PACKET, data, proxyPeer);
         }
 
         private void button3_Click_1(object sender, EventArgs e)
         {
-            int netID = 0;
             World map = messageHandler.worldMap;
-            foreach (Player p in map.players)
-            {
-                if (p.name.Contains(nameBoxOn.Text))
-                {
-                    netID = p.netID;
-                    break;
-                }
-            }
-            messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|wrench\nnetid|" + netID.ToString(), realPeer);
-            messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|dialog_return\ndialog_name|popup\nnetID|" + netID.ToString() + "|\nbuttonClicked|" + actionButtonClicked.Text + "\n", realPeer);
+            int netID = (from p in map.players where p.name.Contains(nameBoxOn.Text) select p.netID).FirstOrDefault();
+
+            messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT,
+                "action|wrench\nnetid|" + netID, realPeer);
+            messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT,
+                "action|dialog_return\ndialog_name|popup\nnetID|" + netID + "|\nbuttonClicked|" +
+                actionButtonClicked.Text + "\n", realPeer);
         }
 
         private void sendAction_Click(object sender, EventArgs e)
@@ -779,7 +696,9 @@ namespace GrowbrewProxy
         private void button3_Click_2(object sender, EventArgs e)
         {
             //messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|dialog_return\ndialog_name|storageboxxtreme\ntilex|" + tileX.ToString() + "|\ntiley|" + tileY.ToString() + "|\nitemid|" + itemid.ToString() + "|\nbuttonClicked|cancel\n\nitemcount|1\n", realPeer);
-            messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|dialog_return\ndialog_name|storageboxxtreme\ntilex|" + tileX.ToString() + "|\ntiley|" + tileY.ToString() + "|\nitemid|1|\nbuttonClicked|cancel\nitemcount|1\n", realPeer);
+            messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT,
+                "action|dialog_return\ndialog_name|storageboxxtreme\ntilex|" + tileX + "|\ntiley|" + tileY +
+                "|\nitemid|1|\nbuttonClicked|cancel\nitemcount|1\n", realPeer);
         }
 
         private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
@@ -818,35 +737,25 @@ namespace GrowbrewProxy
         private void button5_Click(object sender, EventArgs e)
         {
             if (send2client.Checked)
-            {
                 messageHandler.packetSender.SendPacket(3, packetText.Text, proxyPeer);
-            }
             else
-            {
                 messageHandler.packetSender.SendPacket(3, packetText.Text, realPeer);
-            }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             if (send2client.Checked)
-            {
                 messageHandler.packetSender.SendPacket(2, packetText.Text, proxyPeer);
-            }
             else
-            {
                 messageHandler.packetSender.SendPacket(2, packetText.Text, realPeer);
-            }
         }
 
         private void actionButtonClicked_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void nameBoxOn_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void button4_Click_1(object sender, EventArgs e)
@@ -867,7 +776,7 @@ namespace GrowbrewProxy
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|input|?", realPeer);
+            messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT, "action|input|?", realPeer);
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -875,100 +784,34 @@ namespace GrowbrewProxy
             string str = "";
             for (int i = 0; i < 100000; i++) str += "a";
 
-            messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, str, realPeer);
+            messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT, str, realPeer);
             MessageBox.Show("Sent packet!");
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-
         }
 
-        void doTheFastNukaz()
+        private void doTheFastNukaz()
         {
             while (checkBox1.Checked)
             {
                 Thread.Sleep(10);
-                if (realPeer != null)
+                if (realPeer == null) continue;
+                if (realPeer.State != ENetPeerState.Connected) return;
+
+                for (int c = 0; c < 3; c++)
                 {
-                    if (realPeer.State != ENetPeerState.Connected) return;
-
-                    for (int c = 0; c < 3; c++)
-                    {
-                        Thread.Sleep(1000);
-                        for (int i = 0; i < 40; i++)
-                        {
-                            int x, y;
-                            x = messageHandler.worldMap.player.X / 32;
-                            y = messageHandler.worldMap.player.Y / 32;
-
-
-
-
-                            TankPacket tkPt = new TankPacket();
-                            tkPt.PunchX = x;
-                            tkPt.PunchY = y + i;
-                            tkPt.MainValue = 18;
-                            tkPt.X = messageHandler.worldMap.player.X;
-                            tkPt.Y = messageHandler.worldMap.player.Y;
-                            tkPt.ExtDataMask &= ~0x04;
-                            tkPt.ExtDataMask &= ~0x40;
-                            tkPt.ExtDataMask &= ~0x10000;
-                            tkPt.NetID = -1;
-                            messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
-                            tkPt.NetID = -1;
-                            tkPt.PacketType = 3;
-                            tkPt.ExtDataMask = 0;
-                            messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
-                        }
-                    }
-                }
-            }
-        }
-
-        void doTheNukaz()
-        {
-            while (checkBox3.Checked)
-            {
-                Thread.Sleep(10);
-                if (realPeer != null)
-                {
-                    if (realPeer.State != ENetPeerState.Connected) return;
-
-                    int c = 3;
-                    if (checkBox4.Checked) c = 4;
-                    for (int i = 0; i < c; i++)
+                    Thread.Sleep(1000);
+                    for (int i = 0; i < 40; i++)
                     {
                         int x, y;
                         x = messageHandler.worldMap.player.X / 32;
                         y = messageHandler.worldMap.player.Y / 32;
 
-                        if (!checkBox5.Checked)
-                        {
-
-                            if (i == 0) x = x + 1;
-                            else if (i == 1) x = x - 1;
-                            else if (i == 2) y = y - 1;
-                            if (checkBox4.Checked) if (i == 3) y = y + 1;
-                        }
-                        else
-                        {
-                            if (isFacingSwapped)
-                            {
-                                if (i == 1) x -= 1;
-                                if (i == 2) x -= 2;
-                            }
-                            else
-                            {
-                                if (i == 1) x += 1;
-                                if (i == 2) x += 2;
-                            }
-                        }
-
-                        Thread.Sleep(166);
                         TankPacket tkPt = new TankPacket();
                         tkPt.PunchX = x;
-                        tkPt.PunchY = y;
+                        tkPt.PunchY = y + i;
                         tkPt.MainValue = 18;
                         tkPt.X = messageHandler.worldMap.player.X;
                         tkPt.Y = messageHandler.worldMap.player.Y;
@@ -986,54 +829,128 @@ namespace GrowbrewProxy
             }
         }
 
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        private void doTheNukaz()
         {
-            if (checkBox3.Checked)
+            while (checkBox3.Checked)
             {
-                Thread thread = new Thread(new ThreadStart(doTheNukaz));
-                thread.Start();
+                Thread.Sleep(10);
+                if (realPeer == null) continue;
+                if (realPeer.State != ENetPeerState.Connected) return;
+
+                int c = 3;
+                if (checkBox4.Checked) c = 4;
+                for (int i = 0; i < c; i++)
+                {
+                    int x, y;
+                    x = messageHandler.worldMap.player.X / 32;
+                    y = messageHandler.worldMap.player.Y / 32;
+
+                    if (!checkBox5.Checked)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                x += 1;
+                                break;
+                            case 1:
+                                x -= 1;
+                                break;
+                            case 2:
+                                y -= 1;
+                                break;
+                        }
+
+                        if (checkBox4.Checked)
+                            if (i == 3)
+                                y += 1;
+                    }
+                    else
+                    {
+                        if (isFacingSwapped)
+                        {
+                            switch (i)
+                            {
+                                case 1:
+                                    x -= 1;
+                                    break;
+                                case 2:
+                                    x -= 2;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (i)
+                            {
+                                case 1:
+                                    x += 1;
+                                    break;
+                                case 2:
+                                    x += 2;
+                                    break;
+                            }
+                        }
+                    }
+
+                    Thread.Sleep(166);
+                    TankPacket tkPt = new TankPacket
+                    {
+                        PunchX = x,
+                        PunchY = y,
+                        MainValue = 18,
+                        X = messageHandler.worldMap.player.X,
+                        Y = messageHandler.worldMap.player.Y
+                    };
+                    tkPt.ExtDataMask &= ~0x04;
+                    tkPt.ExtDataMask &= ~0x40;
+                    tkPt.ExtDataMask &= ~0x10000;
+                    tkPt.NetID = -1;
+                    messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
+                    tkPt.NetID = -1;
+                    tkPt.PacketType = 3;
+                    tkPt.ExtDataMask = 0;
+                    messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
+                }
             }
         }
 
-        string filterOutAllBadChars(string str)
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            return Regex.Replace(str, @"[^a-zA-Z0-9\-]", "");
+            if (!checkBox3.Checked) return;
+            Thread thread = new Thread(doTheNukaz);
+            thread.Start();
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             World map = messageHandler.worldMap;
             foreach (Player p in map.players)
-            {
-                messageHandler.packetSender.SendPacket(2, "action|input\n|text|/pull " + p.name.Substring(2, p.name.Length - 4), realPeer);
-            }
+                messageHandler.packetSender.SendPacket(2,
+                    "action|input\n|text|/pull " + p.name.Substring(2, p.name.Length - 4), realPeer);
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
             World map = messageHandler.worldMap;
             foreach (Player p in map.players)
-            {
-                messageHandler.packetSender.SendPacket(2, "action|input\n|text|/ban " + p.name.Substring(2, p.name.Length - 4), realPeer);
-            }
+                messageHandler.packetSender.SendPacket(2,
+                    "action|input\n|text|/ban " + p.name.Substring(2, p.name.Length - 4), realPeer);
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
             World map = messageHandler.worldMap;
             foreach (Player p in map.players)
-            {
-                messageHandler.packetSender.SendPacket(2, "action|input\n|text|/kick " + p.name.Substring(2, p.name.Length - 4), realPeer);
-            }
+                messageHandler.packetSender.SendPacket(2,
+                    "action|input\n|text|/kick " + p.name.Substring(2, p.name.Length - 4), realPeer);
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
             World map = messageHandler.worldMap;
             foreach (Player p in map.players)
-            {
-                messageHandler.packetSender.SendPacket(2, "action|input\n|text|/trade " + p.name.Substring(2, p.name.Length - 4), realPeer);
-            }
+                messageHandler.packetSender.SendPacket(2,
+                    "action|input\n|text|/trade " + p.name.Substring(2, p.name.Length - 4), realPeer);
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -1051,6 +968,7 @@ namespace GrowbrewProxy
                 HTTPServer.StopHTTP();
                 button11.Text = "Start HTTP Server + Client";
             }
+
             label13.Visible = isHTTPRunning;
         }
 
@@ -1066,69 +984,60 @@ namespace GrowbrewProxy
 
         private void proxyPage_Click(object sender, EventArgs e)
         {
-
         }
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
-
         }
-
-
 
         private void button14_Click(object sender, EventArgs e)
         {
             TankPacket p = new TankPacket();
-            p.PacketType = (int)NetTypes.PacketTypes.SET_CHARACTER_STATE;
+            p.PacketType = (int) NetTypes.PacketTypes.SET_CHARACTER_STATE;
             p.X = 1000;
             p.Y = 300;
             p.YSpeed = 1000;
             p.NetID = messageHandler.worldMap.netID;
             if (cheat_speed.Checked)
-            {
                 p.XSpeed = 100000;
-            }
             else
-            {
                 p.XSpeed = 300;
-            }
             p.MainValue = 1;
             byte[] data = p.PackForSendingRaw();
             Buffer.BlockCopy(BitConverter.GetBytes(8487168), 0, data, 1, 3);
-            messageHandler.packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, data, proxyPeer);
+            messageHandler.packetSender.SendPacketRaw((int) NetTypes.NetMessages.GAME_PACKET, data, proxyPeer);
         }
 
         private void button15_Click(object sender, EventArgs e)
         {
-
         }
 
         private void changelog_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Growbrew Proxy Changelogs:\n" +
-                "\n2.0\n--------------------------\n" +
-                "- HUUUUGE UPDATE!\n" +
-                "- Added NEW Account Checker (parses all your accounts in directory, and logs into them to see how much rares they have 1 by 1.)\n" +
-                "- IT'S TIME TO GET RID OF ALL CRAPPY AUTOFARMERS THAT EXIST IN GROWTOPIA! :D Growbrew has now a super smart and superior autofarmer, you'll be amazed. It uses the entire world data, and autofarming via packets for the best possible experience. It is the fastest and most undetected autofarmer (and I am still improving it, this is the first ever release of it).\n" +
-                "- Fixed HTTP Server Stopping (stopping it will now work properly, as well as relaunching/restarting it after)\n" +
-                "- Updated RGB to use better RGB logics. (in RGB Skin Cheat, version label now has the same RGB too)\n" +
-                "- Improved subserver switching, should avoid 1 more unnecessary sub server switch cause of request logon stuff (faster)\n" +
-                "- Added silent automatic reconnection after proper detection of connection loss! (9-13 seconds)\n" +
-                "- Added NEW Exploit: Red damage to blocks! Punch blocks and their damage will be red, OTHERS CAN SEE IT AND ITS NOT A VISUAL, its an exploit.\n" +
-                "- Added Config page in Cheats/Mods/Misc, you can select if you want unlimited zoom in there and advanced world loading (by turning it off, you can enter worlds potentially faster)\n" +
-                "- Added How to use button in Main page (Proxy page)\n" +
-                "- Added Growbrew Spammer (right now in Multibot tab), a very undetected spammer using data packets and NOT the Keyboard as well.\n" +
-                "\n1.5.4\n--------------------------\n" +
-                "- Added simple load balancer for channel packet spread.\n" +
-                "- Added better Unlimited Zoom related clothing loading fix\n" +
-                "- Fixed doorID with subserver switching and entering through door/portal will not link to correct door in other world\n" +
-                "- Many more fixes from previous builds, and optimizations.\n" +
-                "- Removed many left over parts for Hacker Network, as the servers closed, I decided to remove some client code to keep the code a little more clean.\n" +
-                "\n1.5.3\n--------------------------\n" +
-                "- Added usage of 2 channels instead of 1 (stability)\n" +
-                "- Removed Hacker Network, discontinued, won't ever add again\n" +
-                "- General bug fixes and changes done in earlier build versions, but didn't update the version before already\n" +
-                "\nFull changelog in changelog.txt, too old versions wont be shown anymore. ~playingo/DEERUX");
+                            "\n2.0\n--------------------------\n" +
+                            "- HUUUUGE UPDATE!\n" +
+                            "- Added NEW Account Checker (parses all your accounts in directory, and logs into them to see how much rares they have 1 by 1.)\n" +
+                            "- IT'S TIME TO GET RID OF ALL CRAPPY AUTOFARMERS THAT EXIST IN GROWTOPIA! :D Growbrew has now a super smart and superior autofarmer, you'll be amazed. It uses the entire world data, and autofarming via packets for the best possible experience. It is the fastest and most undetected autofarmer (and I am still improving it, this is the first ever release of it).\n" +
+                            "- Fixed HTTP Server Stopping (stopping it will now work properly, as well as relaunching/restarting it after)\n" +
+                            "- Updated RGB to use better RGB logics. (in RGB Skin Cheat, version label now has the same RGB too)\n" +
+                            "- Improved subserver switching, should avoid 1 more unnecessary sub server switch cause of request logon stuff (faster)\n" +
+                            "- Added silent automatic reconnection after proper detection of connection loss! (9-13 seconds)\n" +
+                            "- Added NEW Exploit: Red damage to blocks! Punch blocks and their damage will be red, OTHERS CAN SEE IT AND ITS NOT A VISUAL, its an exploit.\n" +
+                            "- Added Config page in Cheats/Mods/Misc, you can select if you want unlimited zoom in there and advanced world loading (by turning it off, you can enter worlds potentially faster)\n" +
+                            "- Added How to use button in Main page (Proxy page)\n" +
+                            "- Added Growbrew Spammer (right now in Multibot tab), a very undetected spammer using data packets and NOT the Keyboard as well.\n" +
+                            "\n1.5.4\n--------------------------\n" +
+                            "- Added simple load balancer for channel packet spread.\n" +
+                            "- Added better Unlimited Zoom related clothing loading fix\n" +
+                            "- Fixed doorID with subserver switching and entering through door/portal will not link to correct door in other world\n" +
+                            "- Many more fixes from previous builds, and optimizations.\n" +
+                            "- Removed many left over parts for Hacker Network, as the servers closed, I decided to remove some client code to keep the code a little more clean.\n" +
+                            "\n1.5.3\n--------------------------\n" +
+                            "- Added usage of 2 channels instead of 1 (stability)\n" +
+                            "- Removed Hacker Network, discontinued, won't ever add again\n" +
+                            "- General bug fixes and changes done in earlier build versions, but didn't update the version before already\n" +
+                            "\nFull changelog in changelog.txt, too old versions wont be shown anymore. ~playingo/DEERUX");
         }
 
         private void button13_Click(object sender, EventArgs e)
@@ -1136,27 +1045,27 @@ namespace GrowbrewProxy
             TankPacket p = new TankPacket();
             p.PacketType = -1;
 
-
-            messageHandler.packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, p.PackForSendingRaw(), realPeer);
+            messageHandler.packetSender.SendPacketRaw((int) NetTypes.NetMessages.GAME_PACKET, p.PackForSendingRaw(),
+                realPeer);
         }
 
         private void button15_Click_1(object sender, EventArgs e)
         {
-
         }
 
         private void button15_Click_2(object sender, EventArgs e)
         {
             string pass = RandomString(8);
-            messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|input\n|text|/sb `2?_ [WE ARE INDIAN TECHNICIAN QUALITY EXPERTS (R)] `4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n`4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n`4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n`4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n  hacked by anonymous all ur data is hacked!`2_?", realPeer);
+            messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT,
+                "action|input\n|text|/sb `2?_ [WE ARE INDIAN TECHNICIAN QUALITY EXPERTS (R)] `4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n`4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n`4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n`4DIS SERVER HAVE TR4$H SecuriTy INDIAN MAN RHANJEED KHALID WILL FIX PLEASE STEY ON DE LINE mam...\n\n\n\n\n\n\n\n  hacked by anonymous all ur data is hacked!`2_?",
+                realPeer);
             for (int i = 0; i < 84; i++)
-            {
-                messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|dialog_return\ndialog_name|register\nusername|" + RandomString(9) + "\npassword|" + pass + "\npasswordverify|" + pass + "\nemail|a@a.de\n", realPeer);
-
-            }
+                messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT,
+                    "action|dialog_return\ndialog_name|register\nusername|" + RandomString(9) + "\npassword|" + pass +
+                    "\npasswordverify|" + pass + "\nemail|a@a.de\n", realPeer);
         }
 
-        void doTakeAll()
+        private void doTakeAll()
         {
             int startingfrom = 0;
             int.TryParse(textBox3.Text, out startingfrom);
@@ -1165,16 +1074,15 @@ namespace GrowbrewProxy
             {
                 Thread.Sleep(12);
                 TankPacket p2 = new TankPacket();
-                p2.PacketType = (int)NetTypes.PacketTypes.ITEM_ACTIVATE_OBJ;
+                p2.PacketType = (int) NetTypes.PacketTypes.ITEM_ACTIVATE_OBJ;
                 p2.MainValue = i;
-                messageHandler.packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, p2.PackForSendingRaw(), MainForm.realPeer);
+                messageHandler.packetSender.SendPacketRaw((int) NetTypes.NetMessages.GAME_PACKET,
+                    p2.PackForSendingRaw(), realPeer);
             }
-
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
-
             /*Thread t = new Thread(doTakeAll);
             t.Start(); */
             // removed for unnecessarity, and confusion. can be reenabled through here but it most likely causes an autoban in real gt servers.
@@ -1183,24 +1091,21 @@ namespace GrowbrewProxy
 
         private void checkBox1_CheckedChanged_2(object sender, EventArgs e)
         {
-            if (checkBox3.Checked)
-            {
-                Thread thread = new Thread(new ThreadStart(doTheFastNukaz));
-                thread.Start();
-            }
+            if (!checkBox3.Checked) return;
+            Thread thread = new Thread(doTheFastNukaz);
+            thread.Start();
         }
 
         private void button18_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Growbrew Policies (last updated 16.04.2020):\n" +
-                "- GROWBREW IS PERMITTED TO USE ANY HARDWARE IDENTIFIER AND YOUR IP ADDRESS.\n" +
-                "- GROWBREW IS NOT RESPONSIBLE FOR BANNED GROWTOPIA ACCOUNTS.\n" +
-                "- GROWBREW DOES AND WILL NOT PROVIDE ANY KIND OF PROGRAM RELIABILITY, THERE ARE UPDATES BUT BUGS, MISTAKES AND SUCH MAY OCCUR.\n" +
-                "- GROWBREW MAY NOT BE SHARED, IT IS A PAID, PREMIUM PRODUCT.\n" +
-                "- GROWBREW HAS THE RIGHTS TO CANCEL YOUR ACCOUNT AT ANY TIME, THIS CAN OCCUR IF THE FOLLOWING RULES WERE BROKEN:\n" +
-                "- Reselling growbrew, sharing growbrew, fraud, decompilation/use of code for your own purposes and ban evading incase of a ban.");
+                            "- GROWBREW IS PERMITTED TO USE ANY HARDWARE IDENTIFIER AND YOUR IP ADDRESS.\n" +
+                            "- GROWBREW IS NOT RESPONSIBLE FOR BANNED GROWTOPIA ACCOUNTS.\n" +
+                            "- GROWBREW DOES AND WILL NOT PROVIDE ANY KIND OF PROGRAM RELIABILITY, THERE ARE UPDATES BUT BUGS, MISTAKES AND SUCH MAY OCCUR.\n" +
+                            "- GROWBREW MAY NOT BE SHARED, IT IS A PAID, PREMIUM PRODUCT.\n" +
+                            "- GROWBREW HAS THE RIGHTS TO CANCEL YOUR ACCOUNT AT ANY TIME, THIS CAN OCCUR IF THE FOLLOWING RULES WERE BROKEN:\n" +
+                            "- Reselling growbrew, sharing growbrew, fraud, decompilation/use of code for your own purposes and ban evading incase of a ban.");
         }
-
 
         private void checkUnlimitedZoom_CheckedChanged_1(object sender, EventArgs e)
         {
@@ -1219,21 +1124,11 @@ namespace GrowbrewProxy
 
         private void button16_Click(object sender, EventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
+            using FolderBrowserDialog fbd = new FolderBrowserDialog();
+            DialogResult result = fbd.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    accsDirTextBox.Text = fbd.SelectedPath;
-                }
-            }
-        }
-
-        public struct AccountTable
-        {
-            public string GrowID;
-            public string password;
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                accsDirTextBox.Text = fbd.SelectedPath;
         }
 
         private AccountTable ParseAccount(string[] lines)
@@ -1245,38 +1140,26 @@ namespace GrowbrewProxy
             foreach (string line in lines)
             {
                 string accstr = line;
-                accstr = accstr.Replace(" ", string.Empty); // remove all spaces, they are unnecessary because they arent allowed in passwords/usernames anyway.
+                accstr = accstr.Replace(" ",
+                    string.Empty); // remove all spaces, they are unnecessary because they arent allowed in passwords/usernames anyway.
                 accstr = accstr.ToLower(); // we dont care about lower / upper either.
 
                 if (accstr.StartsWith("tankidname|"))
-                {
                     accTable.GrowID = accstr.Substring(11);
-                }
                 else if (accstr.StartsWith("tankidpass|"))
-                {
                     accTable.password = accstr.Substring(11);
-                }
                 else if (accstr.StartsWith("username:"))
-                {
                     accTable.GrowID = accstr.Substring(9);
-                }
                 else if (accstr.StartsWith("password:"))
-                {
                     accTable.password = accstr.Substring(9);
-                }
                 else if (accstr.StartsWith("user:"))
-                {
                     accTable.GrowID = accstr.Substring(5);
-                }
-                else if (accstr.StartsWith("pass:"))
-                {
-                    accTable.password = accstr.Substring(5);
-                }
+                else if (accstr.StartsWith("pass:")) accTable.password = accstr.Substring(5);
 
                 if (accTable.GrowID != "" && accTable.password != "")
                     break;
-
             }
+
             return accTable;
         }
 
@@ -1286,9 +1169,8 @@ namespace GrowbrewProxy
             // em pleh slp pleh ni mi
             // ness is an ongoing threat to the community, further actions will be taken.
             List<AccountTable> accTables = new List<AccountTable>();
-            //Multiple Files Detected! Percentage counter is supported for multifiles. 
+            //Multiple Files Detected! Percentage counter is supported for multifiles.
             //Parsing accounts: 0 %
-            int ctr = 0;
             int c = fileLocs.Length;
 
             for (int i = 0; i < c; i++)
@@ -1297,9 +1179,7 @@ namespace GrowbrewProxy
                 string content = File.ReadAllText(fileLoc);
                 string[] lines = content.Split('\n');
                 accTables.Add(ParseAccount(lines));
-
             }
-
 
             return accTables.ToArray();
         }
@@ -1310,32 +1190,27 @@ namespace GrowbrewProxy
             string[] fileLocs = Directory.GetFiles(accsDirTextBox.Text);
             AccountChecker.accountsToCheck = ParseAllAccounts(fileLocs);
             //connectAndCheckAll.Enabled = AccountChecker.Initialize();
-            if (AccountChecker.Initialize())
-            {
-                connectAndCheckAll.Enabled = true;
-                parsedAccountNoLabel.Text = $"Parsed accounts: {AccountChecker.accountsToCheck.Count()}";
-            }
+            if (!AccountChecker.Initialize()) return;
+            connectAndCheckAll.Enabled = true;
+            parsedAccountNoLabel.Text = $"Parsed accounts: {AccountChecker.accountsToCheck.Count()}";
         }
 
         private void button20_Click(object sender, EventArgs e)
         {
             MessageBox.Show("How to use:\n" +
-                "1. Click start http server (make sure you have no other app running on port 80 like another http server on your device)\n" +
-                "2. Put this into your hosts file (in C:\\Windows\\System32\\drivers\\etc):\n" +
-                "127.0.0.1 growtopia1.com\n" +
-                "127.0.0.1 growtopia2.com\n" +
-                "3. Click Start the proxy! If everything succeeded, the orange text in top left will both turn to green.\n" +
-                "4. Normally connect to GT, and you have the proxy installed successfully!\n" +
-                "TIP: To enable AAP Bypass, set your mac to 02:00:00:00:00:00 in Cheat Extra tab.\n" +
-                "TIP: Compile in Release x64 (if you have a 64bit processor and OS) for most performance, if you don't have x64, compile in Release Any CPU!");
+                            "1. Click start http server (make sure you have no other app running on port 80 like another http server on your device)\n" +
+                            "2. Put this into your hosts file (in C:\\Windows\\System32\\drivers\\etc):\n" +
+                            "127.0.0.1 growtopia1.com\n" +
+                            "127.0.0.1 growtopia2.com\n" +
+                            "3. Click Start the proxy! If everything succeeded, the orange text in top left will both turn to green.\n" +
+                            "4. Normally connect to GT, and you have the proxy installed successfully!\n" +
+                            "TIP: To enable AAP Bypass, set your mac to 02:00:00:00:00:00 in Cheat Extra tab.\n" +
+                            "TIP: Compile in Release x64 (if you have a 64bit processor and OS) for most performance, if you don't have x64, compile in Release Any CPU!");
         }
 
         private void itemIDBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
         }
 
         private void itemIDBox_TextChanged(object sender, EventArgs e)
@@ -1350,10 +1225,7 @@ namespace GrowbrewProxy
         private void doDropAllInventory()
         {
             Inventory inventory = messageHandler.worldMap.player.inventory;
-            if (inventory.items == null)
-            {
-                Console.WriteLine("inventory.items was null!");
-            }
+            if (inventory.items == null) Console.WriteLine("inventory.items was null!");
 
             int ctr = 0;
             bool swap = false;
@@ -1365,7 +1237,7 @@ namespace GrowbrewProxy
                 TankPacket tp = new TankPacket();
                 tp.XSpeed = 32;
                 tp.YSpeed = 0;
-                if ((ctr % 20) == 0)
+                if (ctr % 20 == 0)
                 {
                     swap = !swap;
                     Thread.Sleep(400);
@@ -1384,16 +1256,14 @@ namespace GrowbrewProxy
                 tp.X = messageHandler.worldMap.player.X;
                 tp.Y = messageHandler.worldMap.player.Y;
 
-
                 messageHandler.packetSender.SendPacketRaw(4, tp.PackForSendingRaw(), realPeer);
 
-
-                messageHandler.packetSender.SendPacket(2, "action|drop\nitemID|" + item.itemID.ToString() + "|\n", realPeer);
+                messageHandler.packetSender.SendPacket(2, "action|drop\nitemID|" + item.itemID + "|\n", realPeer);
                 // Console.WriteLine($"Dropping item with ID: {item.itemID} with amount: {item.amount}");
                 string str = "action|dialog_return\n" +
-                    "dialog_name|drop_item\n" +
-                    "itemID|" + item.itemID.ToString() + "|\n" +
-                    "count|" + item.amount.ToString() + "\n";
+                             "dialog_name|drop_item\n" +
+                             "itemID|" + item.itemID + "|\n" +
+                             "count|" + item.amount + "\n";
 
                 messageHandler.packetSender.SendPacket(2, str, realPeer);
             }
@@ -1412,7 +1282,6 @@ namespace GrowbrewProxy
 
         private void ignoresetback_CheckedChanged(object sender, EventArgs e)
         {
-
         }
 
         private void ignoresetback_CheckedChanged_1(object sender, EventArgs e)
@@ -1427,50 +1296,38 @@ namespace GrowbrewProxy
 
         private void button21_Click_1(object sender, EventArgs e)
         {
-            if (realPeer != null)
-            {
-                if (realPeer.State == ENetPeerState.Connected)
-                    realPeer.Reset();
-            }
+            if (realPeer == null) return;
+            if (realPeer.State == ENetPeerState.Connected)
+                realPeer.Reset();
         }
 
         private void entireLog_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void aboutlabel_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void spamIntervalBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
         }
 
         private void spammerTimer_Tick(object sender, EventArgs e)
         {
-
             if (randomizeIntervalCheckbox.Checked)
-            {
                 spammerTimer.Interval = int.Parse(spamIntervalBox.Text) + random.Next(0, 2500);
-            }
             lock (realPeer)
             {
-                if (realPeer != null)
-                {
-                    if (realPeer.State == ENetPeerState.Connected)
-                        messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, "action|input\n|text|" + spamtextBox.Text, realPeer);
-                }
+                if (realPeer == null) return;
+                if (realPeer.State == ENetPeerState.Connected)
+                    messageHandler.packetSender.SendPacket((int) NetTypes.NetMessages.GENERIC_TEXT,
+                        "action|input\n|text|" + spamtextBox.Text, realPeer);
             }
         }
 
@@ -1491,12 +1348,10 @@ namespace GrowbrewProxy
 
         private void checkBox9_CheckedChanged(object sender, EventArgs e)
         {
-
         }
 
         private void checkBox9_CheckedChanged_1(object sender, EventArgs e)
         {
-            
         }
 
         private void button22_Click(object sender, EventArgs e)
@@ -1531,7 +1386,6 @@ namespace GrowbrewProxy
 
         private void startFromOwnTilePos_CheckedChanged(object sender, EventArgs e)
         {
-
         }
 
         private void saveIfGemCount_CheckedChanged(object sender, EventArgs e)
@@ -1549,122 +1403,138 @@ namespace GrowbrewProxy
             AccountChecker.SaveWLCountOver10 = !AccountChecker.SaveWLCountOver10;
         }
 
-        void doAutofarm(int itemID, bool remote_mode = false, bool oneblockmode = false, bool selfblockstart = false)
+        private void doAutofarm(int itemID, bool remote_mode = false, bool oneblockmode = false,
+            bool selfblockstart = false)
         {
             bool isBg = ItemDatabase.isBackground(itemID);
             while (isAutofarming)
             {
                 Thread.Sleep(10);
 
-                if (realPeer != null)
+                if (realPeer == null) continue;
+                if (realPeer.State != ENetPeerState.Connected)
                 {
-                    if (realPeer.State != ENetPeerState.Connected)
+                    Thread.Sleep(100);
+                    continue;
+                }
+
+                int c = 2 - (oneblockmode ? 1 : 0);
+
+                for (int i = 0; i < c; i++)
+                {
+                    int x = messageHandler.worldMap.player.X / 32;
+                    int y = messageHandler.worldMap.player.Y / 32;
+
+                    if (isFacingSwapped)
+                    {
+                        if (i == 0) x -= 1;
+                        if (i == 1) x -= 2;
+                        if (selfblockstart) x++;
+                    }
+                    else
+                    {
+                        if (i == 0) x += 1;
+                        if (i == 1) x += 2;
+                        if (selfblockstart) x--;
+                    }
+
+                    Thread.Sleep(166);
+
+                    if (messageHandler.worldMap == null)
                     {
                         Thread.Sleep(100);
                         continue;
                     }
 
-                    int c = 2 - (oneblockmode ? 1 : 0);
+                    TankPacket tkPt = new TankPacket();
+                    tkPt.PunchX = x;
+                    tkPt.PunchY = y;
 
+                    ushort fg = messageHandler.worldMap.tiles[x + y * messageHandler.worldMap.width].fg;
+                    ushort bg = messageHandler.worldMap.tiles[x + y * messageHandler.worldMap.width].bg;
 
-                    for (int i = 0; i < c; i++)
+                    if (isBg)
                     {
-                        int x, y;
-                        x = messageHandler.worldMap.player.X / 32;
-                        y = messageHandler.worldMap.player.Y / 32;
-
-                        if (isFacingSwapped)
-                        {
-                            if (i == 0) x -= 1;
-                            if (i == 1) x -= 2;
-                            if (selfblockstart) x++;
-                        }
+                        if (bg != 0)
+                            tkPt.MainValue = 18;
                         else
-                        {
-                            if (i == 0) x += 1;
-                            if (i == 1) x += 2;
-                            if (selfblockstart) x--;
-                        }
-
-
-                        Thread.Sleep(166);
-
-                        if (messageHandler.worldMap == null)
-                        {
-                            Thread.Sleep(100);
-                            continue;
-                        }
-
-                        TankPacket tkPt = new TankPacket();
-                        tkPt.PunchX = x;
-                        tkPt.PunchY = y;
-
-                        ushort fg = messageHandler.worldMap.tiles[x + (y * messageHandler.worldMap.width)].fg;
-                        ushort bg = messageHandler.worldMap.tiles[x + (y * messageHandler.worldMap.width)].bg;
-
-                        if (isBg)
-                        {
-                            if (bg != 0)
-                            {
-                                tkPt.MainValue = 18;
-                            }
-                            else
-                            {
-                                tkPt.MainValue = itemID;
-                            }
-                        }
+                            tkPt.MainValue = itemID;
+                    }
+                    else
+                    {
+                        if (fg == itemID)
+                            tkPt.MainValue = 18;
                         else
+                            tkPt.MainValue = itemID;
+                    }
+
+                    if (remote_mode && tkPt.MainValue != 18) tkPt.MainValue = 5640;
+
+                    tkPt.X = messageHandler.worldMap.player.X;
+                    tkPt.Y = messageHandler.worldMap.player.Y;
+                    tkPt.ExtDataMask &= ~0x04;
+                    tkPt.ExtDataMask &= ~0x40;
+                    tkPt.ExtDataMask &= ~0x10000;
+                    tkPt.NetID = -1;
+
+                    lock (realPeer)
+                    {
+                        lock (proxyPeer)
                         {
-                            if (fg == itemID)
-                            {
-                                tkPt.MainValue = 18;
-                            }
-                            else
-                            {
-                                tkPt.MainValue = itemID;
-                            }
-                        }
-
-                        if (remote_mode && tkPt.MainValue != 18) tkPt.MainValue = 5640;
-
-                        tkPt.X = messageHandler.worldMap.player.X;
-                        tkPt.Y = messageHandler.worldMap.player.Y;
-                        tkPt.ExtDataMask &= ~0x04;
-                        tkPt.ExtDataMask &= ~0x40;
-                        tkPt.ExtDataMask &= ~0x10000;
-                        tkPt.NetID = -1;
-
-                        lock (realPeer)
-                        {
-                            lock (proxyPeer)
-                            {
-                                messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
-                                tkPt.NetID = -1;
-                                tkPt.PacketType = 3;
-                                tkPt.ExtDataMask = 0;
-                                messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
-                            }
+                            messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
+                            tkPt.NetID = -1;
+                            tkPt.PacketType = 3;
+                            tkPt.ExtDataMask = 0;
+                            messageHandler.packetSender.SendPacketRaw(4, tkPt.PackForSendingRaw(), realPeer);
                         }
                     }
                 }
             }
         }
 
-    
-
         private void startAutofarmBtn_Click(object sender, EventArgs e)
         {
             isAutofarming = !isAutofarming;
             if (isAutofarming)
             {
-                Task.Run(() => doAutofarm(int.Parse(itemIDBox.Text), cheat_Autofarm_magplant_mode, oneblockmode.Checked, startFromOwnTilePos.Checked));
-                
+                Task.Run(() => doAutofarm(int.Parse(itemIDBox.Text), cheat_Autofarm_magplant_mode, oneblockmode.Checked,
+                    startFromOwnTilePos.Checked));
+
                 startAutofarmBtn.Text = "Stop autofarming";
             }
             else
             {
                 startAutofarmBtn.Text = "Start autofarming";
             }
+        }
+
+        public class StateObject
+        {
+            // Size of receive buffer.
+            public const int BufferSize = 1024;
+
+            // Receive buffer.
+            public byte[] buffer = new byte[BufferSize];
+
+            // Received data string.
+            public StringBuilder sb = new StringBuilder();
+
+            // Client socket.
+            public Socket workSocket = null;
+        }
+
+        public struct UserData
+        {
+            public string username;
+            public int paddingInt;
+        }
+
+        private delegate void SafeCallDelegate(string text);
+
+        public struct AccountTable
+        {
+            public string GrowID;
+            public string password;
         }
     }
 }

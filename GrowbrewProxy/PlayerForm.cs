@@ -1,38 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace GrowbrewProxy
 {
     public partial class PlayerForm : Form
     {
+        public static int updatedHeight;
+
         public PlayerForm()
         {
             InitializeComponent();
         }
 
-       
-        public struct ControlWithMetaData
-        {
-            public int netID;
-            public int userID;
-            public Control control;
-        }
-
-        public static int updatedHeight = 0;
-
         public void AddPlayerBtnToForm(string text, int netID, Point point)
         {
-            if (this.IsHandleCreated)
+            if (IsHandleCreated)
             {
                 if (playerBox.InvokeRequired)
                 {
@@ -64,15 +47,14 @@ namespace GrowbrewProxy
 
         public void LoadPlayerButtons() // reload
         {
-            if (this.IsHandleCreated)
-            {
+            if (IsHandleCreated)
                 Invoke(new Action(() =>
                 {
-                    foreach (Player pl in MainForm.messageHandler.worldMap.players) 
+                    foreach (Player pl in MainForm.messageHandler.worldMap.players)
                         MainForm.messageHandler.worldMap.AddPlayerControlToBox(pl);
                 }));
-            }
         }
+
         private void PlayerForm_Load(object sender, EventArgs e)
         {
             foreach (Button btn in playerBox.Controls) // assume all controls are btns.
@@ -84,21 +66,17 @@ namespace GrowbrewProxy
 
         private void playerBtn_Click(object sender, EventArgs e)
         {
-            var btn = (Button)sender;
+            Button btn = (Button) sender;
             int netID = int.Parse(btn.Name);
             World worldMap = MainForm.messageHandler.worldMap;
             Player pl = null;
             if (worldMap != null)
-            {
                 foreach (Player p in worldMap.players)
-                {
                     if (p.netID == netID)
                     {
                         pl = p;
                         goto LABEL_RETRIEVED_PLAYER;
                     }
-                }
-            }
 
             LABEL_RETRIEVED_PLAYER:
             {
@@ -108,23 +86,30 @@ namespace GrowbrewProxy
                 MessageBox.Show("PLAYER INFOS:\n" +
                                 "name/nickname: " + pl.name + "\n" +
                                 "country: " + pl.country + "\n" +
-                                "invisible: " + pl.invis.ToString() + "\n" +
-                                "moderator power level: " + pl.mstate.ToString() + "\n" +
-                                "isSuperModerator (higher than 0 = yes): " + pl.smstate.ToString() + "\n" +
-                                "netID: " + netID.ToString() + "\n" +
-                                "userID: " + pl.userID.ToString() + "\n" +
+                                "invisible: " + pl.invis + "\n" +
+                                "moderator power level: " + pl.mstate + "\n" +
+                                "isSuperModerator (higher than 0 = yes): " + pl.smstate + "\n" +
+                                "netID: " + netID + "\n" +
+                                "userID: " + pl.userID + "\n" +
                                 "X: " + pl.X + " Y: " + pl.Y);
                 return;
             }
 
             LABEL_FAILED_TO_RETRIEVE_PLAYER:
             MessageBox.Show("Could not retrieve player! The expected player left or an error occured.");
-           
         }
+
         protected override void WndProc(ref Message m)
         {
-            updatedHeight = this.Height;
+            updatedHeight = Height;
             base.WndProc(ref m);
+        }
+
+        public struct ControlWithMetaData
+        {
+            public int netID;
+            public int userID;
+            public Control control;
         }
     }
 }

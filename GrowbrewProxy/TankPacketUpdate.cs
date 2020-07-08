@@ -1,30 +1,27 @@
 ﻿// thanks to iProgramInCpp#0001, most things are made by him in the GrowtopiaCustomClient, I have just rewritten it into c# and maybe also improved. -playingo
 // edit: this is ACTUALLY not rewritten and straight taken from iProgramInCpp#0001!
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GrowbrewProxy
 {
-    class TankPacket
+    internal class TankPacket
     {
-        public int PacketType;
-        public int NetID;
-        public int SecondaryNetID;
+        public List<byte> ExtData = new List<byte>();
         public int ExtDataMask;
-        public int CharacterState => ExtDataMask;
-        public float Padding;
         public int MainValue;
-        public int TilePlaced => MainValue;
+        public int NetID;
+        public int PacketType;
+        public float Padding;
+        public int PunchX, PunchY;
+        public int SecondaryNetID;
+        public float SecondaryPadding;
         public float X, Y;
         public float XSpeed, YSpeed;
-        public float SecondaryPadding;
-        public int PunchX, PunchY;
+        public int CharacterState => ExtDataMask;
+        public int TilePlaced => MainValue;
         public int ExtDataSize => ExtData.Count;
-        public List<byte> ExtData = new List<byte>();
-        public byte[] ExtData_Alt;
 
         public byte[] PackForSendingRaw()
         {
@@ -75,14 +72,12 @@ namespace GrowbrewProxy
             dataStruct.SecondaryPadding = BitConverter.ToInt32(data, 40);
             dataStruct.PunchX = BitConverter.ToInt32(data, 44);
             dataStruct.PunchY = BitConverter.ToInt32(data, 48);
-           
-                // this is very i might be unsure...
+
+            // this is very i might be unsure...
             //int len = BitConverter.ToInt32(data, 52);
-           // dataStruct.ExtData_Alt = new byte[len];
+            // dataStruct.ExtData_Alt = new byte[len];
             //Array.Copy(data, 56, dataStruct.ExtData_Alt, 0, len);
-            
-            
-           
+
             return dataStruct;
         }
 
@@ -95,6 +90,7 @@ namespace GrowbrewProxy
                 Array.Copy(p, 4, s, 0, s.Length);
                 packet = Unpack(s);
             }
+
             return packet;
         }
     }

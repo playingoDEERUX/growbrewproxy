@@ -860,7 +860,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(69, 20);
             this.textBox2.TabIndex = 20;
-            this.textBox2.Text = "3.37";
+            this.textBox2.Text = "3.38";
             // 
             // button12
             // 

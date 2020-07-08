@@ -1,84 +1,32 @@
-﻿// thanks to iProgramInCpp#0489, most things are made by him in the GrowtopiaCustomClient, 
+﻿// thanks to iProgramInCpp#0489, most things are made by him in the GrowtopiaCustomClient,
 // I have just rewritten it into c# and maybe also improved. -playingo
-using System;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GrowbrewProxy
 {
     public class ItemDatabase
     {
-        public struct ItemDefinition
-        {
-            public short id;
-            public byte editType;
-            public byte editCategory;
-            public byte actionType;
-            public byte hitSound;
-            public string itemName;
-            public string fileName;
-            public int texHash;
-            public byte itemKind;
-            public byte texX;
-            public byte texY;
-            public byte sprType;
-            public byte isStripey;
-            public byte collType;
-            public byte hitsTaken;
-            public byte dropChance;
-            public int clothingType;
-            public short rarity;
-            public short toolKind;
-            public string audioFile;
-            public int audioHash;
-            public short audioVol;
-            public byte seedBase;
-            public byte seedOver;
-            public byte treeBase;
-            public byte treeOver;
-            // Colors are stored in ARGB.
-            public byte color1R, color1G, color1B, color1A;
-            public byte color2R, color2G, color2B, color2A;
-            public short ing1, ing2;
-            public int growTime;
-            public string extraUnk01;
-            public string extraUnk02;
-            public string extraUnk03;
-            public string extraUnk04;
-            public string extraUnk05;
-            public string extraUnk11;
-            public string extraUnk12;
-            public string extraUnk13;
-            public string extraUnk14;
-            public string extraUnk15;
-            public short extraUnkShort1;
-            public short extraUnkShort2;
-            public int extraUnkInt1;
-        };
-
         public static List<ItemDefinition> itemDefs = new List<ItemDefinition>();
 
-        public static bool isBackground(int itemID) // thanks for the dev iProgramInCpp for telling me a reliable method on how to determine between foreground and background in GT.
+        public static bool
+            isBackground(
+                int itemID) // thanks for the dev iProgramInCpp for telling me a reliable method on how to determine between foreground and background in GT.
         {
             ItemDefinition def = GetItemDef(itemID);
             byte actType = def.actionType;
-            return (actType == 18 || actType == 23 || actType == 28);
+            return actType == 18 || actType == 23 || actType == 28;
         }
+
         public static ItemDefinition GetItemDef(int itemID)
         {
-            if (itemID < 0 || itemID > (int)itemDefs.Count()) return itemDefs[0];
+            if (itemID < 0 || itemID > itemDefs.Count()) return itemDefs[0];
             ItemDefinition def = itemDefs[itemID];
-            if (def.id != itemID)
-            {
-                // For some reason, something is off.
-                foreach (var d in itemDefs)
-                {
-                    if (d.id == itemID) return d;
-                }
-            }
+            if (def.id == itemID) return def;
+            foreach (ItemDefinition d in itemDefs.Where(d => d.id == itemID))
+                return d;
             return def;
         }
 
@@ -142,7 +90,7 @@ namespace GrowbrewProxy
                 def.actionType == 116 || // GrowScan 9000 ???
                 def.actionType == 127 || // Temp. Platform
                 def.actionType == 130 ||
-                (def.id % 2 == 0 && def.id >= 5818 && def.id <= 5932) ||
+                def.id % 2 == 0 && def.id >= 5818 && def.id <= 5932 ||
                 // ...
                 false;
         }
@@ -152,35 +100,82 @@ namespace GrowbrewProxy
             string a = File.ReadAllText("include/base.txt");
             List<string> aaa = a.Split('|').ToList();
             if (aaa.Count < 3) return;
-            int itemCount = -1;
-            int.TryParse(aaa[2], out itemCount);
+            int.TryParse(aaa[2], out int itemCount);
             if (itemCount == -1) return;
             short id = 0;
             itemDefs.Clear();
             ItemDefinition def = new ItemDefinition();
-            using (StreamReader sr = File.OpenText("include/item_defs.txt"))
+            using StreamReader sr = File.OpenText("include/item_defs.txt");
+            string s = string.Empty;
+            while ((s = sr.ReadLine()) != null)
             {
-                string s = String.Empty;
-                while ((s = sr.ReadLine()) != null)
+                if (s.Length < 2) continue;
+                if (s.Contains("//")) continue;
+                List<string> infos = s.Split('\\').ToList();
+                if (infos[0] != "add_item") continue;
+
+                def.id = short.Parse(infos[1]);
+                def.actionType = byte.Parse(infos[4]);
+                def.itemName = infos[6];
+
+                if (def.id != id)
                 {
-                    if (s.Length < 2) continue;
-                    if (s.Contains("//")) continue;
-                    List<string> infos = s.Split('\\').ToList();
-                    if (infos[0] != "add_item") continue;
-                   
-                    def.id = short.Parse(infos[1]);
-                    def.actionType = byte.Parse(infos[4]);
-                    def.itemName = infos[6];
-
-                    if (def.id != id)
-                    {
-                        // unordered db item, can cause problems!!
-
-                    }
-                    itemDefs.Add(def);
-                    id++;
+                    // unordered db item, can cause problems!!
                 }
+
+                itemDefs.Add(def);
+                id++;
             }
+        }
+
+        public struct ItemDefinition
+        {
+            public short id;
+            public byte editType;
+            public byte editCategory;
+            public byte actionType;
+            public byte hitSound;
+            public string itemName;
+            public string fileName;
+            public int texHash;
+            public byte itemKind;
+            public byte texX;
+            public byte texY;
+            public byte sprType;
+            public byte isStripey;
+            public byte collType;
+            public byte hitsTaken;
+            public byte dropChance;
+            public int clothingType;
+            public short rarity;
+            public short toolKind;
+            public string audioFile;
+            public int audioHash;
+            public short audioVol;
+            public byte seedBase;
+            public byte seedOver;
+            public byte treeBase;
+            public byte treeOver;
+
+            // Colors are stored in ARGB.
+            public byte color1R, color1G, color1B, color1A;
+
+            public byte color2R, color2G, color2B, color2A;
+            public short ing1, ing2;
+            public int growTime;
+            public string extraUnk01;
+            public string extraUnk02;
+            public string extraUnk03;
+            public string extraUnk04;
+            public string extraUnk05;
+            public string extraUnk11;
+            public string extraUnk12;
+            public string extraUnk13;
+            public string extraUnk14;
+            public string extraUnk15;
+            public short extraUnkShort1;
+            public short extraUnkShort2;
+            public int extraUnkInt1;
         }
     }
 }

@@ -8,6 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>GrowbrewProxy</RootNamespace>
     <AssemblyName>GrowbrewProxy</AssemblyName>
+    <LangVersion>preview</LangVersion>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
