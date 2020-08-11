@@ -1219,13 +1219,13 @@ namespace GrowbrewProxy
 
         private void button16_Click(object sender, EventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog())
+            using (var fbd = new OpenFileDialog())
             {
                 DialogResult result = fbd.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.FileName))
                 {
-                    accsDirTextBox.Text = fbd.SelectedPath;
+                    accsDirTextBox.Text = fbd.FileName;
                 }
             }
         }
