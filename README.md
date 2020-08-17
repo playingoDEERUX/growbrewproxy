@@ -91,7 +91,7 @@ current version: V2
 
 (IMPORTANT: THIS DEERUX IS A FAKER/IMPERSONATOR): https://www.youtube.com/channel/UCjUmKOedwc7gDa8Fl9E5HMA If you have subbed to him, unsubscribe now and this is my real channel: https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
-(UPDATE: second channel is terminated too, dont trust anyone called DEERUX or playingo on youtube, youtube copyright system is great at this!11)
+(UPDATE: second channel is terminated too, dont trust anyone called DEERUX or playingo on youtube for now, youtube copyright system is great at this!11)
 
 Subscribe to support me :)
 
@@ -100,3 +100,5 @@ Enjoy the **ultimate** haXing in Growtopia :) Star this if you liked my project,
 NOTE: can be combined with any trainer of your choice, this is a proxy and not a trainer so this will only offer exclusive proxy / networking features
 
 NOTE: Make sure you allow unsafe code when compiling
+
+# Discord: DEERUX#1551
