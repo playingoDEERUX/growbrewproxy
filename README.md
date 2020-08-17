@@ -90,6 +90,7 @@ current version: V2
 # MADE BY DEERUX (quit) AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 (IMPORTANT: THIS DEERUX IS A FAKER/IMPERSONATOR): https://www.youtube.com/channel/UCjUmKOedwc7gDa8Fl9E5HMA If you have subbed to him, unsubscribe now and this is my real channel: https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
+
 (UPDATE: second channel is terminated too, dont trust anyone called DEERUX or playingo on youtube, youtube copyright system is great at this!11)
 
 Subscribe to support me :)
