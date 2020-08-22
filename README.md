@@ -100,5 +100,3 @@ Enjoy the **ultimate** haXing in Growtopia :) Star this if you liked my project,
 NOTE: can be combined with any trainer of your choice, this is a proxy and not a trainer so this will only offer exclusive proxy / networking features
 
 NOTE: Make sure you allow unsafe code when compiling
-
-# Discord: DEERUX#1551
