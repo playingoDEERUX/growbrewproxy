@@ -1,4 +1,4 @@
-﻿namespace GrowbrewProxy
+namespace GrowbrewProxy
 {
     partial class MainForm
     {
@@ -86,11 +86,11 @@
             this.rgbSkinHack = new System.Windows.Forms.CheckBox();
             this.internalextrapage = new System.Windows.Forms.TabPage();
             this.spoofBox = new System.Windows.Forms.GroupBox();
+            this.button23 = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.button12 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
-            this.setMac = new System.Windows.Forms.TextBox();
             this.macUpdate = new System.Windows.Forms.Button();
             this.tileX = new System.Windows.Forms.TextBox();
             this.button19 = new System.Windows.Forms.Button();
@@ -160,6 +160,7 @@
             this.label19 = new System.Windows.Forms.Label();
             this.itemIDBox = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label30 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.randomizeIntervalCheckbox = new System.Windows.Forms.CheckBox();
@@ -175,7 +176,7 @@
             this.vLabel = new System.Windows.Forms.Label();
             this.whitepanel = new System.Windows.Forms.Panel();
             this.spammerTimer = new System.Windows.Forms.Timer(this.components);
-            this.label30 = new System.Windows.Forms.Label();
+            this.setMac = new System.Windows.Forms.TextBox();
             this.multibotPage.SuspendLayout();
             this.proxyPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.portBox)).BeginInit();
@@ -832,18 +833,29 @@
             // 
             // spoofBox
             // 
+            this.spoofBox.Controls.Add(this.setMac);
+            this.spoofBox.Controls.Add(this.button23);
             this.spoofBox.Controls.Add(this.label16);
             this.spoofBox.Controls.Add(this.textBox2);
             this.spoofBox.Controls.Add(this.button12);
             this.spoofBox.Controls.Add(this.label7);
-            this.spoofBox.Controls.Add(this.setMac);
             this.spoofBox.Controls.Add(this.macUpdate);
-            this.spoofBox.Location = new System.Drawing.Point(319, 32);
+            this.spoofBox.Location = new System.Drawing.Point(242, 32);
             this.spoofBox.Name = "spoofBox";
-            this.spoofBox.Size = new System.Drawing.Size(178, 101);
+            this.spoofBox.Size = new System.Drawing.Size(255, 101);
             this.spoofBox.TabIndex = 37;
             this.spoofBox.TabStop = false;
             this.spoofBox.Text = "Spoofing";
+            // 
+            // button23
+            // 
+            this.button23.Location = new System.Drawing.Point(180, 69);
+            this.button23.Name = "button23";
+            this.button23.Size = new System.Drawing.Size(69, 23);
+            this.button23.TabIndex = 23;
+            this.button23.Text = "Generate!";
+            this.button23.UseVisualStyleBackColor = true;
+            this.button23.Click += new System.EventHandler(this.button23_Click);
             // 
             // label16
             // 
@@ -881,14 +893,6 @@
             this.label7.TabIndex = 8;
             this.label7.Text = "change mac:";
             // 
-            // setMac
-            // 
-            this.setMac.Location = new System.Drawing.Point(6, 71);
-            this.setMac.Name = "setMac";
-            this.setMac.Size = new System.Drawing.Size(100, 20);
-            this.setMac.TabIndex = 7;
-            this.setMac.Text = "02:00:00:00:00:00";
-            // 
             // macUpdate
             // 
             this.macUpdate.Location = new System.Drawing.Point(110, 69);
@@ -910,7 +914,7 @@
             // 
             this.button19.Location = new System.Drawing.Point(9, 58);
             this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(223, 21);
+            this.button19.Size = new System.Drawing.Size(177, 21);
             this.button19.TabIndex = 35;
             this.button19.Text = "Drop entire inventory";
             this.button19.UseVisualStyleBackColor = true;
@@ -918,9 +922,9 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(238, 32);
+            this.textBox3.Location = new System.Drawing.Point(189, 31);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(65, 20);
+            this.textBox3.Size = new System.Drawing.Size(44, 20);
             this.textBox3.TabIndex = 33;
             this.textBox3.Visible = false;
             // 
@@ -971,18 +975,17 @@
             // 
             this.button17.Location = new System.Drawing.Point(9, 31);
             this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(223, 21);
+            this.button17.Size = new System.Drawing.Size(177, 21);
             this.button17.TabIndex = 32;
             this.button17.Text = "Collect all items (uid starting from):";
             this.button17.UseVisualStyleBackColor = true;
             this.button17.Visible = false;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
             // button15
             // 
             this.button15.Location = new System.Drawing.Point(9, 84);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(223, 21);
+            this.button15.Size = new System.Drawing.Size(177, 21);
             this.button15.TabIndex = 31;
             this.button15.Text = "Mass account create (only on gtps)";
             this.button15.UseVisualStyleBackColor = true;
@@ -1596,6 +1599,16 @@
             this.tabPage1.Text = "Multibot";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(6, 96);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(227, 39);
+            this.label30.TabIndex = 14;
+            this.label30.Text = "UPDATE: V2.1 will come around next week\r\nIt will have more features in account ch" +
+    "ecking,\r\nand finally the Multibot implementation.";
+            // 
             // label27
             // 
             this.label27.AutoSize = true;
@@ -1735,15 +1748,12 @@
             this.spammerTimer.Interval = 1000;
             this.spammerTimer.Tick += new System.EventHandler(this.spammerTimer_Tick);
             // 
-            // label30
+            // setMac
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(6, 96);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(227, 39);
-            this.label30.TabIndex = 14;
-            this.label30.Text = "UPDATE: V2.1 will come around next week\r\nIt will have more features in account ch" +
-    "ecking,\r\nand finally the Multibot implementation.";
+            this.setMac.Location = new System.Drawing.Point(6, 71);
+            this.setMac.Name = "setMac";
+            this.setMac.Size = new System.Drawing.Size(100, 20);
+            this.setMac.TabIndex = 24;
             // 
             // MainForm
             // 
@@ -1862,12 +1872,10 @@
         private System.Windows.Forms.CheckBox rgbSkinHack;
         private System.Windows.Forms.TabPage internalextrapage;
         private System.Windows.Forms.Button button19;
-        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox itemid;
         private System.Windows.Forms.TextBox tileY;
-        private System.Windows.Forms.TextBox setMac;
         private System.Windows.Forms.TextBox custom_collect_y;
         private System.Windows.Forms.TextBox custom_collect_x;
         private System.Windows.Forms.TextBox custom_collect_uid;
@@ -1917,7 +1925,6 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.TextBox tileX;
         private System.Windows.Forms.GroupBox spoofBox;
-        private System.Windows.Forms.Button button17;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox ignoresetback;
         private System.Windows.Forms.TabPage tabPage1;
@@ -1949,6 +1956,10 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.CheckBox logallpackets;
         private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button23;
+        private System.Windows.Forms.TextBox setMac;
     }
 }
 
