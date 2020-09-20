@@ -1,4 +1,4 @@
-﻿// (C) Made, programmed and designed by PlayIngoHD/PlayIngoHD Gaming/playingo/DEERUX and iProgramInCpp/iProgramMC only.
+// (C) Made, programmed and designed by PlayIngoHD/PlayIngoHD Gaming/playingo/DEERUX and iProgramInCpp/iProgramMC only.
 // Reselling this is illegal, because this is free-opensource-ware and credits are appreciated :)
 using System;
 using System.Collections.Generic;
@@ -227,7 +227,7 @@ namespace GrowbrewProxy
         public static string GenerateMACAddress()
         {
             var random = new Random();
-            var buffer = new byte[6];
+            var buffer = new byte[5];
             random.NextBytes(buffer);
             var result = String.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
             return result.TrimEnd(':');
@@ -797,6 +797,11 @@ namespace GrowbrewProxy
 
         private void macUpdate_Click(object sender, EventArgs e)
         {
+            TextWriter tw = new StreamWriter("setmac.txt", false);
+            {
+                tw.Write(setMac.Text);
+                tw.Close();
+            }
             macc = setMac.Text;
         }
 
@@ -1598,6 +1603,11 @@ namespace GrowbrewProxy
         private void saveIfWlCount_CheckedChanged(object sender, EventArgs e)
         {
             AccountChecker.SaveWLCountOver10 = !AccountChecker.SaveWLCountOver10;
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            setMac.Text = "02:" + GenerateMACAddress();
         }
 
         void doAutofarm(int itemID, bool remote_mode = false, bool oneblockmode = false, bool selfblockstart = false)
