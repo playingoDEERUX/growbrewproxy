@@ -1,7 +1,9 @@
 ﻿using ENet.Managed;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -21,8 +23,7 @@ namespace GrowbrewProxy
         public bool serverRelogReq = false;
         int checkPeerUsability(ENetPeer peer)
         {
-            if (peer == null) return -1;
-            if (peer.Data == null) return -2;
+            if (peer.IsNull) return -1;
             if (peer.State != ENetPeerState.Connected) return -3;
 
             return 0;
@@ -58,18 +59,23 @@ namespace GrowbrewProxy
             IPWithExtraData = 4
             lmode = 5 (Used for determining how client should behave when leaving, and could also influence the connection after.
             */
-        private int OperateVariant(VariantList.VarList vList)
+        private int OperateVariant(VariantList.VarList vList, object botPeer)
         {                      
             switch (vList.FunctionName)
             {
                 case "OnSuperMainStartAcceptLogonHrdxs47254722215a":
                     {
-                        if (MainForm.skipCache)
+                        if (MainForm.skipCache && botPeer == null)
                         {
                             MainForm.LogText += ("[" + DateTime.UtcNow + "] (CLIENT): Skipping potential caching (will make world list disappear)...");
                             GamePacketProton gp = new GamePacketProton(); // variant list
                             gp.AppendString("OnRequestWorldSelectMenu");
                             packetSender.SendData(gp.GetBytes(), MainForm.proxyPeer);
+                        }
+                        if (botPeer != null)
+                        {
+                            Console.WriteLine("BOT PEER IS ENTERING THE GAME...");
+                            packetSender.SendPacket(3, "action|enter_game\n", (ENetPeer)botPeer);
                         }
                         return -1;
                     }
@@ -136,6 +142,8 @@ namespace GrowbrewProxy
             
                 case "OnSendToServer":
                     {
+                        // TODO FIX THIS AND MIRROR ALL PACKETS AND SOME BUG FIXES.
+                        
                         string ip = (string)vList.functionArgs[4];
 
                         if (ip.Contains("|"))
@@ -145,42 +153,65 @@ namespace GrowbrewProxy
                         int userID = (int)vList.functionArgs[3];
                         int token = (int)vList.functionArgs[2];
                         int lmode = (int)vList.functionArgs[5];
-                        
-                        MainForm.lmode = lmode;
-                        if (MainForm.token <= 0)
+
+                        if (botPeer != null)
                         {
-                            ip = MainForm.Growtopia_Master_IP;
-                            port = MainForm.Growtopia_Master_Port;
-                            MainForm.token = token;
+                            ENetPeer peer = (ENetPeer)botPeer; // unbox
+                            MainForm.UserData ud = null;
+                            if (peer.TryGetUserData(out ud))
+                            {
+                                Console.WriteLine("Doing bot subserver switch...");
+                                if (ud.token <= 0)
+                                {
+                                    ip = MainForm.globalUserData.Growtopia_Master_IP;
+                                    port = MainForm.globalUserData.Growtopia_Master_Port;
+                                    ud.token = token;
+                                }
+
+                                ud.Growtopia_IP = ip;
+                                ud.Growtopia_Port = port;
+                                ud.userID = userID;
+                                ud.lmode = lmode;
+                                MainForm.ConnectToServer(ref peer, ud);
+                            }
                         }
-                        MainForm.userID = userID;
+                        else
+                        {
+                            Console.WriteLine("Doing proxy subserver switch...");
+                            MainForm.globalUserData.lmode = lmode;
+                            if (MainForm.globalUserData.token <= 0)
+                            {
+                                ip = MainForm.globalUserData.Growtopia_Master_IP;
+                                port = MainForm.globalUserData.Growtopia_Master_Port;
+                                MainForm.globalUserData.token = token;
+                            }
+                            MainForm.globalUserData.userID = userID;
 
-                        MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): OnSendToServer (func call used for server switching/sub-servers) " +
-                            "IP: " +
-                            ip + " PORT: " + port
-                            + " UserId: " + userID
-                            + " Session-Token: " + token + "\n");
-                        GamePacketProton variantPacket = new GamePacketProton();
-                        variantPacket.AppendString("OnConsoleMessage");
-                        variantPacket.AppendString("`6(PROXY)`o Switching subserver...``");
-                        packetSender.SendData(variantPacket.GetBytes(), MainForm.proxyPeer);
-
-                        
-                        GamePacketProton variantPacket2 = new GamePacketProton();
-                        variantPacket2.AppendString("OnSendToServer");
-                        variantPacket2.AppendInt(2);
-                        variantPacket2.AppendInt(token);
-                        variantPacket2.AppendInt(userID);
-                        variantPacket2.AppendString("127.0.0.1|" + MainForm.doorid);
-                        variantPacket2.AppendInt(lmode);
-
-                        // MainForm.doorid = ""; fix cant enter door with link to other door in other subserver/world
-                        packetSender.SendData(variantPacket2.GetBytes(), MainForm.proxyPeer);
-                        
-                        MainForm.Growtopia_IP = ip; // proper sub server switching
-                        MainForm.Growtopia_Port = port;
+                            MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): OnSendToServer (func call used for server switching/sub-servers) " +
+                                "IP: " +
+                                ip + " PORT: " + port
+                                + " UserId: " + userID
+                                + " Session-Token: " + token + "\n");
+                            GamePacketProton variantPacket = new GamePacketProton();
+                            variantPacket.AppendString("OnConsoleMessage");
+                            variantPacket.AppendString("`6(PROXY)`o Switching subserver...``");
+                            packetSender.SendData(variantPacket.GetBytes(), MainForm.proxyPeer);
 
 
+                            GamePacketProton variantPacket2 = new GamePacketProton();
+                            variantPacket2.AppendString("OnSendToServer");
+                            variantPacket2.AppendInt(2);
+                            variantPacket2.AppendInt(token);
+                            variantPacket2.AppendInt(userID);
+                            variantPacket2.AppendString("127.0.0.1|" + MainForm.globalUserData.doorid);
+                            variantPacket2.AppendInt(lmode);
+
+                            // MainForm.doorid = ""; fix cant enter door with link to other door in other subserver/world
+                            packetSender.SendData(variantPacket2.GetBytes(), MainForm.proxyPeer);
+
+                            MainForm.globalUserData.Growtopia_IP = ip; // proper sub server switching
+                            MainForm.globalUserData.Growtopia_Port = port;
+                        }
 
                         return -1;
                     }
@@ -240,7 +271,7 @@ namespace GrowbrewProxy
 
                         if (p.mstate > 0 || p.smstate > 0 || p.invis > 0)
                         {
-                            if (MainForm.cheat_autoworldban_mod) banEveryoneInWorld();
+                            if (MainForm.globalUserData.cheat_autoworldban_mod) banEveryoneInWorld();
                             MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): A moderator or developer seems to have joined your world!\n");
                         }
 
@@ -270,7 +301,7 @@ namespace GrowbrewProxy
 
                             //lestring = lestring.Replace("mstate|0", "mstate|1");
 
-                            if (MainForm.unlimitedZoom)
+                            if (MainForm.globalUserData.unlimitedZoom)
                             {
                                 GamePacketProton gp = new GamePacketProton();
                                 gp.AppendString("OnSpawn");
@@ -331,15 +362,13 @@ namespace GrowbrewProxy
             return growtopia_text;
         }
 
-        private void SwitchServers(string ip, int port, int lmode = 0, int userid = 0, int token = 0)
+        private void SwitchServers(ref ENetPeer peer, string ip, int port, int lmode = 0, int userid = 0, int token = 0)
         {
-            MainForm.Growtopia_IP = ip;
-            MainForm.Growtopia_Port = port;
-
-            //MainForm.proxyPeer.DisconnectLater(0);
+            MainForm.globalUserData.Growtopia_IP = ip;
+            MainForm.globalUserData.Growtopia_Port = port;
             isSwitchingServers = true;
-            //MainForm.proxyPeer.DisconnectLater(100); // momentan erforderlich
-            MainForm.ConnectToServer();
+            
+            MainForm.ConnectToServer(ref peer);
         }
 
         void banEveryoneInWorld()
@@ -356,15 +385,16 @@ namespace GrowbrewProxy
         {
             return (b & (1 << pos)) != 0;
         }
-        public string HandlePacketFromClient(ENetPacket packet) // Why string? Oh yeah, it's the best thing to also return a string response for anything you want!
+        public string HandlePacketFromClient(ref ENetPeer peer, ENetPacket packet) // Why string? Oh yeah, it's the best thing to also return a string response for anything you want!
         {
 
-            if (MainForm.proxyPeer == null) return "";
-            if (MainForm.proxyPeer.State != ENetPeerState.Connected) return "";
-            if (MainForm.realPeer == null) return "";
+            if (peer.IsNull) return "";
+            if (peer.State != ENetPeerState.Connected) return "";
+            if (MainForm.realPeer.IsNull) return "";
             if (MainForm.realPeer.State != ENetPeerState.Connected) return "";
 
-            byte[] data = packet.GetPayloadFinal();
+            bool respondToBotPeers = true;
+            byte[] data = packet.Data.ToArray();
 
             switch ((NetTypes.NetMessages)data[0])
             {
@@ -378,11 +408,13 @@ namespace GrowbrewProxy
                         string inputPH = "input\n|text|";
                         if (actionExecuted.StartsWith("enter_game"))
                         {
-                            if (MainForm.blockEnterGame) return "Blocked enter_game packet!";
+                            respondToBotPeers = true;
+                            if (MainForm.globalUserData.blockEnterGame) return "Blocked enter_game packet!";
                             enteredGame = true;
                         }
                         else if (actionExecuted.StartsWith(inputPH))
                         {
+
                             string text = actionExecuted.Substring(inputPH.Length);
 
                             if (text.Length > 0)
@@ -408,6 +440,7 @@ namespace GrowbrewProxy
                     else
                     {
                         // for (int i = 0; i < 1000; i++) packetSender.SendPacket(2, "action|refresh_item_data\n", MainForm.realPeer);
+                        respondToBotPeers = false;
                         string[] lines = str.Split('\n');
 
                         string tankIDName = "";
@@ -421,15 +454,15 @@ namespace GrowbrewProxy
                                     tankIDName = lineToken[1];
                                     break;
                                 case "tankIDPass":
-                                    MainForm.tankIDPass = lineToken[1];
+                                    MainForm.globalUserData.tankIDPass = lineToken[1];
                                     break;
                                 case "requestedName":
-                                    MainForm.requestedName = lineToken[1];
+                                    MainForm.globalUserData.requestedName = lineToken[1];
                                     break;
 
                             }
                         }
-                        MainForm.tankIDName = tankIDName;
+                        MainForm.globalUserData.tankIDName = tankIDName;
 
                         bool hasAcc = false;
 
@@ -442,18 +475,26 @@ namespace GrowbrewProxy
                     MainForm.LogText += ("[" + DateTime.UtcNow + "] (CLIENT): String package fetched:\n" + str2 + "\n");
                     if (str2.StartsWith("action|"))
                     {
-                        string actionExecuted = str2.Substring(7, str2.Length - 7);
-                        if (actionExecuted == "quit")
+                        string actionExecuted = str2.Substring(7);
+                        if (actionExecuted.StartsWith("quit") && !actionExecuted.StartsWith("quit_to_exit"))
                         {
-                            MainForm.token = 0;
-                            MainForm.Growtopia_IP = MainForm.Growtopia_Master_IP;
-                            MainForm.Growtopia_Port = MainForm.Growtopia_Master_Port;
+                            // super multibotting will not mirror all packets in here (the "quit" action), cuz i found it unnecessary, although, you can enable that by pasting the code that does it.
+                            respondToBotPeers = true;
+                            MainForm.globalUserData.token = 0;
+                            MainForm.globalUserData.Growtopia_IP = MainForm.globalUserData.Growtopia_Master_IP;
+                            MainForm.globalUserData.Growtopia_Port = MainForm.globalUserData.Growtopia_Master_Port;
 
                             if (MainForm.realPeer != null && MainForm.proxyPeer != null)
                             {
                                 if (MainForm.realPeer.State == ENetPeerState.Connected) MainForm.realPeer.Disconnect(0);
                                 if (MainForm.proxyPeer.State == ENetPeerState.Connected) MainForm.proxyPeer.Disconnect(0);
                             }
+                        }
+                        else if (actionExecuted.StartsWith("join_request\nname|")) // ghetto fetching of worldname
+                        {
+                            string[] rest = actionExecuted.Substring(18).Split('\n');
+                            string joinWorldName = rest[0];
+                            Console.WriteLine($"Joining world {joinWorldName}...");
                         }
                     }
                     break;
@@ -471,17 +512,18 @@ namespace GrowbrewProxy
                                 {
                                     MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): PunchX/PunchY detected, pX: " + p.PunchX.ToString() + " pY: " + p.PunchY.ToString() + "\n");
                                 }
-                                MainForm.isFacingSwapped = IsBitSet(p.CharacterState, 4);
+                                MainForm.globalUserData.isFacingSwapped = IsBitSet(p.CharacterState, 4);
 
                                 worldMap.player.X = (int)p.X;
                                 worldMap.player.Y = (int)p.Y;
                                 break;
                             case NetTypes.PacketTypes.TILE_CHANGE_REQ:
-                                if (p.MainValue == 18 && MainForm.redDamageToBlock)
+                                respondToBotPeers = true;
+                                if (p.MainValue == 18 && MainForm.globalUserData.redDamageToBlock)
                                 {
                                     // playingo
                                     p.SecondaryPadding = -1;
-                                    p.ExtDataMask |= 1 << 27;
+                                    p.ExtDataMask |= 1 << 27; // 28
                                     p.Padding = 1;
                                     packetSender.SendPacketRaw(4, p.PackForSendingRaw(), MainForm.realPeer);
                                     return "";
@@ -489,7 +531,7 @@ namespace GrowbrewProxy
                                 break;
                             case NetTypes.PacketTypes.ITEM_ACTIVATE_OBJ: // just incase, to keep better track of items incase something goes wrong
                                 worldMap.dropped_ITEMUID = p.MainValue;
-                                if (MainForm.blockCollecting) return "";
+                                if (MainForm.globalUserData.blockCollecting) return "";
                                 break;
                             default:
                                 break;
@@ -505,6 +547,7 @@ namespace GrowbrewProxy
             }
 
             packetSender.SendData(data, MainForm.realPeer, ENetPacketFlags.Reliable);
+            
             return string.Empty;
 
         
@@ -524,15 +567,15 @@ namespace GrowbrewProxy
             packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, p.PackForSendingRaw(), MainForm.realPeer);
         }
 
-        public string HandlePacketFromServer(ENetPacket packet)
+        public string HandlePacketFromServer(ref ENetPeer peer, ENetPacket packet)
         {
             
-            if (MainForm.proxyPeer == null) return "";
+            if (MainForm.proxyPeer.IsNull) return "";
             if (MainForm.proxyPeer.State != ENetPeerState.Connected) return "";
-            if (MainForm.realPeer == null) return "";
-            if (MainForm.realPeer.State != ENetPeerState.Connected) return "";
+            if (peer.IsNull) return "";
+            if (peer.State != ENetPeerState.Connected) return "";
 
-            byte[] data = packet.GetPayloadFinal();
+            byte[] data = packet.Data.ToArray();
            
             //else
             //{
@@ -544,27 +587,48 @@ namespace GrowbrewProxy
             switch (msgType)
             {
                 case NetTypes.NetMessages.SERVER_HELLO:
-
-                    MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): Initial logon accepted." + "\n");
-                    break;
+                    {
+                        MainForm.UserData ud;
+                        if (peer.TryGetUserData(out ud))
+                        {
+                            if (ud != null)
+                            {
+                                packetSender.SendPacket(2, MainForm.CreateLogonPacket(ud.tankIDName, ud.tankIDPass, ud.userID, ud.token, ud.doorid), peer);
+                                return "BOT with GrowID: " + ud.tankIDName + " is logging in...";
+                            }
+                        }
+                        MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): Initial logon accepted." + "\n");
+                        break;
+                    }
                 case NetTypes.NetMessages.GAME_MESSAGE:
 
                     string str = GetProperGenericText(data);
                     MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): A game_msg packet was sent: " + str + "\n");
 
 
-                    if (str.Contains("Server requesting that you re-logon..."))
+                    if (str.Contains("Server requesting that you re-logon...")) // this is actually improper, but solves the problem.
                     {
-                        MainForm.token = 0;
-                        MainForm.doorid = "";
-                        GamePacketProton gp = new GamePacketProton();
-                        gp.AppendString("OnConsoleMessage");
-                        gp.AppendString("`6(PROXY) `4Handling server relogon request automatically...");
-                        packetSender.SendData(gp.GetBytes(), MainForm.proxyPeer);
+                        MainForm.UserData ud = null;
+                        if (!peer.TryGetUserData(out ud))
+                        {
+                            MainForm.globalUserData.token = 0;
+                            MainForm.globalUserData.doorid = "";
+                            GamePacketProton gp = new GamePacketProton();
+                            gp.AppendString("OnConsoleMessage");
+                            gp.AppendString("`6(PROXY) `4Handling server relogon request automatically...");
+                            packetSender.SendData(gp.GetBytes(), MainForm.proxyPeer);
 
-                        SwitchServers(MainForm.Growtopia_Master_IP, MainForm.Growtopia_Master_Port);
+                            SwitchServers(ref MainForm.realPeer, MainForm.globalUserData.Growtopia_Master_IP, MainForm.globalUserData.Growtopia_Master_Port);
 
-                        return "Server forces logon request, switching server automatically so user does not have to cancel to login menu and reconnect.";
+                            return "Server forces logon request, switching server automatically so user does not have to cancel to login menu and reconnect.";
+                        }
+                        else
+                        {
+                            if (ud != null) 
+                            {
+                                return "Bot with GrowID: " + ud.tankIDName + " got a relog request!";
+                            }
+                        }
                     }
 
                     break;
@@ -645,7 +709,15 @@ namespace GrowbrewProxy
                             VarListFetched.netID = BitConverter.ToInt32(tankPacket, 4); // add netid
                             VarListFetched.delay = BitConverter.ToUInt32(tankPacket, 20); // add keep track of delay modifier
 
-                            int netID = OperateVariant(VarListFetched);
+                            bool isABot = false;
+                            MainForm.UserData ud = null;
+                            if (peer.TryGetUserData(out ud))
+                            {
+                                if (ud != null)
+                                    isABot = true;
+                            }
+
+                            int netID = OperateVariant(VarListFetched, isABot ? (object)peer : null); // box enetpeer obj to generic obj
                             string argText = string.Empty;
 
                             for (int i = 0; i < VarListFetched.functionArgs.Count(); i++)
@@ -658,10 +730,10 @@ namespace GrowbrewProxy
                             if (VarListFetched.FunctionName == "OnSendToServer") return "Server switching forced, not continuing as Proxy Client has to deal with this.";
                             if (VarListFetched.FunctionName == "onShowCaptcha") return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
                             if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("captcha")) return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
-                            if (VarListFetched.FunctionName == "OnSetPos" && MainForm.ignoreonsetpos && netID == worldMap.netID) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
+                            if (VarListFetched.FunctionName == "OnSetPos" && MainForm.globalUserData.ignoreonsetpos && netID == worldMap.netID) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
                             if (VarListFetched.FunctionName == "OnSpawn" && netID == -2)
                             {
-                                if (MainForm.unlimitedZoom)
+                                if (MainForm.globalUserData.unlimitedZoom)
                                     return "Modified OnSpawn for unlimited zoom (mstate|1)"; // only doing unlimited zoom and not unlimited punch/place to be sure that no bans occur due to this. If you wish to use unlimited punching/placing as well, change the smstate in OperateVariant function instead.
                             }
 
@@ -733,7 +805,7 @@ namespace GrowbrewProxy
                                     dItem.uid = worldMap.dropped_ITEMUID;
                                     worldMap.droppedItems.Add(dItem);
 
-                                    if (MainForm.cheat_magplant)
+                                    if (MainForm.globalUserData.cheat_magplant)
                                     {
 
 
@@ -755,9 +827,13 @@ namespace GrowbrewProxy
                     }
                     break;
                 case NetTypes.NetMessages.TRACK:
+                    {
+                        return "Track message:\n" + GetProperGenericText(data);
+                        break;
+                    }
                 case NetTypes.NetMessages.LOG_REQ:
                 case NetTypes.NetMessages.ERROR:
-                    return "Blocked track/logreq/error message type by server.";
+                    return "Blocked LOG_REQUEST/ERROR message from server";
                 default:
                     //return "(SERVER): An unknown event occured. Message Type: " + msgType.ToString() + "\n";
                     break;

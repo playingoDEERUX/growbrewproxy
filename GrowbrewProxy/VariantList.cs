@@ -276,7 +276,7 @@ namespace GrowbrewProxy
                             {
                                 if (varList.FunctionName == "OnSendToServer") // exceptionary function, having it easier like this :)
                                 {
-                                    MainForm.doorid = v.Substring(v.IndexOf("|") + 1); // doorid
+                                    MainForm.globalUserData.doorid = v.Substring(v.IndexOf("|") + 1); // doorid
                                     if (v.Length >= 8)
                                         v = v.Substring(0, v.IndexOf("|"));
                                 }

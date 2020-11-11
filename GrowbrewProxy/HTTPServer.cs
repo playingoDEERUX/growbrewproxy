@@ -49,22 +49,22 @@ namespace GrowbrewProxy
                                 case "server":
                                     {
                                         // server ip
-                                        MainForm.Growtopia_Master_IP = value.Substring(0, value.Length - 1);
+                                        MainForm.globalUserData.Growtopia_Master_IP = value.Substring(0, value.Length - 1);
                                         break;
                                     }
                                 case "port":
                                     {
                                        
-                                        MainForm.Growtopia_Master_Port = ushort.Parse(value);
+                                        MainForm.globalUserData.Growtopia_Master_Port = ushort.Parse(value);
                                         break;
                                     }
                                 default:
                                     break;
                             }
                         }
-                        MainForm.Growtopia_IP = MainForm.Growtopia_Master_IP;
-                        MainForm.Growtopia_Port = MainForm.Growtopia_Master_Port;
-                        Console.WriteLine("Parsing done, detected IP:Port -> " + MainForm.Growtopia_IP + ":" + MainForm.Growtopia_Port.ToString());
+                        MainForm.globalUserData.Growtopia_IP = MainForm.globalUserData.Growtopia_Master_IP;
+                        MainForm.globalUserData.Growtopia_Port = MainForm.globalUserData.Growtopia_Master_Port;
+                        Console.WriteLine("Parsing done, detected IP:Port -> " + MainForm.globalUserData.Growtopia_IP + ":" + MainForm.globalUserData.Growtopia_Port.ToString());
                     }
 
                     HttpListenerContext context = listener.GetContext();

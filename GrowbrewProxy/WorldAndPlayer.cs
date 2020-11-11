@@ -586,7 +586,7 @@ namespace GrowbrewProxy
                 tiles = new Tile[tileCount]; // allocate exact tile data.
 
                 MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): Loading world: " + currentWorld + ", total tile count is: " + tileCount.ToString() + "\n");
-                if (!MainForm.serializeWorldsAdvanced)
+                if (!MainForm.globalUserData.serializeWorldsAdvanced)
                 {
                     MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): NOTE: Advanced world serialization was disabled, not continuing to load tiles.\n");
                     return this;

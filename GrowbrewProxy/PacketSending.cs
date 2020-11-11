@@ -14,12 +14,9 @@ namespace GrowbrewProxy
         private Random rand = new Random();
         public void SendData(byte[] data, ENetPeer peer, ENetPacketFlags flag = ENetPacketFlags.Reliable)
         {
-
             if (peer == null) return;
             if (peer.State != ENetPeerState.Connected) return;
-
-            if (rand.Next(0, 1) == 0) peer.Send(data, 0, flag);
-            else peer.Send(data, 1, flag);
+            peer.Send((byte)rand.Next(0, 1), data, flag);
         }
 
         public void SendPacketRaw(int type, byte[] data, ENetPeer peer, ENetPacketFlags flag = ENetPacketFlags.Reliable)

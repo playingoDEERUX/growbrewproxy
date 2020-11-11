@@ -117,14 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label23.Text" xml:space="preserve">
-    <value>Multibot usage Coming soon (most likely in V2.1), this is a heavy competitor to 
-the known Tool "GABB" in Growtopia,
-Growbrew's Multibot soon will help with growbrew's very fast and reliable Autofarmer 
-to make use of multiple accounts at once.
-
-- playingo</value>
-  </data>
   <data name="checkBox7.Text" xml:space="preserve">
     <value>Disable advanced world loading in proxy [makes world entering/loading much faster, 
 but makes Magplant/Pickup range exploit practically unusable.]
@@ -146,6 +138,6 @@ This project is entirely NOT based on ama6nen/enetproxy nor affiliated.
     <value>17, 17</value>
   </metadata>
   <metadata name="spammerTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>171, 17</value>
+    <value>196, 18</value>
   </metadata>
 </root>
