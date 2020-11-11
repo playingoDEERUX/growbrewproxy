@@ -332,25 +332,6 @@ namespace GrowbrewProxy
                     peer = client.Connect(new IPEndPoint(IPAddress.Parse(ip), port), 2, 0);
                 }
             }
-            if (userData != null)
-            {
-                Console.WriteLine("(INFO): Overwriting user data...");
-                peer.UnsetUserData();
-                peer.SetUserData(userData);
-            }
-
-            /*if (!FirstInitialUseOfBot && userData != null)
-            {
-                lock (botPeers)
-                {
-                    int ind = GetFreeBotPeerIndex();
-                    if (ind > -1)
-                        botPeers[ind] = peer;
-                    else
-                        Console.WriteLine("[BOT] an error occcured, GetFreeBotPeerIndex() returned -1, that means no location in the array was free to use??");
-                }
-                // try to get an available array location for the bot
-            }*/
         }
 
         private void Host_OnConnect(ENetPeer peer)
