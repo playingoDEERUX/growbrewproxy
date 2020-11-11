@@ -3,7 +3,7 @@ Growbrew - An advanced Growtopia ENet Proxy made in C#, giving you the advantage
 
 # Compatibility:
 - Windows 7 - Windows 10 (windows versions older than than that may work with modifications and such, this is not supported by default though.)
-.NET requirements: .NET Framework 4.6.1, I have heard reports from people that this does not work on .NET Framework 4.8, it may work on older .NET Framework versions but this has been tested without any issues on .NET 4.5
+.NET requirements: .NET Framework 4.7.2, I have heard reports from people that this does not work on .NET Framework 4.8, it may work on older .NET Framework versions but this has been tested without any issues on .NET 4.5
 If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Managed please!
 
 # Features:
@@ -50,6 +50,18 @@ ADDED SINCE V2:
 - *NEW* Config exporting/saving
 - A few fixes.
 - Many more
+
+ADDED SINCE V2.1:
+This update focused mostly on performance/stability. Would highly recommend this one over V2.0.
+- *NEW* Multibotting, the better way of multiboxing in only a single Growtopia window using the proxy. (Only in Growbrew Proxy Extreme Edition or Auto-CCS soon)
+- Upgraded ENet wrapper to ENet.Managed v4 (huge improvement)
+- Fixed autofarming may cause autoban after some time
+- Fixed random disconnects on very populated worlds
+- Extended customizability (added more to toggle in Config menu)
+- Fixed "drop entire inventory" autoban.
+- Fixed some other minor bugs, such as UI bugs etc.
+- Optimized few other things.
+
 ---------------------------------------------------------------
 
 
@@ -86,7 +98,7 @@ https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 Other versions may work too, they are not tested. Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
 
 
-current version: V2
+current version: V2.1
 # MADE BY DEERUX (quit) AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
 
 (IMPORTANT: THIS DEERUX IS A FAKER/IMPERSONATOR): https://www.youtube.com/channel/UCjUmKOedwc7gDa8Fl9E5HMA If you have subbed to him, unsubscribe now and this is my real channel: https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
