@@ -56,7 +56,7 @@ namespace GrowbrewProxy
         public static ENetPeer realPeer;
         public static ENetPeer proxyPeer;
 #pragma warning disable CS0436 // Type conflicts with imported type
-        public static ENetPeer[] botPeers = new ENetPeer[128]; // handle 128 bot peers, can be increased.
+        // unnecessary as botting isnt made anyway
 #pragma warning restore CS0436 // Type conflicts with imported type
 
         public class UserData
