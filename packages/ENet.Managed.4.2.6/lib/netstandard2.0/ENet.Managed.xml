@@ -1,0 +1,685 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ENet.Managed</name>
+    </assembly>
+    <members>
+        <member name="T:ENet.Managed.Allocators.ENetAllocator">
+            <summary>
+            An abstract class which is responsible for allocating and deallocating memory for ENet library
+            </summary>
+        </member>
+        <member name="T:ENet.Managed.Allocators.ENetHGlobalAllocator">
+            <summary>
+            Implements <see cref="T:ENet.Managed.Allocators.ENetAllocator"/> which uses <see cref="M:System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Int32)"/> and <see cref="M:System.Runtime.InteropServices.Marshal.FreeHGlobal(System.IntPtr)"/> to allocate and deallocate memory.
+            This class is singleton.
+            </summary>
+        </member>
+        <member name="T:ENet.Managed.Allocators.ENetPooledAllocator">
+            <summary>
+            Implements a pooling allocator with fixed length buffers for ENet
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.Allocators.ENetPooledAllocator.#ctor">
+            <summary>
+            Constructs the allocator with a general size.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.Allocators.ENetPooledAllocator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructs the allocator with custom size.
+            </summary>
+            <param name="maxBufferLen">Maximum length of buffers this allocator is allowed to pool.</param>
+            <param name="maxBufferCount">Maximum number of buffers this allocator is allowed to pool.</param>
+        </member>
+        <member name="T:ENet.Managed.Checksums.ENetChecksum">
+            <summary>
+            An abstract class which calculates checksums for given buffers by ENet library
+            </summary>
+            <remarks>
+            Each instance of this class shouldn't be shared between multiple ENet Hosts
+            </remarks>
+        </member>
+        <member name="T:ENet.Managed.Compressors.ENetCompressor">
+            <summary>
+            An abstract class which is de\compresses given buffers by ENet library
+            </summary>
+            <remarks>
+            Each instance of this class shouldn't be shared between multiple ENet Hosts
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetEvent.DisptachTo(ENet.Managed.IENetEventListener)">
+            <summary>
+            Disptaches this event to the specified listener based on the event type.
+            </summary>
+            <param name="listener">Listener to disptach event to.</param>
+            <returns>Returns true if any event disptached to listener; otherwise false.</returns>
+        </member>
+        <member name="F:ENet.Managed.ENetEventType.None">
+            <summary>
+            Indicates no event
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetEventType.Connect">
+            <summary>
+            Indicates event is about connection of a peer
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetEventType.Disconnect">
+            <summary>
+            Indicates event is about disconnection of a peer
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetEventType.Receive">
+            <summary>
+            Indicates event is about receiving a packet from a peer
+            </summary>
+        </member>
+        <member name="T:ENet.Managed.ENetException">
+            <summary>
+            Reperesents an exception related to ENet
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.Compressor">
+            <summary>
+            Gets current in-use (custom) compressor
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.Checksum">
+            <summary>
+            Gets current in-use (custom) checksum
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.InterceptCallback">
+            <summary>
+            Gets current in-use (custom) intercept callback
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.IsUsingChecksum">
+            <summary>
+            Indicates whether checksum is enabled or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.IsUsingCRC32Checksum">
+            <summary>
+            Indicates whether ENet's builtin CRC32 checksum is enabled or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.IsUsingCompressor">
+            <summary>
+            Indicates whether compression is enabled or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.IsUsingRangerCoderCompressor">
+            <summary>
+            Indicates whether ENet's builtin range-coder compressor is enabled or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.IsUsingInterceptor">
+            <summary>
+            Indicates whether an interceptor is being used or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.TotalSentData">
+            <summary>
+            Total number of bytes sent
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.TotalSentPackets">
+            <summary>
+            Total number of packets sent
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.TotalReceivedData">
+            <summary>
+            Total number of received bytes
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.TotalReceivedPackets">
+            <summary>
+            Total number of received packets
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.ConnectedPeers">
+            <summary>
+            Number of connected peers
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.DuplicatePeers">
+            <summary>
+            Maximum number of Peers that can connect with same IP.
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.PeersCount">
+            <summary>
+            Number of peers allocated.
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetHost.PeerList">
+            <summary>
+            List of all allocated and pre-allocated peers by this host.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.#ctor(System.Net.IPEndPoint,System.Int32,System.Byte,System.Int64,System.Int64)">
+            <summary>
+            Instantiates <see cref="T:ENet.Managed.ENetHost"/> by creating native ENet host 
+            </summary>
+            <param name="address">The address at which other peers may connect to this host. If null, then no peers may connect to the host.</param>
+            <param name="peers">Maximum number of peers</param>
+            <param name="channels">Maximum number of channels (0 = <see cref="F:ENet.Managed.ENetHost.MaximumPeers"/>)</param>
+            <param name="incomingBandwidth">Maximum incoming bandwidth (0 = unlimited)</param>
+            <param name="outgoingBandwidth">Maximum outgoing bandwidth (0 = unlimited)</param>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.GetNativePointer">
+            <summary>
+            Gets native pointer to ENetHost that could be passed to ENet library functions
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.Connect(System.Net.IPEndPoint,System.Byte,System.UInt32)">
+            <summary>
+            Connects specified <see cref="T:System.Net.IPEndPoint"/>
+            </summary>
+            <param name="endPoint">Remote endpoint</param>
+            <param name="channels">Maximum number of channels (can't be zero)</param>
+            <param name="data">User data supplied to the receiving host</param>
+            <returns></returns>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.Broadcast(System.Byte,System.ReadOnlySpan{System.Byte},ENet.Managed.ENetPacketFlags)">
+            <summary>
+            Queues a packet to be sent to all peers associated with the host.
+            </summary>
+            <remarks>
+            <see cref="F:ENet.Managed.ENetPacketFlags.NoAllocate"/> will be ignored.
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.Broadcast(System.Byte,ENet.Managed.ENetPacket)">
+            <summary>
+            Queues a packet to be sent to all peers associated with the host.
+            </summary>
+            <remarks>
+            This method will destroy the packet if its <see cref="P:ENet.Managed.ENetPacket.ReferenceCount"/> is zero
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.BandwidthLimit(System.Int64,System.Int64)">
+            <summary>
+            Adjusts the bandwidth limits of the host.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.ChannelLimit(System.Byte)">
+            <summary>
+            Limits the maximum allowed channels of future incoming connections.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.CheckEvents">
+            <summary>
+            Checks for any queued events on the host and dispatches one if available.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.Service(System.TimeSpan)">
+            <summary>
+            Waits for events on the host specified and shuttles packets between the host and its peers.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.Flush">
+            <summary>
+            Sends any queued packets on the host specified to its designated peers.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.CompressWith(ENet.Managed.Compressors.ENetCompressor)">
+            <summary>
+            Enables compression with given custom compressor
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.CompressWithRangeCoder">
+            <summary>
+            Enables compression using ENet's builtin range-coder compression
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.DisableCompression">
+            <summary>
+            Disables compression
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.ChecksumWith(ENet.Managed.Checksums.ENetChecksum)">
+            <summary>
+            Enables checksum with given custom checksum method
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.ChecksumWithCRC32">
+            <summary>
+            Enables ENet's builtin CRC32 checksum
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.DisableChecksum">
+            <summary>
+            Disables checksum
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.InterceptWith(ENet.Managed.Native.ENetInterceptCallback)">
+            <summary>
+            Intercepts host events with given callback
+            </summary>
+            <param name="callback">Callback which intercepts the events</param>
+        </member>
+        <member name="M:ENet.Managed.ENetHost.DisableInterception">
+            <summary>
+            Disables interception
+            </summary>
+        </member>
+        <member name="T:ENet.Managed.ENetHostPeerList">
+            <summary>
+            Represents ENet host's allocated peers.
+            </summary>
+        </member>
+        <member name="T:ENet.Managed.ENetPacket">
+            <summary>
+            Wraps <see cref="T:ENet.Managed.Native.NativeENetPacket"/> pointer
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPacket.IsNull">
+            <summary>
+            Indicates whether underlaying pointer is null or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPacket.Data">
+            <summary>
+            Packet data
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPacket.Flags">
+            <summary>
+            Packet flags
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPacket.UserData">
+            <summary>
+            Pointer to user supplied data or tag to this packet.
+            </summary>
+            <remarks>
+            <see cref="P:ENet.Managed.ENetPacket.UserData"/> differs from <see cref="P:ENet.Managed.ENetPacket.Data"/>.
+            Its purpose is to allow you to tag the packet if needed.
+            </remarks>
+        </member>
+        <member name="P:ENet.Managed.ENetPacket.FreeCallback">
+            <summary>
+            Callback to be called after packet gets destoryed.
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPacket.ReferenceCount">
+            <summary>
+            Number of references to this packet, initial value is 0
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetPacket.GetNativePointer">
+            <summary>
+            Get underlaying pointer to <see cref="T:ENet.Managed.Native.NativeENetPacket"/>.
+            </summary>
+            <returns>Pointer to <see cref="T:ENet.Managed.Native.NativeENetPacket"/></returns>
+        </member>
+        <member name="M:ENet.Managed.ENetPacket.AddRef">
+            <summary>
+            Increments packet references count by one
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetPacket.RemoveRef">
+            <summary>
+            Decerements packet references count by one and destroys the packet if count reaches zero
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetPacket.Resize(System.Int32)">
+            <summary>
+            Resizes packet data length
+            </summary>
+            <param name="dataLength">New data length</param>
+            <remarks>
+            All <see cref="T:System.Span`1"/>s after this will become invalid and touching them will result in memory errors
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPacket.Destroy">
+            <summary>
+            Destroys packet without considering references count
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPacketFlags.Reliable">
+            <summary>
+            Indicates packet data must be sent reliable
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPacketFlags.Unsequenced">
+            <summary>
+            Indicates packet data must be sent unsequenced
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPacketFlags.UnsequencedReliable">
+            <summary>
+            Indicates packet data must be sent reliable but unsqeuenced
+            </summary>
+            <remarks>
+            This flag is combination of <see cref="F:ENet.Managed.ENetPacketFlags.Reliable"/> and <see cref="F:ENet.Managed.ENetPacketFlags.Unsequenced"/>
+            </remarks>
+        </member>
+        <member name="F:ENet.Managed.ENetPacketFlags.NoAllocate">
+            <summary>
+            Specifies to enet_packet_create to avoid allocating new buffer and use the given buffer directly
+            </summary>
+            <remarks>
+            Given buffer must have allocated using the same allocater that ENet is using
+            </remarks>
+        </member>
+        <member name="F:ENet.Managed.ENetPacketFlags.UnreliableFragment">
+            <summary>
+            Indicates the packet data fragments must be sent unreliable
+            </summary>
+        </member>
+        <member name="T:ENet.Managed.ENetPeer">
+            <summary>
+            Wraps <see cref="T:ENet.Managed.Native.NativeENetPeer"/> pointer
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPeer.IsNull">
+            <summary>
+            Indicates whether underlaying pointer is null or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPeer.State">
+            <summary>
+            Peer state.
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ENetPeer.UserData">
+            <summary>
+            Native user supplied data.
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.GetNativePointer">
+            <summary>
+            Gets underlaying <see cref="T:ENet.Managed.Native.NativeENetPeer"/> pointer
+            </summary>
+            <returns>Pointer to <see cref="T:ENet.Managed.Native.NativeENetPeer"/></returns>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.GetRemoteEndPoint">
+            <summary>
+            Get remote IP and Port of peer as <see cref="T:System.Net.IPEndPoint"/>
+            </summary>
+            <returns>Peer's remote endpoint</returns>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.Send(System.Byte,ENet.Managed.ENetPacket)">
+            <summary>
+            Queues a packet to be sent.
+            </summary>
+            <param name="channelId">Destination channel Id</param>
+            <param name="packet">Packet to be queued</param>
+            <remarks>
+            This method will destroy the packet if its <see cref="P:ENet.Managed.ENetPacket.ReferenceCount"/> is zero
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.Send(System.Byte,System.ReadOnlySpan{System.Byte},ENet.Managed.ENetPacketFlags)">
+            <summary>
+            Queues a packet to be sent.
+            </summary>
+            <param name="channelId">Destination channel Id</param>
+            <param name="buffer">Buffer containing packet data</param>
+            <param name="flags">Packet flags</param>
+            <remarks>
+            <see cref="F:ENet.Managed.ENetPacketFlags.NoAllocate"/> will be ignored.
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.TryReceive(ENet.Managed.ENetPacket@,System.Byte@)">
+            <summary>
+            Attempts to dequeue any incoming queued packet.
+            </summary>
+            <param name="packet">Received packet if return value is true</param>
+            <param name="channelId">Receiver channel if return value is true</param>
+            <returns>Return true if packet received otherwise false</returns>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.Reset">
+            <summary>
+            Forcefully disconnects a peer.
+            </summary>
+            <remarks>
+            The foreign host represented by the peer is not notified of the disconnection and will timeout on its connection to the local host.
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.Disconnect(System.UInt32)">
+            <summary>
+            Request disconnection from the peer.
+            </summary>
+            <param name="data">Data describing the disconnection</param>
+            <remarks>
+            An <see cref="F:ENet.Managed.ENetEventType.Disconnect"/> event will be generated by service method once disconnection is complete
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.DisconnectLater(System.UInt32)">
+            <summary>
+            Request disconnection from the peer.
+            </summary>
+            <param name="data">Data describing the disconnection</param>
+            <remarks>
+            An <see cref="F:ENet.Managed.ENetEventType.Disconnect"/> event will be generated by service method once disconnection is complete
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.DisconnectNow(System.UInt32)">
+            <summary>
+            Force an immediate disconnection from the peer.
+            </summary>
+            <param name="data">Data describing the disconnection</param>
+            <remarks>
+            No <see cref="F:ENet.Managed.ENetEventType.Disconnect"/> event will be generated by service method once disconnection is complete
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.Ping">
+            <summary>
+            Sends a ping request to the peer.
+            </summary>
+            <remarks>
+            From offical doc:
+            Ping requests factor into the mean round trip time as designated by the roundTripTime field in the ENetPeer structure.
+            ENet automatically pings all connected peers at regular intervals,
+            however, this function may be called to ensure more frequent ping requests.
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.PingInterval(System.TimeSpan)">
+            <summary>
+            Sets the interval at which pings will be sent to the peer.
+            </summary>
+            <param name="timeout">The interval at which to send pings; defaults to ENET_PEER_PING_INTERVAL if <see cref="F:System.TimeSpan.Zero"/></param>
+            <remarks>
+            From offical doc:
+            Pings are used both to monitor the liveness of the connection and also to dynamically adjust the throttle during
+            periods of low traffic so that the throttle has reasonable responsiveness during traffic spikes.
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.ThrottleConfigure(System.TimeSpan,System.UInt32,System.UInt32)">
+            <summary>
+            Configures throttle parameter for a peer.
+            </summary>
+            <remarks>
+            See enet_peer_throttle_configure function documentation at http://enet.bespin.org/
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ENetPeer.Timeout(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Sets the timeout parameters for a peer.
+            </summary>
+            <remarks>
+            See enet_peer_timeout function documentation at http://enet.bespin.org/
+            </remarks>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.Disconnected">
+            <summary>
+            Indicates peer is disconnected
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.Connecting">
+            <summary>
+            Indicates peer is connecting
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.AcknowledgingConnect">
+            <summary>
+            Indicates connect is being acknowledged
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.ConnectionPending">
+            <summary>
+            Indicates connection is pending
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.ConnectingSucceeded">
+            <summary>
+            Indicates connection is succeed
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.Connected">
+            <summary>
+            Indicates the peer is connected
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.DisconnectLater">
+            <summary>
+            Indicates the peer is going to disconnect
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.Disconnecting">
+            <summary>
+            Indicates the peer is disconnecting
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.AcknowledgingDisconnect">
+            <summary>
+            Indicates disconnect is being acknowledged
+            </summary>
+        </member>
+        <member name="F:ENet.Managed.ENetPeerState.Zombie">
+            <summary>
+            Indicates the peer is a zombie
+            </summary>
+            <remarks>
+            The meaning zombie is that the peer haven't reacted in a while
+            </remarks>
+        </member>
+        <member name="T:ENet.Managed.IENetEventListener">
+            <summary>
+            An interface event listener which receives dispatched ENet events. 
+            </summary>
+        </member>
+        <member name="T:ENet.Managed.ManagedENet">
+            <summary>
+            Manages initialization and deinitialization of ENet library
+            </summary>
+            <remarks>
+            The methods of this should be manually called at beginning and end 
+            of your application.
+            This class is not thread-safe.
+            </remarks>
+        </member>
+        <member name="P:ENet.Managed.ManagedENet.Started">
+            <summary>
+            Indicates whether ENet has initialized or not
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ManagedENet.Allocator">
+            <summary>
+            The memory allocator currently in-use by ENet
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.ManagedENet.LinkedVersion">
+            <summary>
+            The ENet static-linked version 
+            </summary>
+        </member>
+        <member name="M:ENet.Managed.ManagedENet.Startup(ENet.Managed.Allocators.ENetAllocator)">
+            <summary>
+            Initializes ENEt with specified memory allocator
+            </summary>
+            <param name="allocator">If this parameter receives null ENet will use its own heap allocator.</param>
+        </member>
+        <member name="M:ENet.Managed.ManagedENet.Shutdown(System.Boolean)">
+            <summary>
+            Shutdowns and unloads ENet dynamic library
+            </summary>
+            <param name="delete">Specifies the ENet dynamic library should be removed or not</param>
+            <remarks>
+            Any interaction with ENet managed wrapper instances like <see cref="T:ENet.Managed.ENetHost"/> should be avoided
+            after calling this method
+            </remarks>
+        </member>
+        <member name="M:ENet.Managed.ManagedENetHelpers.TryGetIPEndPoint(System.String,System.Net.IPEndPoint@)">
+            <summary>
+            Attempts to turn [IP/HOST]:[PORT] style string into <see cref="T:System.Net.IPEndPoint"/>
+            </summary>
+            <returns>Returns true if succeed otherwise false</returns>
+        </member>
+        <member name="T:ENet.Managed.Native.LibENet">
+            <summary>
+            Provides methods and delegates to load/unload/call ENet library 
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.Native.LibENet.Path">
+            <summary>
+            Current loaded ENet dynamic library path
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.Native.LibENet.Handle">
+            <summary>
+            Current loaded ENet dynamic library handle
+            </summary>
+        </member>
+        <member name="P:ENet.Managed.Native.LibENet.IsLoaded">
+            <summary>
+            Indicates whether ENet dynamic libray is loaded or not
+            </summary>
+        </member>
+        <member name="T:ENetBinariesResource">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.enet_linux_arm">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.enet_linux_arm64">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.enet_linux_x86">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.enet_linux_x86_64">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.enet_win32_arm">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.enet_win32_x86">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:ENetBinariesResource.enet_win32_x86_64">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+    </members>
+</doc>
