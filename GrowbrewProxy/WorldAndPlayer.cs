@@ -39,8 +39,8 @@ namespace GrowbrewProxy
             for (int i = 0; i < inventoryitemCount; i++)
             {
                 int pos = 7 + i * 4;
-                inventory.items[i].itemID = BitConverter.ToUInt16(inventoryData, pos);
-                inventory.items[i].amount = BitConverter.ToInt16(inventoryData, pos + 2);
+                //inventory.items[i].itemID = BitConverter.ToUInt16(inventoryData, pos);
+                //inventory.items[i].amount = BitConverter.ToInt16(inventoryData, pos + 2);
             }
         }
     };
