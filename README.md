@@ -5,6 +5,7 @@ Growbrew - An advanced Growtopia ENet Proxy made in C#, giving you the advantage
 - Windows 7 - Windows 10 (windows versions older than than that may work with modifications and such, this is not supported by default though.)
 .NET requirements: .NET 5.0+ (ATTENTION, THIS IS NECESSARY NOW!)
 If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Managed please!
+NOTE: V2.2.1 Supports x64 only as of right now, if you use 32 bit or ARM for some reason contact me on discord DEERUX#1551
 
 # Features:
 ---------------------------------------------------------------
