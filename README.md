@@ -67,7 +67,7 @@ This update focused mostly on performance/stability. Would highly recommend this
 - Add HashString to C# (func name is "HashBytes" - credits iProgramInCpp)
 - Upgraded ENet wrapper to ENet.Managed v5 + ENet protocol fix for server and client side (type2|1)
 - Prepare dll injector code for future usage of our own internal
-- 2 *NEW* exploits: BRB status change and ghost slime spam (on_step_on_tile_mod)
+- 3 *NEW* exploits: BRB status change and ghost slime spam (on_step_on_tile_mod) and the doorid "exploit"
 - Fix other stuff
 - Extreme version will be sold again soon, especially with our new multibotting feature.
 - Crosscompatible with MacOS and Linux due to .NET 5 switch
