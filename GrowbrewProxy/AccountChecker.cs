@@ -21,8 +21,8 @@ namespace GrowbrewProxy
         public static bool SaveGrowtokenCount9 = false;
         public static bool SaveWLCountOver10 = false;
 
-        public static int Growtopia_Port = MainForm.Growtopia_Master_Port; // todo auto get port
-        public static string Growtopia_IP = MainForm.Growtopia_Master_IP;
+        public static int Growtopia_Port = MainForm.globalUserData.Growtopia_Master_Port; // todo auto get port
+        public static string Growtopia_IP = MainForm.globalUserData.Growtopia_Master_IP;
         public static MainForm.AccountTable[] accountsToCheck;
         private static ENetHost g_Client;
         private static ENetPeer g_Peer;
@@ -35,7 +35,7 @@ namespace GrowbrewProxy
             try
             {
                 // this is a specific, external client made only for the purpose of using the TRACK packet for our gains/advantage in order to check all accounts quick and efficiently.
-                byte[] packet = e.GetPayloadFinal();
+                byte[] packet = e.Data.ToArray();
                 Console.WriteLine("RECEIVE TYPE: " + packet[0].ToString());
                 switch (packet[0])
                 {
@@ -89,8 +89,8 @@ namespace GrowbrewProxy
                             Console.WriteLine("[ACCOUNT-CHECKER] TRACK PACKET CONTENT:\n" + Encoding.ASCII.GetString(packet.Skip(4).ToArray()));
                             checkCurrentIndex++;
                             Console.WriteLine("[ACCOUNT-CHECKER] +1 account checked, disconnecting and moving onto the next one.");
-                            Growtopia_Port = MainForm.Growtopia_Master_Port; // todo auto get port
-                            Growtopia_IP = MainForm.Growtopia_Master_IP;
+                            Growtopia_Port = MainForm.globalUserData.Growtopia_Master_Port; // todo auto get port
+                            Growtopia_IP = MainForm.globalUserData.Growtopia_Master_IP;
                             ConnectCurrent();
                             break;
                         }
@@ -110,22 +110,15 @@ namespace GrowbrewProxy
             // MainForm.hasLogonAlready = false;
             Console.WriteLine("[ACCOUNT-CHECKER] Disconnected from GT Server(s)!");
         }
-        private static void Client_OnConnect(object sender, ENetConnectEventArgs e)
-        {
-            e.Peer.OnReceive += Peer_OnReceive_Client;
-            e.Peer.OnDisconnect += Peer_OnDisconnect_Client;
-            e.Peer.PingInterval(1000);
-            e.Peer.Timeout(1000, 9000, 13000);
-
-            Console.WriteLine("[ACCOUNT-CHECKER] Successfully connected to GT Server(s)!");
-        }
+      
         public static bool Initialize()
         {
             // Setting up ENet-Client ->
             if (g_Client == null)
             {
                 AllocConsole();
-                Console.WriteLine("[ACCOUNT-CHECKER] Account Checker Bot/Client (C) 2020 playingo (aka DEERUX), github.com/playingoDEERUX/growbrewproxy\n" +
+                Console.WriteLine("Feature is temporarily disabled for fixing...");
+                /*Console.WriteLine("[ACCOUNT-CHECKER] Account Checker Bot/Client (C) 2020 playingo (aka DEERUX), github.com/playingoDEERUX/growbrewproxy\n" +
                     "DO NOT CLOSE THIS WINDOW, OTHERWISE THE ENTIRE PROXY WILL CLOSE (except do it when you wanna exit from it)! \n" +
                     "Although, you can still click on stop checking accounts to gain performance for proxy-only again.");
 
@@ -141,14 +134,14 @@ namespace GrowbrewProxy
                     return false;
                 }
 
-                leftToCheckIndex = accountsToCheck.Count() - 1;
+                /*leftToCheckIndex = accountsToCheck.Count() - 1;
                 g_Client = new ENetHost(1, 2);
-                g_Client.OnConnect += Client_OnConnect;
+                g_Client. += Client_OnConnect;
                 g_Client.ChecksumWithCRC32();
                 g_Client.CompressWithRangeCoder();
-                g_Client.StartServiceThread();
-                Console.WriteLine("[ACCOUNT-CHECKER] Initialized Global Client Host and started service thread!\n" +
-                    "\nClick 'Connect and check all accounts' to start checking!");
+                g_Client.StartServiceThread();*/
+                /*Console.WriteLine("[ACCOUNT-CHECKER] Initialized Global Client Host and started service thread!\n" +
+                    "\nClick 'Connect and check all accounts' to start checking!");*/
             }
             return true;
         }
@@ -156,7 +149,7 @@ namespace GrowbrewProxy
         {
             if (g_Client == null) return;
 
-            if (g_Client.ServiceThreadStarted)
+            /*if (g_Client.ServiceThreadStarted)
             {
 
                 if (g_Peer == null)
@@ -169,7 +162,7 @@ namespace GrowbrewProxy
 
                     g_Peer = g_Client.Connect(new System.Net.IPEndPoint(IPAddress.Parse(Growtopia_IP), Growtopia_Port), 2, 0);
                 }
-            }
+            }*/
         }
     }
 }

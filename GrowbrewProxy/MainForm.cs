@@ -1,6 +1,8 @@
 ﻿// (C) Made, programmed and designed by PlayIngoHD/PlayIngoHD Gaming/playingo/DEERUX and iProgramInCpp/iProgramMC only.
 // Reselling this is illegal, because this is free-opensource-ware and credits are appreciated :)
 using ENet.Managed;
+using ENet.Managed.Allocators;
+using ENet.Managed.Native;
 using Kernys.Bson;
 using System;
 using System.Collections.Generic;
@@ -49,6 +51,21 @@ namespace GrowbrewProxy
         public static string LogText = string.Empty;
 
         private delegate void SafeCallDelegate(string text);
+        private delegate void SafeCallDelegatePort(ushort port);
+
+        public void UpdatePortBoxSafe(ushort port)
+        {
+            if (textBox1.InvokeRequired)
+            {
+                var d = new SafeCallDelegatePort(UpdatePortBoxSafe);
+                portBox.Invoke(d, new object[] { port });
+            }
+            else
+            {
+                portBox.Value = port;
+            }
+        }
+
 
         public static ENetHost client;
         private ENetHost m_Host;
@@ -61,6 +78,10 @@ namespace GrowbrewProxy
 
         public class UserData
         {
+            public ulong connectIDReal = 0;
+            public ulong connectID = 0;
+
+            public bool didQuit = false;
             public bool mayContinue = false;
             public bool srvRunning = false;
             public bool clientRunning = false;
@@ -84,7 +105,7 @@ namespace GrowbrewProxy
             public int userID = -1;
             public int lmode = -1;
             public byte[] skinColor = new byte[4];
-            public bool disableSilentReconnect = false;
+            public bool enableSilentReconnect = false;
             public bool hasLogonAlready = false;
             public bool hasUpdatedItemsAlready = false;
             public bool bypassAAP = false;
@@ -104,6 +125,11 @@ namespace GrowbrewProxy
             public bool unlimitedZoom = false;
             public bool isFacingSwapped = false;
             public bool blockCollecting = false;
+            public short lastWrenchX = 0;
+            public short lastWrenchY = 0;
+            public bool awaitingReconnect = false;
+            public bool enableAutoreconnect = false;
+            public string autoEnterWorld = "";
         }
 
         public static UserData globalUserData = new UserData();
@@ -241,11 +267,12 @@ namespace GrowbrewProxy
 
         public static string CreateLogonPacket(string customGrowID = "", string customPass = "", int customUserID = -1, int customToken = -1, string doorID = "")
         {
+            
             // this is kinda messy
             string gversion = globalUserData.game_version;
             string p = string.Empty;
             Random rand = new Random();
-            bool requireAdditionalData = false; if (globalUserData.token > 0 || globalUserData.token < 0) requireAdditionalData = true;
+            bool requireAdditionalData = globalUserData.token > -1;
 
             if (customGrowID == "")
             {
@@ -264,33 +291,35 @@ namespace GrowbrewProxy
 
             p += "requestedName|" + ("Growbrew" + rand.Next(0, 255).ToString() + "\n"); //"Growbrew" + rand.Next(0, 255).ToString() + "\n"
             p += "f|1\n";
-            p += "protocol|112\n";
+            p += "protocol|120\n";
             p += "game_version|" + (gversion + "\n");
             if (requireAdditionalData) p += "lmode|" + globalUserData.lmode + "\n";
-            p += "cbits|0\n";
+            p += "cbits|128\n";
             p += "player_age|100\n";
             p += "GDPR|1\n";
-            p += "hash2|" + rand.Next(-777777777, 777777777).ToString() + "\n";
-            p += "meta|localhost\n"; // soon auto fetch meta etc.
+            p += "hash2|" + rand.Next(-777777776, 777777776).ToString() + "\n";
+            p += "meta|playingo.co.uk-456236.999666420.de\n"; // soon auto fetch meta etc.
             p += "fhash|-716928004\n";
-            p += "platformID|4\n";
+            p += "platformID|0\n";
             p += "deviceVersion|0\n";
             p += "country|" + (globalUserData.country + "\n");
-            p += "hash|" + rand.Next(-777777777, 777777777).ToString() + "\n";
+            p += "hash|" + rand.Next(-777777776, 777777776).ToString() + "\n";
             p += "mac|" + globalUserData.macc + "\n";
-            if (requireAdditionalData && customUserID == -1) p += "user|" + (globalUserData.userID.ToString() + "\n");
-            if (requireAdditionalData && customToken == -1) p += "token|" + (globalUserData.token.ToString() + "\n");
+            p += "rid|" + GenerateRID() + "\n";
+            if (requireAdditionalData) p += "user|" + (globalUserData.userID.ToString() + "\n");
+            if (requireAdditionalData) p += "token|" + (globalUserData.token.ToString() + "\n");
             if (customUserID > 0) p += "user|" + (customUserID.ToString() + "\n");
             if (customToken > 0) p += "token|" + (customToken.ToString() + "\n");
             if (globalUserData.doorid != "" && doorID == "") p += "doorID|" + globalUserData.doorid + "\n";
             else if (doorID != "") p += "doorID|" + doorID + "\n";
-            p += "wk|" + ("NONE0\n");
+            p += "wk|" + GenerateUniqueWinKey() + "\n";
+            p += "fz|1331849031";
             Console.WriteLine(p);
-            //p += "zf|-1576181843";
+            p += "zf|-1331849031";
             return p;
         }
 
-        void AppendLog(string text)
+        public void AppendLog(string text)
         {
             if (text == string.Empty) return;
             if (logBox.InvokeRequired)
@@ -305,10 +334,11 @@ namespace GrowbrewProxy
         public static void ConnectToServer(ref ENetPeer peer, UserData userData = null, bool FirstInitialUseOfBot = false)
         {
             Console.WriteLine("Internal proxy client is attempting a connection to server...");
-            bool isUSDnull = userData == null;
-            string ip = isUSDnull ? globalUserData.Growtopia_IP : userData.Growtopia_IP;
-            int port = isUSDnull ? globalUserData.Growtopia_Port : userData.Growtopia_Port;
+            
+            string ip = globalUserData.Growtopia_IP;
+            int port = globalUserData.Growtopia_Port;
 
+     
             if (peer == null)
             {
                 peer = client.Connect(new IPEndPoint(IPAddress.Parse(ip), port), 2, 0);
@@ -319,16 +349,20 @@ namespace GrowbrewProxy
                 {
                     peer = client.Connect(new IPEndPoint(IPAddress.Parse(ip), port), 2, 0);
                 }
-                else if (realPeer.State != ENetPeerState.Connected)
+                else if (peer.State != ENetPeerState.Connected)
                 {
                     peer = client.Connect(new IPEndPoint(IPAddress.Parse(ip), port), 2, 0);
                 }
                 else
                 {
-                    messageHandler.packetSender.SendPacket(3, "action|quit", peer);
-                    peer.DisconnectLater(0);
-                    // sub server switching, most likely.
 
+                    // peer = client.Connect(new IPEndPoint(IPAddress.Parse(ip), port), 2, 0);
+                    globalUserData.awaitingReconnect = true;
+                    peer.Disconnect(0);
+                
+                    //In this case, we will want the realPeer to be disconnected first 
+
+                    // sub server switching, most likely.
                     peer = client.Connect(new IPEndPoint(IPAddress.Parse(ip), port), 2, 0);
                 }
             }
@@ -336,23 +370,41 @@ namespace GrowbrewProxy
 
         private void Host_OnConnect(ENetPeer peer)
         {
-
+            
             proxyPeer = peer;
 
-            peer.Timeout(1000, 5000, 8000);
+            //peer.Timeout(1000, 5000, 8000);
             //e.Peer.Timeout(30000, 25000, 30000);
-
+            //MessageBox.Show("a");
+           // Thread.Sleep(1000);
             AppendLog("Connecting to gt servers at " + globalUserData.Growtopia_IP + ":" + globalUserData.Growtopia_Port.ToString() + "...");
-            ConnectToServer(ref realPeer);
+            globalUserData.connectID++;
+            ConnectToServer(ref MainForm.realPeer);
 
         }
 
         private void Peer_OnDisconnect(object sender, uint e)
         {
+            ENetPeer peer = (ENetPeer)sender;
+            if (globalUserData.isSwitchingServer)
+            {
+                globalUserData.isSwitchingServer = false;
+                GamePacketProton variantPacket = new GamePacketProton();
+                variantPacket = new GamePacketProton();
+                variantPacket.delay = 0; //Avoid too quick connection and give headroom for enetcommand to prevent random/rare freezing (fix by Toxic Vampor)
+                variantPacket.NetID = -1;
+                variantPacket.AppendString("OnSendToServer");
+                variantPacket.AppendInt(2);
+                variantPacket.AppendInt(globalUserData.token);
+                variantPacket.AppendInt(globalUserData.userID);
+                variantPacket.AppendString("127.0.0.1|" + globalUserData.doorid);
+                variantPacket.AppendInt(globalUserData.lmode);
 
-            
-            //if (((ENetPeer)sender) != null) ((ENetPeer)sender).Host.Dispose();
-            if (!globalUserData.disableSilentReconnect)
+                messageHandler.packetSender.SendData(variantPacket.GetBytes(), MainForm.proxyPeer);
+                return;
+            }
+           
+            if (globalUserData.enableSilentReconnect)
             {
                 unsafe
                 {
@@ -376,33 +428,55 @@ namespace GrowbrewProxy
                             messageHandler.packetSender.SendData(variantPacket.GetBytes(), MainForm.proxyPeer);
                         }
                     }
-
-                    globalUserData.token = 0;
-                    globalUserData.userID = 0;
-                    globalUserData.lmode = 1;
-
-                    globalUserData.Growtopia_IP = globalUserData.Growtopia_Master_IP;
-                    globalUserData.Growtopia_Port = globalUserData.Growtopia_Master_Port;
                 }
 
                 // ConnectToServer(useRealPeer ? ref realPeer : ref peer);
 
                 ConnectToServer(ref realPeer);
             }
+            else if (globalUserData.enableAutoreconnect)
+            {
+                unsafe
+                {
+                    if (((ENetPeer)sender).GetNativePointer()->ConnectID != realPeer.GetNativePointer()->ConnectID) return;
+                }
+
+                try
+                {
+                    realPeer.Send(0, new byte[60], ENetPacketFlags.Reliable);
+                }
+                catch
+                {
+
+                    if (proxyPeer != null)
+                    {
+                        if (proxyPeer.State == ENetPeerState.Connected)
+                        {
+                            GamePacketProton variantPacket2 = new GamePacketProton();
+                            variantPacket2.AppendString("OnReconnect");
+                            messageHandler.packetSender.SendData(variantPacket2.GetBytes(), MainForm.proxyPeer);
+                        }
+                    }
+                }
+            }
             messageHandler.enteredGame = false;
+            
             AppendLog("An internal disconnection was triggered in the proxy, you may want to reconnect your GT Client if you are not being disconnected by default (maybe because of sub-server switching?)");
         }
 
         private void Peer_OnReceive(object sender, ENetPacket e)
         {
             ENetPeer peer = (ENetPeer)sender;
+            if (peer.IsNull) AppendLog("Attention peer is null!! (Peer_OnReceive)");
             string str = messageHandler.HandlePacketFromClient(ref peer, e);
             if (str != "_none_" && str != "") AppendLog(str);
         }
 
         private void Peer_OnReceive_Client(object sender, ENetPacket e)
         {
+            
             ENetPeer peer = (ENetPeer)sender;
+            if (peer.IsNull) AppendLog("Attention peer is null!! (Peer_OnReceive_Client)");
             string str = messageHandler.HandlePacketFromServer(ref peer, e);
             if (str != "_none_" && str != "") AppendLog(str);
         }
@@ -423,10 +497,12 @@ namespace GrowbrewProxy
 
         private void Client_OnConnect(ENetPeer peer)
         {
-            peer.Timeout(1000, 5400, 6700);
-            peer.PingInterval(TimeSpan.FromMilliseconds(500));
-            // realPeer = peer;
             AppendLog("The growtopia client just connected successfully.");
+            peer.Timeout(1000, 4000, 6000);
+            //peer.PingInterval(TimeSpan.FromMilliseconds(1000));
+
+            realPeer = peer;
+            globalUserData.connectIDReal++;
         }
 
         private void doServerService(int delay = 0)
@@ -437,16 +513,18 @@ namespace GrowbrewProxy
             switch (Event.Type)
             {
                 case ENetEventType.None:
-                    //Console.WriteLine("EVENTTYPE NONE CALLED??!");
+                   
                     break;
                 case ENetEventType.Connect:
                     Host_OnConnect(Event.Peer);
                     break;
                 case ENetEventType.Disconnect:
-                    Console.WriteLine($"Proxy GT peer disconnected! (irrelevant)");
+                    
                     break;
                 case ENetEventType.Receive:
+                    
                     Peer_OnReceive(Event.Peer, Event.Packet);
+                   
                     Event.Packet.Destroy();
                     break;
                 default:
@@ -457,26 +535,32 @@ namespace GrowbrewProxy
 
         private void doClientService(int delay = 0)
         {
+            if (client == null) return;
+            if (client.Disposed) return;
             var Event = client.Service(TimeSpan.FromMilliseconds(delay));
 
-            switch (Event.Type)
+            unsafe
             {
-                case ENetEventType.None:
+                switch (Event.Type)
+                {
+                    case ENetEventType.None:
 
-                    break;
-                case ENetEventType.Connect:
-                    Client_OnConnect(Event.Peer);
-                    break;
-                case ENetEventType.Disconnect:
-                    Console.WriteLine($"Real GT peer disconnected!");
-                    Peer_OnDisconnect(Event.Peer, 0);
-                    break;
-                case ENetEventType.Receive:
-                    Peer_OnReceive_Client(Event.Peer, Event.Packet);
-                    Event.Packet.Destroy();
-                    break;
-                default:
-                    throw new NotImplementedException();
+                        break;
+                    case ENetEventType.Connect:
+                        Client_OnConnect(Event.Peer);
+                        break;
+                    case ENetEventType.Disconnect:
+                        Peer_OnDisconnect(Event.Peer, 0);
+                        Event.Peer.UnsetUserData();
+                        break;
+                    case ENetEventType.Receive:
+                       
+                        Peer_OnReceive_Client(Event.Peer, Event.Packet);
+                        Event.Packet.Destroy();
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
 
@@ -486,7 +570,7 @@ namespace GrowbrewProxy
             while (true)
             {
                 doClientService(1);
-                doServerService(10);
+                doServerService(3);
             }
         }
 
@@ -509,17 +593,20 @@ namespace GrowbrewProxy
                 globalUserData.clientRunning = true;
 
                 // Setting up ENet-Server ->
-
-                m_Host = new ENetHost(new IPEndPoint(IPAddress.Any, 2), 32, 2, 32000, 32000);
+               
+                m_Host = new ENetHost(new IPEndPoint(IPAddress.Any, 2), 32, 10, 0, 0);
                 m_Host.ChecksumWithCRC32();
                 m_Host.CompressWithRangeCoder();
-
+                m_Host.EnableNewProtocol(2);
+               
                 // Setting up ENet-Client ->
-                client = new ENetHost(null, 128, 2); // for multibotting, coming soon.
+                client = new ENetHost(null, 64, 10); // for multibotting, coming soon.
                 client.ChecksumWithCRC32();
                 client.CompressWithRangeCoder();
+                client.EnableNewProtocol(1);
 
-                realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(globalUserData.Growtopia_Master_IP), globalUserData.Growtopia_Master_Port), 2, 0);
+                // realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(globalUserData.Growtopia_Master_IP), globalUserData.Growtopia_Master_Port), 2, 0);
+                //realPeer = client.Connect(new IPEndPoint(IPAddress.Parse(globalUserData.Growtopia_Master_IP), globalUserData.Growtopia_Master_Port), 2, 0);
                 doProxy();
 
                 // Setting up controls
@@ -589,6 +676,18 @@ namespace GrowbrewProxy
             }
         }
 
+        public static uint HashBytes(byte[] b) // Thanks to iProgramInCpp !
+        {
+            byte[] n = b;
+            uint acc = 0x55555555;
+
+            for (int i = 0; i < b.Length; i++)
+            {
+                acc = (acc >> 27) + (acc << 5) + n[i];
+            }
+            return acc;
+        }
+
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -597,7 +696,14 @@ namespace GrowbrewProxy
 
             StartupScreen stsc = new StartupScreen();
             stsc.ShowDialog();
-            ManagedENet.Startup();
+
+            var startupOptions = new ENetStartupOptions()
+            {
+                ModulePath = Directory.GetCurrentDirectory() + "\\enet.dll"
+            };
+
+            ManagedENet.Startup(startupOptions);
+            ManagedENet.Shutdown(delete: false);
 
             globalUserData.macc = GenerateMACAddress();
 
@@ -671,7 +777,9 @@ namespace GrowbrewProxy
 
         private void logBox_TextChanged(object sender, EventArgs e)
         {
-
+            logBox.SelectionStart = logBox.Text.Length;
+            // scroll it automatically
+            logBox.ScrollToCaret();
         }
 
         private void formTabs_SelectedIndexChanged(object sender, EventArgs e)
@@ -679,24 +787,24 @@ namespace GrowbrewProxy
             try
             {
                 if (ActiveForm == null) return;
-                if (mainPages.SelectedTab == mainPages.TabPages["proxyPage"])
+                if (proxyPages.SelectedTab == proxyPages.TabPages["proxyPage"])
                     ActiveForm.Text = "Growbrew Proxy - Main Page";
-                else if (mainPages.SelectedTab == mainPages.TabPages["cheatPage"])
+                else if (proxyPages.SelectedTab == proxyPages.TabPages["cheatPage"])
                     ActiveForm.Text = "Growbrew Proxy - Cheats and more";
-                else if (mainPages.SelectedTab == mainPages.TabPages["extraPage"])
+                else if (proxyPages.SelectedTab == proxyPages.TabPages["extraPage"])
                 {
                     loadLogs();
                     ActiveForm.Text = "Growbrew Proxy - Logs";
                 }
-                else if (mainPages.SelectedTab == mainPages.TabPages["accountCheckerPage"])
+                else if (proxyPages.SelectedTab == proxyPages.TabPages["accountCheckerPage"])
                 {
                     ActiveForm.Text = "Growbrew Proxy - Account Checker";
                 }
-                else if (mainPages.SelectedTab == mainPages.TabPages["autofarmPage"])
+                else if (proxyPages.SelectedTab == proxyPages.TabPages["autofarmPage"])
                 {
                     ActiveForm.Text = "Growbrew Proxy - Autofarming";
                 }
-                else if (mainPages.SelectedTab == mainPages.TabPages["multibottingPage"])
+                else if (proxyPages.SelectedTab == proxyPages.TabPages["multibottingPage"])
                 {
                     ActiveForm.Text = "Growbrew Proxy - Multibot";
                 }
@@ -802,6 +910,7 @@ namespace GrowbrewProxy
             {
                 Player playerObject = messageHandler.worldMap.player;
                 posXYLabel.Text = "X: " + playerObject.X.ToString() + " Y: " + playerObject.Y.ToString();
+                wrenchXYlabel.Text = $"Last Wrench X: {globalUserData.lastWrenchX} Y: {globalUserData.lastWrenchY}";
             }
         }
 
@@ -1121,7 +1230,7 @@ namespace GrowbrewProxy
             {
                 string[] arr = new string[1];
                 arr[0] = "http://*:80/";
-                HTTPServer.StartHTTP(arr);
+                HTTPServer.StartHTTP(this, arr);
                 button11.Text = "Stop HTTP Server";
             }
             else
@@ -1184,6 +1293,17 @@ namespace GrowbrewProxy
         private void changelog_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Growbrew Proxy Changelogs:\n" +
+                "\n2.2.1\n" +
+                "- Upgrade to .NET 5 and C# 9.0\n" +
+                "- extreme version will contain an entire bundle of tools for GT (android stealer, growalts, cross/multibotting), including our own gt internal.\n" +
+                "- Added BRB change & Slime spam exploit" +
+                "- Fixed custom enet.dll with *server* (type2|1) sided and *client* sided fix :) thanks to mar4ello6\n" +
+                "- Upgrade to ENet.Managed v5 by moien007 (async changes, support for using custom ENet native lib easily etc.\n" +
+                "- Fix connect to servers due to modified ENet protocol from dev team\n" +
+                "- Added new features, discover them your self!\n" +
+                "- Updated a few common tile extras, didn't want to add support for every just so it gets skidded again...\n" +
+                "- Growbrew Extreme is on sale now, and it's not just a 'proxy' anymore, it will feature an inbuilt internal with over 90+ features and support for android (have it working+privately tested, but not nearly 90 features yet), as well as multibotting with UP TO 90 BOTS of course...\n" +
+                "- Enjoy!" +
                 "\n2.1 (probably the last version)\n--------------------------\n" +
                 "- (Biggest update) Crossbotting/Multibotting added (Not available in free open source version), better than multiboxing and it's all done in a single Growtopia window by design (saves tons of cpu and allows you to use many more accounts at the same time). You can basically add bots in the Multibot tab and make them do everything same as what you do without having more than one Growtopia window opened.\n" +
                 "- Known bug: Peer.Reset doesn't trigger disconnect event after 5-8s of timeout, idk if it's one of my bugs but I thought it was because of ENet.Managed v4, so stay updated on that perhaps it'll get fixed?\n" +
@@ -1638,7 +1758,7 @@ namespace GrowbrewProxy
 
         private void disableSilentReconnect_CheckedChanged(object sender, EventArgs e)
         {
-            globalUserData.disableSilentReconnect = !globalUserData.disableSilentReconnect;
+            globalUserData.enableSilentReconnect = !globalUserData.enableSilentReconnect;
         }
 
         private void button23_Click(object sender, EventArgs e)
@@ -1646,6 +1766,185 @@ namespace GrowbrewProxy
             MessageBox.Show("Super Multibotting: What is it?\n" +
                 "Super Multibotting enables the MIRRORING of your proxy packets in a functioning way to all 'dumb bots', turning them into smart ones.\n" +
                 "Shortly said: All bots will start to do what you do, move where you go, enter doors where you do, enter worlds where you go, break/place where you do and chat what you type. ");
+        }
+
+        private void cheattabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label33_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void broadcastIconStatus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (broadcastIconStatus.Checked)
+                modifyIconStatusTimer.Start();
+            else
+                modifyIconStatusTimer.Stop();
+        }
+
+        int currentIconStatus = 0;
+        private void modifyIconStatusTimer_Tick(object sender, EventArgs e)
+        {
+            Player[] players = messageHandler.worldMap.players.ToArray();
+
+            TankPacket tStruct = new TankPacket();
+            tStruct.PacketType = (int)NetTypes.PacketTypes.ICON_STATE;
+            tStruct.PunchX = currentIconStatus++;
+            
+
+            if (currentIconStatus > 2) currentIconStatus = 0;
+
+            foreach (Player p in players)
+            {
+                tStruct.NetID = p.netID;
+                messageHandler.packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, tStruct.PackForSendingRaw(), MainForm.realPeer);
+            }
+        }
+
+        private void reapplyLockBtn_Click(object sender, EventArgs e)
+        {
+
+            TankPacket tPacket = new TankPacket();
+            tPacket.PacketType = (int)NetTypes.PacketTypes.TILE_CHANGE_REQ;
+            tPacket.MainValue = 32;
+            tPacket.PunchX = (int)globalUserData.lastWrenchX;
+            tPacket.PunchY = (int)globalUserData.lastWrenchY;
+            tPacket.X = messageHandler.worldMap.player.X;
+            tPacket.Y = messageHandler.worldMap.player.Y;
+            tPacket.ExtDataMask = 16;
+
+            string dlg = "action|dialog_return\n" +
+                   "dialog_name|lock_edit\n" +
+                   $"tilex|{globalUserData.lastWrenchX}|\n" +
+                   $"tiley|{globalUserData.lastWrenchY}|\n" +
+                   "buttonClicked|recalcLock\n" +
+                   "checkbox_public|0\n" +
+                   "checkbox_ignore|1\n";
+
+            for (int i = 0; i < 5; i++)
+            {
+                messageHandler.packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, tPacket.PackForSendingRaw(), MainForm.realPeer);
+                messageHandler.packetSender.SendPacket((int)NetTypes.NetMessages.GENERIC_TEXT, dlg, MainForm.realPeer);
+                Thread.Sleep(10);
+            }
+        }
+        int rn = 0;
+
+        private void doCrash()
+        {
+            
+        }
+        private void button25_Click(object sender, EventArgs e)
+        {
+            TankPacket tPacket = new TankPacket();
+            tPacket.PacketType = 46;
+
+
+            Player[] players = messageHandler.worldMap.players.ToArray();
+            for (int i = 0; i < 100000; i++)
+            {
+                foreach (var p in players)
+                {
+                    int tileX = p.X / 32, tileY = p.Y / 32;
+
+                    tPacket.X = tileX;
+                    tPacket.Y = tileY;
+                    tPacket.NetID = p.netID;
+                    tPacket.SecondaryNetID = tileX;
+                    tPacket.ExtDataMask = tileY;
+                    tPacket.MainValue = 3728;
+                    tPacket.PunchX = tileX;
+                    tPacket.PunchY = tileY;
+                    //rn++;
+                    messageHandler.packetSender.SendPacketRaw(4, tPacket.PackForSendingRaw(), MainForm.realPeer, ENetPacketFlags.Reliable);
+
+                    //Thread.Sleep(100);
+                }
+            }
+            
+        }
+
+        private void annoyPlayers_Tick(object sender, EventArgs e)
+        {
+            TankPacket tPacket = new TankPacket();
+            int tileX = messageHandler.worldMap.player.X / 32, tileY = (messageHandler.worldMap.player.Y / 32) + 1;
+
+            tPacket.PacketType = 46;
+            tPacket.X = tileX;
+            tPacket.Y = tileY;
+            tPacket.NetID = 0;
+            tPacket.SecondaryNetID = tileX;
+            tPacket.ExtDataMask = tileY;
+            tPacket.MainValue = 3728;
+            tPacket.PunchX = tileX;
+            tPacket.PunchY = tileY;
+
+            Player[] players = messageHandler.worldMap.players.ToArray();
+
+
+
+            messageHandler.packetSender.SendPacketRaw(4, tPacket.PackForSendingRaw(), MainForm.realPeer, ENetPacketFlags.Reliable);
+            foreach (var p in players)
+            {
+
+                tileX = p.X / 32;
+                tileY = p.Y / 32;
+
+                tPacket.X = tileX;
+                tPacket.Y = tileY;
+                tPacket.NetID = p.netID;
+                tPacket.SecondaryNetID = tileX;
+                tPacket.ExtDataMask = tileY;
+                tPacket.MainValue = 3728;
+                tPacket.PunchX = tileX;
+                tPacket.PunchY = tileY;
+
+                byte[] packet = tPacket.PackForSendingRaw();
+                //rn++;
+
+                messageHandler.packetSender.SendPacketRaw(4, packet, MainForm.realPeer, ENetPacketFlags.Reliable);
+               
+                //Thread.Sleep(100);
+
+            }
+            MainForm.realPeer.Ping();
+        }
+
+        private void annoyPlayerBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (annoyPlayerBox.Checked)
+                annoyPlayers.Start();
+            else
+                annoyPlayers.Stop();
+        }
+
+        private void enableAutoReconnect_CheckedChanged(object sender, EventArgs e)
+        {
+            globalUserData.enableAutoreconnect = enableAutoReconnectBox.Checked;
+        }
+
+        private void autoEnterWorldBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (autoEnterWorldBox.Checked)
+            {
+                globalUserData.autoEnterWorld = autoWorldTextBox.Text;
+            }
+            else
+            {
+                globalUserData.autoEnterWorld = "";
+            }
+        }
+
+        private void autoWorldTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (autoEnterWorldBox.Checked)
+            {
+                globalUserData.autoEnterWorld = autoWorldTextBox.Text;
+            }
         }
 
         void doAutofarm(int itemID, bool remote_mode = false, bool oneblockmode = false, bool selfblockstart = false)

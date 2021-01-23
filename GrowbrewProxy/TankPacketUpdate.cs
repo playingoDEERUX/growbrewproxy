@@ -20,7 +20,7 @@ namespace GrowbrewProxy
         public int TilePlaced => MainValue;
         public float X, Y;
         public float XSpeed, YSpeed;
-        public float SecondaryPadding;
+        public int SecondaryPadding;
         public int PunchX, PunchY;
         public int ExtDataSize => ExtData.Count;
         public List<byte> ExtData = new List<byte>();

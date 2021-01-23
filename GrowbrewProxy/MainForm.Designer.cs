@@ -36,8 +36,9 @@
             this.labelclientrunning = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.mainPages = new System.Windows.Forms.TabControl();
+            this.proxyPages = new System.Windows.Forms.TabControl();
             this.proxyPage = new System.Windows.Forms.TabPage();
+            this.accessLabel = new System.Windows.Forms.Label();
             this.button21 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
@@ -115,7 +116,8 @@
             this.expllabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.configPage = new System.Windows.Forms.TabPage();
-            this.disableSilentReconnect = new System.Windows.Forms.CheckBox();
+            this.enableAutoReconnectBox = new System.Windows.Forms.CheckBox();
+            this.enableSilentReconnect = new System.Windows.Forms.CheckBox();
             this.logallpackets = new System.Windows.Forms.CheckBox();
             this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.checkBox6 = new System.Windows.Forms.CheckBox();
@@ -128,6 +130,12 @@
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.checkUnlimitedZoom = new System.Windows.Forms.CheckBox();
             this.cheatExtra2Page = new System.Windows.Forms.TabPage();
+            this.autoWorldTextBox = new System.Windows.Forms.TextBox();
+            this.autoEnterWorldBox = new System.Windows.Forms.CheckBox();
+            this.annoyPlayerBox = new System.Windows.Forms.CheckBox();
+            this.wrenchXYlabel = new System.Windows.Forms.Label();
+            this.reapplyLockBtn = new System.Windows.Forms.Button();
+            this.broadcastIconStatus = new System.Windows.Forms.CheckBox();
             this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.extraPage = new System.Windows.Forms.TabPage();
             this.reloadLogs = new System.Windows.Forms.Button();
@@ -161,6 +169,7 @@
             this.label19 = new System.Windows.Forms.Label();
             this.itemIDBox = new System.Windows.Forms.TextBox();
             this.multibottingPage = new System.Windows.Forms.TabPage();
+            this.label32 = new System.Windows.Forms.Label();
             this.button23 = new System.Windows.Forms.Button();
             this.label31 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
@@ -178,14 +187,15 @@
             this.spamStartStopBtn = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.spamtextBox = new System.Windows.Forms.TextBox();
-            this.aboutlabel = new System.Windows.Forms.LinkLabel();
             this.playerLogicUpdate = new System.Windows.Forms.Timer(this.components);
             this.label14 = new System.Windows.Forms.Label();
+            this.spammerTimer = new System.Windows.Forms.Timer(this.components);
             this.vLabel = new System.Windows.Forms.Label();
             this.whitepanel = new System.Windows.Forms.Panel();
-            this.spammerTimer = new System.Windows.Forms.Timer(this.components);
-            this.label32 = new System.Windows.Forms.Label();
-            this.mainPages.SuspendLayout();
+            this.label33 = new System.Windows.Forms.Label();
+            this.modifyIconStatusTimer = new System.Windows.Forms.Timer(this.components);
+            this.annoyPlayers = new System.Windows.Forms.Timer(this.components);
+            this.proxyPages.SuspendLayout();
             this.proxyPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.portBox)).BeginInit();
             this.cheatPage.SuspendLayout();
@@ -207,10 +217,10 @@
             // 
             // runproxy
             // 
-            this.runproxy.Location = new System.Drawing.Point(221, 213);
+            this.runproxy.Location = new System.Drawing.Point(221, 236);
             this.runproxy.Margin = new System.Windows.Forms.Padding(4);
             this.runproxy.Name = "runproxy";
-            this.runproxy.Size = new System.Drawing.Size(236, 60);
+            this.runproxy.Size = new System.Drawing.Size(236, 37);
             this.runproxy.TabIndex = 0;
             this.runproxy.Text = "Start the proxy!";
             this.runproxy.UseVisualStyleBackColor = true;
@@ -222,7 +232,7 @@
             this.statuslabel.Location = new System.Drawing.Point(12, 4);
             this.statuslabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.statuslabel.Name = "statuslabel";
-            this.statuslabel.Size = new System.Drawing.Size(52, 17);
+            this.statuslabel.Size = new System.Drawing.Size(52, 20);
             this.statuslabel.TabIndex = 1;
             this.statuslabel.Text = "Status:";
             // 
@@ -233,7 +243,7 @@
             this.labelsrvrunning.Location = new System.Drawing.Point(13, 30);
             this.labelsrvrunning.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelsrvrunning.Name = "labelsrvrunning";
-            this.labelsrvrunning.Size = new System.Drawing.Size(143, 17);
+            this.labelsrvrunning.Size = new System.Drawing.Size(148, 20);
             this.labelsrvrunning.TabIndex = 2;
             this.labelsrvrunning.Text = "Server is not running!";
             // 
@@ -244,7 +254,7 @@
             this.labelclientrunning.Location = new System.Drawing.Point(13, 46);
             this.labelclientrunning.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelclientrunning.Name = "labelclientrunning";
-            this.labelclientrunning.Size = new System.Drawing.Size(136, 17);
+            this.labelclientrunning.Size = new System.Drawing.Size(145, 20);
             this.labelclientrunning.TabIndex = 3;
             this.labelclientrunning.Text = "Client is not running!";
             // 
@@ -265,28 +275,29 @@
             this.label1.Location = new System.Drawing.Point(199, 4);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 17);
+            this.label1.Size = new System.Drawing.Size(66, 20);
             this.label1.TabIndex = 5;
             this.label1.Text = "Log Box:";
             // 
-            // mainPages
+            // proxyPages
             // 
-            this.mainPages.Controls.Add(this.proxyPage);
-            this.mainPages.Controls.Add(this.cheatPage);
-            this.mainPages.Controls.Add(this.extraPage);
-            this.mainPages.Controls.Add(this.accountCheckerPage);
-            this.mainPages.Controls.Add(this.autofarmPage);
-            this.mainPages.Controls.Add(this.multibottingPage);
-            this.mainPages.Location = new System.Drawing.Point(-1, 0);
-            this.mainPages.Margin = new System.Windows.Forms.Padding(4);
-            this.mainPages.Name = "mainPages";
-            this.mainPages.SelectedIndex = 0;
-            this.mainPages.Size = new System.Drawing.Size(692, 310);
-            this.mainPages.TabIndex = 6;
-            this.mainPages.SelectedIndexChanged += new System.EventHandler(this.formTabs_SelectedIndexChanged);
+            this.proxyPages.Controls.Add(this.proxyPage);
+            this.proxyPages.Controls.Add(this.cheatPage);
+            this.proxyPages.Controls.Add(this.extraPage);
+            this.proxyPages.Controls.Add(this.accountCheckerPage);
+            this.proxyPages.Controls.Add(this.autofarmPage);
+            this.proxyPages.Controls.Add(this.multibottingPage);
+            this.proxyPages.Location = new System.Drawing.Point(-1, 0);
+            this.proxyPages.Margin = new System.Windows.Forms.Padding(4);
+            this.proxyPages.Name = "proxyPages";
+            this.proxyPages.SelectedIndex = 0;
+            this.proxyPages.Size = new System.Drawing.Size(692, 310);
+            this.proxyPages.TabIndex = 6;
+            this.proxyPages.SelectedIndexChanged += new System.EventHandler(this.formTabs_SelectedIndexChanged);
             // 
             // proxyPage
             // 
+            this.proxyPage.Controls.Add(this.accessLabel);
             this.proxyPage.Controls.Add(this.button21);
             this.proxyPage.Controls.Add(this.button20);
             this.proxyPage.Controls.Add(this.button18);
@@ -305,15 +316,25 @@
             this.proxyPage.Controls.Add(this.labelsrvrunning);
             this.proxyPage.Controls.Add(this.statuslabel);
             this.proxyPage.Controls.Add(this.runproxy);
-            this.proxyPage.Location = new System.Drawing.Point(4, 25);
+            this.proxyPage.Location = new System.Drawing.Point(4, 29);
             this.proxyPage.Margin = new System.Windows.Forms.Padding(4);
             this.proxyPage.Name = "proxyPage";
             this.proxyPage.Padding = new System.Windows.Forms.Padding(4);
-            this.proxyPage.Size = new System.Drawing.Size(684, 281);
+            this.proxyPage.Size = new System.Drawing.Size(684, 277);
             this.proxyPage.TabIndex = 0;
             this.proxyPage.Text = "Proxy";
             this.proxyPage.UseVisualStyleBackColor = true;
             this.proxyPage.Click += new System.EventHandler(this.proxyPage_Click);
+            // 
+            // accessLabel
+            // 
+            this.accessLabel.AutoSize = true;
+            this.accessLabel.Location = new System.Drawing.Point(276, 217);
+            this.accessLabel.Name = "accessLabel";
+            this.accessLabel.Size = new System.Drawing.Size(123, 20);
+            this.accessLabel.TabIndex = 20;
+            this.accessLabel.Text = "Access: EXTREME";
+            this.accessLabel.Visible = false;
             // 
             // button21
             // 
@@ -328,7 +349,7 @@
             // 
             // button20
             // 
-            this.button20.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button20.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.button20.Location = new System.Drawing.Point(430, -2);
             this.button20.Margin = new System.Windows.Forms.Padding(4);
             this.button20.Name = "button20";
@@ -340,7 +361,7 @@
             // 
             // button18
             // 
-            this.button18.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button18.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.button18.Location = new System.Drawing.Point(552, -2);
             this.button18.Margin = new System.Windows.Forms.Padding(4);
             this.button18.Name = "button18";
@@ -352,7 +373,7 @@
             // 
             // changelog
             // 
-            this.changelog.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F);
+            this.changelog.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.changelog.Location = new System.Drawing.Point(305, -6);
             this.changelog.Margin = new System.Windows.Forms.Padding(4);
             this.changelog.Name = "changelog";
@@ -368,7 +389,7 @@
             this.label13.Location = new System.Drawing.Point(13, 66);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(161, 17);
+            this.label13.Size = new System.Drawing.Size(163, 20);
             this.label13.TabIndex = 15;
             this.label13.Text = "HTTP-Server is running!";
             this.label13.Visible = false;
@@ -378,7 +399,7 @@
             this.button11.Location = new System.Drawing.Point(16, 86);
             this.button11.Margin = new System.Windows.Forms.Padding(4);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(155, 44);
+            this.button11.Size = new System.Drawing.Size(155, 51);
             this.button11.TabIndex = 14;
             this.button11.Text = "Start HTTP Server + Client";
             this.button11.UseVisualStyleBackColor = true;
@@ -399,7 +420,7 @@
             0,
             0});
             this.portBox.Name = "portBox";
-            this.portBox.Size = new System.Drawing.Size(108, 22);
+            this.portBox.Size = new System.Drawing.Size(108, 27);
             this.portBox.TabIndex = 12;
             this.portBox.Value = new decimal(new int[] {
             17196,
@@ -435,7 +456,7 @@
             this.label3.Location = new System.Drawing.Point(12, 225);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(38, 17);
+            this.label3.Size = new System.Drawing.Size(38, 20);
             this.label3.TabIndex = 8;
             this.label3.Text = "Port:";
             // 
@@ -445,7 +466,7 @@
             this.label2.Location = new System.Drawing.Point(13, 170);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(24, 17);
+            this.label2.Size = new System.Drawing.Size(24, 20);
             this.label2.TabIndex = 7;
             this.label2.Text = "IP:";
             // 
@@ -454,18 +475,18 @@
             this.ipaddrBox.Location = new System.Drawing.Point(17, 190);
             this.ipaddrBox.Margin = new System.Windows.Forms.Padding(4);
             this.ipaddrBox.Name = "ipaddrBox";
-            this.ipaddrBox.Size = new System.Drawing.Size(132, 22);
+            this.ipaddrBox.Size = new System.Drawing.Size(132, 27);
             this.ipaddrBox.TabIndex = 6;
             this.ipaddrBox.Text = "213.179.209.168";
             // 
             // cheatPage
             // 
             this.cheatPage.Controls.Add(this.cheattabs);
-            this.cheatPage.Location = new System.Drawing.Point(4, 25);
+            this.cheatPage.Location = new System.Drawing.Point(4, 29);
             this.cheatPage.Margin = new System.Windows.Forms.Padding(4);
             this.cheatPage.Name = "cheatPage";
             this.cheatPage.Padding = new System.Windows.Forms.Padding(4);
-            this.cheatPage.Size = new System.Drawing.Size(684, 281);
+            this.cheatPage.Size = new System.Drawing.Size(684, 277);
             this.cheatPage.TabIndex = 1;
             this.cheatPage.Text = "Cheats/Mods/Misc";
             this.cheatPage.UseVisualStyleBackColor = true;
@@ -482,6 +503,7 @@
             this.cheattabs.SelectedIndex = 0;
             this.cheattabs.Size = new System.Drawing.Size(677, 278);
             this.cheattabs.TabIndex = 5;
+            this.cheattabs.SelectedIndexChanged += new System.EventHandler(this.cheattabs_SelectedIndexChanged);
             // 
             // internalcheattab
             // 
@@ -516,11 +538,11 @@
             this.internalcheattab.Controls.Add(this.hack_magplant);
             this.internalcheattab.Controls.Add(this.chnamelabel);
             this.internalcheattab.Controls.Add(this.rgbSkinHack);
-            this.internalcheattab.Location = new System.Drawing.Point(4, 25);
+            this.internalcheattab.Location = new System.Drawing.Point(4, 29);
             this.internalcheattab.Margin = new System.Windows.Forms.Padding(4);
             this.internalcheattab.Name = "internalcheattab";
             this.internalcheattab.Padding = new System.Windows.Forms.Padding(4);
-            this.internalcheattab.Size = new System.Drawing.Size(669, 249);
+            this.internalcheattab.Size = new System.Drawing.Size(669, 245);
             this.internalcheattab.TabIndex = 0;
             this.internalcheattab.Text = "Cheat";
             this.internalcheattab.UseVisualStyleBackColor = true;
@@ -528,10 +550,10 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(589, 102);
+            this.label28.Location = new System.Drawing.Point(588, 98);
             this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(67, 17);
+            this.label28.Size = new System.Drawing.Size(69, 20);
             this.label28.TabIndex = 35;
             this.label28.Text = "Executor:";
             // 
@@ -541,7 +563,7 @@
             this.checkBox1.Location = new System.Drawing.Point(227, 36);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(97, 21);
+            this.checkBox1.Size = new System.Drawing.Size(96, 24);
             this.checkBox1.TabIndex = 34;
             this.checkBox1.Text = "Fast nuker";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -549,7 +571,7 @@
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(431, 36);
+            this.button13.Location = new System.Drawing.Point(442, 49);
             this.button13.Margin = new System.Windows.Forms.Padding(4);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(71, 28);
@@ -564,7 +586,7 @@
             this.label15.Location = new System.Drawing.Point(359, 4);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(155, 34);
+            this.label15.Size = new System.Drawing.Size(165, 40);
             this.label15.TabIndex = 32;
             this.label15.Text = "for private servers :\r\n(some have them fixed)";
             // 
@@ -618,7 +640,7 @@
             this.checkBox5.Location = new System.Drawing.Point(212, 106);
             this.checkBox5.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(77, 21);
+            this.checkBox5.Size = new System.Drawing.Size(80, 24);
             this.checkBox5.TabIndex = 26;
             this.checkBox5.Text = "rayman";
             this.checkBox5.UseVisualStyleBackColor = true;
@@ -629,7 +651,7 @@
             this.checkBox4.Location = new System.Drawing.Point(212, 85);
             this.checkBox4.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(140, 21);
+            this.checkBox4.Size = new System.Drawing.Size(150, 24);
             this.checkBox4.TabIndex = 25;
             this.checkBox4.Text = "(break below too)";
             this.checkBox4.UseVisualStyleBackColor = true;
@@ -641,7 +663,7 @@
             this.checkBox3.Location = new System.Drawing.Point(131, 92);
             this.checkBox3.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(85, 21);
+            this.checkBox3.Size = new System.Drawing.Size(90, 24);
             this.checkBox3.TabIndex = 24;
             this.checkBox3.Text = "Nuker ->";
             this.checkBox3.UseVisualStyleBackColor = true;
@@ -649,7 +671,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(357, 36);
+            this.button6.Location = new System.Drawing.Point(370, 49);
             this.button6.Margin = new System.Windows.Forms.Padding(4);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(71, 28);
@@ -660,7 +682,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(431, 64);
+            this.button5.Location = new System.Drawing.Point(442, 81);
             this.button5.Margin = new System.Windows.Forms.Padding(4);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(71, 28);
@@ -671,7 +693,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(357, 64);
+            this.button4.Location = new System.Drawing.Point(370, 81);
             this.button4.Margin = new System.Windows.Forms.Padding(4);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(71, 28);
@@ -686,7 +708,7 @@
             this.send2client.Location = new System.Drawing.Point(467, 188);
             this.send2client.Margin = new System.Windows.Forms.Padding(4);
             this.send2client.Name = "send2client";
-            this.send2client.Size = new System.Drawing.Size(195, 21);
+            this.send2client.Size = new System.Drawing.Size(205, 24);
             this.send2client.TabIndex = 19;
             this.send2client.Text = "send to proxy peer (client)";
             this.send2client.UseVisualStyleBackColor = true;
@@ -705,7 +727,7 @@
             this.actionButtonClicked.Location = new System.Drawing.Point(192, 134);
             this.actionButtonClicked.Margin = new System.Windows.Forms.Padding(4);
             this.actionButtonClicked.Name = "actionButtonClicked";
-            this.actionButtonClicked.Size = new System.Drawing.Size(132, 22);
+            this.actionButtonClicked.Size = new System.Drawing.Size(132, 27);
             this.actionButtonClicked.TabIndex = 12;
             this.actionButtonClicked.TextChanged += new System.EventHandler(this.actionButtonClicked_TextChanged);
             // 
@@ -714,7 +736,7 @@
             this.nameBoxOn.Location = new System.Drawing.Point(51, 134);
             this.nameBoxOn.Margin = new System.Windows.Forms.Padding(4);
             this.nameBoxOn.Name = "nameBoxOn";
-            this.nameBoxOn.Size = new System.Drawing.Size(132, 22);
+            this.nameBoxOn.Size = new System.Drawing.Size(132, 27);
             this.nameBoxOn.TabIndex = 10;
             this.nameBoxOn.TextChanged += new System.EventHandler(this.nameBoxOn_TextChanged);
             // 
@@ -723,13 +745,13 @@
             this.changeNameBox.Location = new System.Drawing.Point(525, 28);
             this.changeNameBox.Margin = new System.Windows.Forms.Padding(4);
             this.changeNameBox.Name = "changeNameBox";
-            this.changeNameBox.Size = new System.Drawing.Size(132, 22);
+            this.changeNameBox.Size = new System.Drawing.Size(132, 27);
             this.changeNameBox.TabIndex = 2;
             this.changeNameBox.TextChanged += new System.EventHandler(this.changeNameBox_TextChanged);
             // 
             // sendgameact
             // 
-            this.sendgameact.Location = new System.Drawing.Point(343, 209);
+            this.sendgameact.Location = new System.Drawing.Point(343, 214);
             this.sendgameact.Margin = new System.Windows.Forms.Padding(4);
             this.sendgameact.Name = "sendgameact";
             this.sendgameact.Size = new System.Drawing.Size(159, 28);
@@ -740,7 +762,7 @@
             // 
             // sendtextact
             // 
-            this.sendtextact.Location = new System.Drawing.Point(509, 209);
+            this.sendtextact.Location = new System.Drawing.Point(510, 214);
             this.sendtextact.Margin = new System.Windows.Forms.Padding(4);
             this.sendtextact.Name = "sendtextact";
             this.sendtextact.Size = new System.Drawing.Size(149, 28);
@@ -755,7 +777,7 @@
             this.ghostmodskin.Location = new System.Drawing.Point(113, 36);
             this.ghostmodskin.Margin = new System.Windows.Forms.Padding(4);
             this.ghostmodskin.Name = "ghostmodskin";
-            this.ghostmodskin.Size = new System.Drawing.Size(98, 21);
+            this.ghostmodskin.Size = new System.Drawing.Size(103, 24);
             this.ghostmodskin.TabIndex = 15;
             this.ghostmodskin.Text = "/ghost skin";
             this.ghostmodskin.UseVisualStyleBackColor = true;
@@ -767,7 +789,7 @@
             this.label6.Location = new System.Drawing.Point(8, 138);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(33, 17);
+            this.label6.Size = new System.Drawing.Size(34, 20);
             this.label6.TabIndex = 11;
             this.label6.Text = "ON:";
             // 
@@ -788,7 +810,7 @@
             this.cheat_speed.Location = new System.Drawing.Point(8, 92);
             this.cheat_speed.Margin = new System.Windows.Forms.Padding(4);
             this.cheat_speed.Name = "cheat_speed";
-            this.cheat_speed.Size = new System.Drawing.Size(162, 38);
+            this.cheat_speed.Size = new System.Drawing.Size(167, 44);
             this.cheat_speed.TabIndex = 8;
             this.cheat_speed.Text = "Super speed\r\n(never gets patched)";
             this.cheat_speed.UseVisualStyleBackColor = true;
@@ -800,7 +822,7 @@
             this.posXYLabel.Location = new System.Drawing.Point(521, 57);
             this.posXYLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.posXYLabel.Name = "posXYLabel";
-            this.posXYLabel.Size = new System.Drawing.Size(62, 17);
+            this.posXYLabel.Size = new System.Drawing.Size(60, 20);
             this.posXYLabel.TabIndex = 7;
             this.posXYLabel.Text = "X: 0 Y: 0";
             // 
@@ -810,7 +832,7 @@
             this.hack_autoworldbanmod.Location = new System.Drawing.Point(8, 64);
             this.hack_autoworldbanmod.Margin = new System.Windows.Forms.Padding(4);
             this.hack_autoworldbanmod.Name = "hack_autoworldbanmod";
-            this.hack_autoworldbanmod.Size = new System.Drawing.Size(225, 21);
+            this.hack_autoworldbanmod.Size = new System.Drawing.Size(243, 24);
             this.hack_autoworldbanmod.TabIndex = 6;
             this.hack_autoworldbanmod.Text = "Auto world ban when mod joins";
             this.hack_autoworldbanmod.UseVisualStyleBackColor = true;
@@ -833,7 +855,7 @@
             this.hack_magplant.Location = new System.Drawing.Point(8, 7);
             this.hack_magplant.Margin = new System.Windows.Forms.Padding(4);
             this.hack_magplant.Name = "hack_magplant";
-            this.hack_magplant.Size = new System.Drawing.Size(275, 21);
+            this.hack_magplant.Size = new System.Drawing.Size(289, 24);
             this.hack_magplant.TabIndex = 0;
             this.hack_magplant.Text = "Magplant Hack / Pickup range 9 blocks";
             this.hack_magplant.UseVisualStyleBackColor = true;
@@ -845,7 +867,7 @@
             this.chnamelabel.Location = new System.Drawing.Point(521, 7);
             this.chnamelabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.chnamelabel.Name = "chnamelabel";
-            this.chnamelabel.Size = new System.Drawing.Size(105, 17);
+            this.chnamelabel.Size = new System.Drawing.Size(109, 20);
             this.chnamelabel.TabIndex = 3;
             this.chnamelabel.Text = "Name changer:";
             // 
@@ -855,7 +877,7 @@
             this.rgbSkinHack.Location = new System.Drawing.Point(8, 36);
             this.rgbSkinHack.Margin = new System.Windows.Forms.Padding(4);
             this.rgbSkinHack.Name = "rgbSkinHack";
-            this.rgbSkinHack.Size = new System.Drawing.Size(91, 21);
+            this.rgbSkinHack.Size = new System.Drawing.Size(90, 24);
             this.rgbSkinHack.TabIndex = 4;
             this.rgbSkinHack.Text = "RGB Skin";
             this.rgbSkinHack.UseVisualStyleBackColor = true;
@@ -886,11 +908,12 @@
             this.internalextrapage.Controls.Add(this.label4);
             this.internalextrapage.Controls.Add(this.expllabel);
             this.internalextrapage.Controls.Add(this.button1);
-            this.internalextrapage.Location = new System.Drawing.Point(4, 25);
+            this.internalextrapage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.internalextrapage.Location = new System.Drawing.Point(4, 29);
             this.internalextrapage.Margin = new System.Windows.Forms.Padding(4);
             this.internalextrapage.Name = "internalextrapage";
             this.internalextrapage.Padding = new System.Windows.Forms.Padding(4);
-            this.internalextrapage.Size = new System.Drawing.Size(669, 249);
+            this.internalextrapage.Size = new System.Drawing.Size(669, 245);
             this.internalextrapage.TabIndex = 2;
             this.internalextrapage.Text = "Cheat Extra";
             this.internalextrapage.UseVisualStyleBackColor = true;
@@ -927,9 +950,9 @@
             this.textBox2.Location = new System.Drawing.Point(8, 38);
             this.textBox2.Margin = new System.Windows.Forms.Padding(4);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(91, 22);
+            this.textBox2.Size = new System.Drawing.Size(91, 23);
             this.textBox2.TabIndex = 20;
-            this.textBox2.Text = "3.37";
+            this.textBox2.Text = "4.20";
             // 
             // button12
             // 
@@ -957,7 +980,7 @@
             this.setMac.Location = new System.Drawing.Point(8, 87);
             this.setMac.Margin = new System.Windows.Forms.Padding(4);
             this.setMac.Name = "setMac";
-            this.setMac.Size = new System.Drawing.Size(132, 22);
+            this.setMac.Size = new System.Drawing.Size(132, 23);
             this.setMac.TabIndex = 7;
             this.setMac.Text = "02:00:00:00:00:00";
             // 
@@ -977,7 +1000,7 @@
             this.tileX.Location = new System.Drawing.Point(12, 191);
             this.tileX.Margin = new System.Windows.Forms.Padding(4);
             this.tileX.Name = "tileX";
-            this.tileX.Size = new System.Drawing.Size(39, 22);
+            this.tileX.Size = new System.Drawing.Size(39, 23);
             this.tileX.TabIndex = 36;
             // 
             // button19
@@ -996,7 +1019,7 @@
             this.textBox3.Location = new System.Drawing.Point(317, 39);
             this.textBox3.Margin = new System.Windows.Forms.Padding(4);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(85, 22);
+            this.textBox3.Size = new System.Drawing.Size(85, 23);
             this.textBox3.TabIndex = 33;
             this.textBox3.Visible = false;
             // 
@@ -1005,7 +1028,7 @@
             this.textBox1.Location = new System.Drawing.Point(180, 191);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(47, 22);
+            this.textBox1.Size = new System.Drawing.Size(47, 23);
             this.textBox1.TabIndex = 16;
             // 
             // itemid
@@ -1013,7 +1036,7 @@
             this.itemid.Location = new System.Drawing.Point(108, 191);
             this.itemid.Margin = new System.Windows.Forms.Padding(4);
             this.itemid.Name = "itemid";
-            this.itemid.Size = new System.Drawing.Size(63, 22);
+            this.itemid.Size = new System.Drawing.Size(63, 23);
             this.itemid.TabIndex = 14;
             // 
             // tileY
@@ -1021,7 +1044,7 @@
             this.tileY.Location = new System.Drawing.Point(60, 191);
             this.tileY.Margin = new System.Windows.Forms.Padding(4);
             this.tileY.Name = "tileY";
-            this.tileY.Size = new System.Drawing.Size(39, 22);
+            this.tileY.Size = new System.Drawing.Size(39, 23);
             this.tileY.TabIndex = 13;
             // 
             // custom_collect_y
@@ -1029,7 +1052,7 @@
             this.custom_collect_y.Location = new System.Drawing.Point(437, 4);
             this.custom_collect_y.Margin = new System.Windows.Forms.Padding(4);
             this.custom_collect_y.Name = "custom_collect_y";
-            this.custom_collect_y.Size = new System.Drawing.Size(64, 22);
+            this.custom_collect_y.Size = new System.Drawing.Size(64, 23);
             this.custom_collect_y.TabIndex = 6;
             // 
             // custom_collect_x
@@ -1037,7 +1060,7 @@
             this.custom_collect_x.Location = new System.Drawing.Point(339, 4);
             this.custom_collect_x.Margin = new System.Windows.Forms.Padding(4);
             this.custom_collect_x.Name = "custom_collect_x";
-            this.custom_collect_x.Size = new System.Drawing.Size(64, 22);
+            this.custom_collect_x.Size = new System.Drawing.Size(64, 23);
             this.custom_collect_x.TabIndex = 3;
             // 
             // custom_collect_uid
@@ -1045,7 +1068,7 @@
             this.custom_collect_uid.Location = new System.Drawing.Point(211, 4);
             this.custom_collect_uid.Margin = new System.Windows.Forms.Padding(4);
             this.custom_collect_uid.Name = "custom_collect_uid";
-            this.custom_collect_uid.Size = new System.Drawing.Size(99, 22);
+            this.custom_collect_uid.Size = new System.Drawing.Size(99, 23);
             this.custom_collect_uid.TabIndex = 1;
             this.custom_collect_uid.Text = "1";
             // 
@@ -1084,12 +1107,12 @@
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(448, 203);
+            this.button14.Location = new System.Drawing.Point(448, 215);
             this.button14.Margin = new System.Windows.Forms.Padding(4);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(215, 41);
+            this.button14.Size = new System.Drawing.Size(215, 26);
             this.button14.TabIndex = 26;
-            this.button14.Text = "activate mod noclip (may ban)";
+            this.button14.Text = "activate mod noclip";
             this.button14.UseVisualStyleBackColor = true;
             this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
@@ -1187,7 +1210,8 @@
             // 
             // configPage
             // 
-            this.configPage.Controls.Add(this.disableSilentReconnect);
+            this.configPage.Controls.Add(this.enableAutoReconnectBox);
+            this.configPage.Controls.Add(this.enableSilentReconnect);
             this.configPage.Controls.Add(this.logallpackets);
             this.configPage.Controls.Add(this.checkBox9);
             this.configPage.Controls.Add(this.checkBox6);
@@ -1197,26 +1221,39 @@
             this.configPage.Controls.Add(this.checkAppendNetID);
             this.configPage.Controls.Add(this.checkBox7);
             this.configPage.Controls.Add(this.checkUnlimitedZoom);
-            this.configPage.Location = new System.Drawing.Point(4, 25);
+            this.configPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.configPage.Location = new System.Drawing.Point(4, 29);
             this.configPage.Margin = new System.Windows.Forms.Padding(4);
             this.configPage.Name = "configPage";
             this.configPage.Padding = new System.Windows.Forms.Padding(4);
-            this.configPage.Size = new System.Drawing.Size(669, 249);
+            this.configPage.Size = new System.Drawing.Size(669, 245);
             this.configPage.TabIndex = 3;
             this.configPage.Text = "Config";
             this.configPage.UseVisualStyleBackColor = true;
             // 
-            // disableSilentReconnect
+            // enableAutoReconnectBox
             // 
-            this.disableSilentReconnect.AutoSize = true;
-            this.disableSilentReconnect.Location = new System.Drawing.Point(464, 84);
-            this.disableSilentReconnect.Margin = new System.Windows.Forms.Padding(4);
-            this.disableSilentReconnect.Name = "disableSilentReconnect";
-            this.disableSilentReconnect.Size = new System.Drawing.Size(188, 55);
-            this.disableSilentReconnect.TabIndex = 46;
-            this.disableSilentReconnect.Text = "Disable Silent Reconnect\r\n(this option doesn\'t save\r\nin the config file.)";
-            this.disableSilentReconnect.UseVisualStyleBackColor = true;
-            this.disableSilentReconnect.CheckedChanged += new System.EventHandler(this.disableSilentReconnect_CheckedChanged);
+            this.enableAutoReconnectBox.AutoSize = true;
+            this.enableAutoReconnectBox.Location = new System.Drawing.Point(7, 53);
+            this.enableAutoReconnectBox.Margin = new System.Windows.Forms.Padding(4);
+            this.enableAutoReconnectBox.Name = "enableAutoReconnectBox";
+            this.enableAutoReconnectBox.Size = new System.Drawing.Size(179, 21);
+            this.enableAutoReconnectBox.TabIndex = 47;
+            this.enableAutoReconnectBox.Text = "Enable Auto Reconnect";
+            this.enableAutoReconnectBox.UseVisualStyleBackColor = true;
+            this.enableAutoReconnectBox.CheckedChanged += new System.EventHandler(this.enableAutoReconnect_CheckedChanged);
+            // 
+            // enableSilentReconnect
+            // 
+            this.enableSilentReconnect.AutoSize = true;
+            this.enableSilentReconnect.Location = new System.Drawing.Point(454, 67);
+            this.enableSilentReconnect.Margin = new System.Windows.Forms.Padding(4);
+            this.enableSilentReconnect.Name = "enableSilentReconnect";
+            this.enableSilentReconnect.Size = new System.Drawing.Size(185, 55);
+            this.enableSilentReconnect.TabIndex = 46;
+            this.enableSilentReconnect.Text = "Enable Silent Reconnect\r\n(this option doesn\'t save\r\nin the config file.)";
+            this.enableSilentReconnect.UseVisualStyleBackColor = true;
+            this.enableSilentReconnect.CheckedChanged += new System.EventHandler(this.disableSilentReconnect_CheckedChanged);
             // 
             // logallpackets
             // 
@@ -1330,9 +1367,10 @@
             this.checkBox7.Location = new System.Drawing.Point(7, 7);
             this.checkBox7.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(561, 72);
+            this.checkBox7.Size = new System.Drawing.Size(561, 38);
             this.checkBox7.TabIndex = 36;
-            this.checkBox7.Text = resources.GetString("checkBox7.Text");
+            this.checkBox7.Text = "Disable advanced world loading in proxy [makes world entering/loading much faster" +
+    ", \r\nbut makes Magplant/Autofarm/Pickup range exploit practically unusable.]";
             this.checkBox7.UseVisualStyleBackColor = true;
             this.checkBox7.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
             // 
@@ -1350,15 +1388,81 @@
             // 
             // cheatExtra2Page
             // 
+            this.cheatExtra2Page.Controls.Add(this.autoWorldTextBox);
+            this.cheatExtra2Page.Controls.Add(this.autoEnterWorldBox);
+            this.cheatExtra2Page.Controls.Add(this.annoyPlayerBox);
+            this.cheatExtra2Page.Controls.Add(this.wrenchXYlabel);
+            this.cheatExtra2Page.Controls.Add(this.reapplyLockBtn);
+            this.cheatExtra2Page.Controls.Add(this.broadcastIconStatus);
             this.cheatExtra2Page.Controls.Add(this.checkBox8);
-            this.cheatExtra2Page.Location = new System.Drawing.Point(4, 25);
+            this.cheatExtra2Page.Location = new System.Drawing.Point(4, 29);
             this.cheatExtra2Page.Margin = new System.Windows.Forms.Padding(4);
             this.cheatExtra2Page.Name = "cheatExtra2Page";
             this.cheatExtra2Page.Padding = new System.Windows.Forms.Padding(4);
-            this.cheatExtra2Page.Size = new System.Drawing.Size(669, 249);
+            this.cheatExtra2Page.Size = new System.Drawing.Size(669, 245);
             this.cheatExtra2Page.TabIndex = 4;
             this.cheatExtra2Page.Text = "Cheat Extra 2";
             this.cheatExtra2Page.UseVisualStyleBackColor = true;
+            // 
+            // autoWorldTextBox
+            // 
+            this.autoWorldTextBox.Location = new System.Drawing.Point(302, 162);
+            this.autoWorldTextBox.Name = "autoWorldTextBox";
+            this.autoWorldTextBox.Size = new System.Drawing.Size(195, 27);
+            this.autoWorldTextBox.TabIndex = 6;
+            this.autoWorldTextBox.TextChanged += new System.EventHandler(this.autoWorldTextBox_TextChanged);
+            // 
+            // autoEnterWorldBox
+            // 
+            this.autoEnterWorldBox.AutoSize = true;
+            this.autoEnterWorldBox.Location = new System.Drawing.Point(8, 164);
+            this.autoEnterWorldBox.Name = "autoEnterWorldBox";
+            this.autoEnterWorldBox.Size = new System.Drawing.Size(288, 24);
+            this.autoEnterWorldBox.TabIndex = 5;
+            this.autoEnterWorldBox.Text = "Autoenter World once in Select Screen:";
+            this.autoEnterWorldBox.UseVisualStyleBackColor = true;
+            this.autoEnterWorldBox.CheckedChanged += new System.EventHandler(this.autoEnterWorldBox_CheckedChanged);
+            // 
+            // annoyPlayerBox
+            // 
+            this.annoyPlayerBox.AutoSize = true;
+            this.annoyPlayerBox.Location = new System.Drawing.Point(8, 134);
+            this.annoyPlayerBox.Name = "annoyPlayerBox";
+            this.annoyPlayerBox.Size = new System.Drawing.Size(253, 24);
+            this.annoyPlayerBox.TabIndex = 4;
+            this.annoyPlayerBox.Text = "Slime Spam Annoy Players (Burst)";
+            this.annoyPlayerBox.UseVisualStyleBackColor = true;
+            this.annoyPlayerBox.CheckedChanged += new System.EventHandler(this.annoyPlayerBox_CheckedChanged);
+            // 
+            // wrenchXYlabel
+            // 
+            this.wrenchXYlabel.AutoSize = true;
+            this.wrenchXYlabel.Location = new System.Drawing.Point(444, 84);
+            this.wrenchXYlabel.Name = "wrenchXYlabel";
+            this.wrenchXYlabel.Size = new System.Drawing.Size(142, 20);
+            this.wrenchXYlabel.TabIndex = 3;
+            this.wrenchXYlabel.Text = "Last Wrench X: ? Y: ?";
+            // 
+            // reapplyLockBtn
+            // 
+            this.reapplyLockBtn.Location = new System.Drawing.Point(8, 81);
+            this.reapplyLockBtn.Name = "reapplyLockBtn";
+            this.reapplyLockBtn.Size = new System.Drawing.Size(198, 29);
+            this.reapplyLockBtn.TabIndex = 2;
+            this.reapplyLockBtn.Text = "reapply Lock at wrenchXY";
+            this.reapplyLockBtn.UseVisualStyleBackColor = true;
+            this.reapplyLockBtn.Click += new System.EventHandler(this.reapplyLockBtn_Click);
+            // 
+            // broadcastIconStatus
+            // 
+            this.broadcastIconStatus.AutoSize = true;
+            this.broadcastIconStatus.Location = new System.Drawing.Point(8, 38);
+            this.broadcastIconStatus.Name = "broadcastIconStatus";
+            this.broadcastIconStatus.Size = new System.Drawing.Size(227, 24);
+            this.broadcastIconStatus.TabIndex = 1;
+            this.broadcastIconStatus.Text = "Modify Everyone\'s Icon Status";
+            this.broadcastIconStatus.UseVisualStyleBackColor = true;
+            this.broadcastIconStatus.CheckedChanged += new System.EventHandler(this.broadcastIconStatus_CheckedChanged);
             // 
             // checkBox8
             // 
@@ -1366,7 +1470,7 @@
             this.checkBox8.Location = new System.Drawing.Point(8, 7);
             this.checkBox8.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(471, 21);
+            this.checkBox8.Size = new System.Drawing.Size(489, 24);
             this.checkBox8.TabIndex = 0;
             this.checkBox8.Text = "Red damage to block exploit (not visual, everyone sees it) [PATCHED]";
             this.checkBox8.UseVisualStyleBackColor = true;
@@ -1376,11 +1480,11 @@
             // 
             this.extraPage.Controls.Add(this.reloadLogs);
             this.extraPage.Controls.Add(this.entireLog);
-            this.extraPage.Location = new System.Drawing.Point(4, 25);
+            this.extraPage.Location = new System.Drawing.Point(4, 29);
             this.extraPage.Margin = new System.Windows.Forms.Padding(4);
             this.extraPage.Name = "extraPage";
             this.extraPage.Padding = new System.Windows.Forms.Padding(4);
-            this.extraPage.Size = new System.Drawing.Size(684, 281);
+            this.extraPage.Size = new System.Drawing.Size(684, 277);
             this.extraPage.TabIndex = 2;
             this.extraPage.Text = "Extra Logs";
             this.extraPage.UseVisualStyleBackColor = true;
@@ -1422,11 +1526,11 @@
             this.accountCheckerPage.Controls.Add(this.label17);
             this.accountCheckerPage.Controls.Add(this.button16);
             this.accountCheckerPage.Controls.Add(this.accsDirTextBox);
-            this.accountCheckerPage.Location = new System.Drawing.Point(4, 25);
+            this.accountCheckerPage.Location = new System.Drawing.Point(4, 29);
             this.accountCheckerPage.Margin = new System.Windows.Forms.Padding(4);
             this.accountCheckerPage.Name = "accountCheckerPage";
             this.accountCheckerPage.Padding = new System.Windows.Forms.Padding(4);
-            this.accountCheckerPage.Size = new System.Drawing.Size(684, 281);
+            this.accountCheckerPage.Size = new System.Drawing.Size(684, 277);
             this.accountCheckerPage.TabIndex = 3;
             this.accountCheckerPage.Text = "Account Checker";
             this.accountCheckerPage.UseVisualStyleBackColor = true;
@@ -1434,10 +1538,10 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(557, 4);
+            this.label24.Location = new System.Drawing.Point(551, 0);
             this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(119, 17);
+            this.label24.Size = new System.Drawing.Size(129, 20);
             this.label24.TabIndex = 12;
             this.label24.Text = "Made by playingo";
             // 
@@ -1447,7 +1551,7 @@
             this.parsedAccountNoLabel.Location = new System.Drawing.Point(4, 123);
             this.parsedAccountNoLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.parsedAccountNoLabel.Name = "parsedAccountNoLabel";
-            this.parsedAccountNoLabel.Size = new System.Drawing.Size(118, 17);
+            this.parsedAccountNoLabel.Size = new System.Drawing.Size(117, 20);
             this.parsedAccountNoLabel.TabIndex = 11;
             this.parsedAccountNoLabel.Text = "Parsed accounts:";
             // 
@@ -1466,10 +1570,11 @@
             // label21
             // 
             this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Segoe UI", 7.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label21.Location = new System.Drawing.Point(440, 91);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(233, 85);
+            this.label21.Size = new System.Drawing.Size(220, 85);
             this.label21.TabIndex = 9;
             this.label21.Text = "WARNING: \r\nThe parsing of accounts\r\nmay take longer if you have a huge\r\nfile or a" +
     " lot of account files to parse.\r\nI will work on a better solution soon.";
@@ -1477,10 +1582,11 @@
             // label22
             // 
             this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Segoe UI", 7.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label22.Location = new System.Drawing.Point(4, 210);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(371, 68);
+            this.label22.Size = new System.Drawing.Size(339, 68);
             this.label22.TabIndex = 8;
             this.label22.Text = "All accounts with the reached criteria will be saved \r\nin stored/accs/\r\nThe save " +
     "criteria values can be changed within the code. \r\n(was too lazy to use Text Boxe" +
@@ -1492,7 +1598,7 @@
             this.saveIfTokenCount.Location = new System.Drawing.Point(8, 164);
             this.saveIfTokenCount.Margin = new System.Windows.Forms.Padding(4);
             this.saveIfTokenCount.Name = "saveIfTokenCount";
-            this.saveIfTokenCount.Size = new System.Drawing.Size(337, 21);
+            this.saveIfTokenCount.Size = new System.Drawing.Size(352, 24);
             this.saveIfTokenCount.TabIndex = 7;
             this.saveIfTokenCount.Text = "Save account if growtoken count is higher than 9";
             this.saveIfTokenCount.UseVisualStyleBackColor = true;
@@ -1504,7 +1610,7 @@
             this.saveIfWlCount.Location = new System.Drawing.Point(8, 186);
             this.saveIfWlCount.Margin = new System.Windows.Forms.Padding(4);
             this.saveIfWlCount.Name = "saveIfWlCount";
-            this.saveIfWlCount.Size = new System.Drawing.Size(351, 21);
+            this.saveIfWlCount.Size = new System.Drawing.Size(363, 24);
             this.saveIfWlCount.TabIndex = 6;
             this.saveIfWlCount.Text = "Save account if World Lock count is higher than 10";
             this.saveIfWlCount.UseVisualStyleBackColor = true;
@@ -1516,7 +1622,7 @@
             this.saveIfGemCount.Location = new System.Drawing.Point(8, 143);
             this.saveIfGemCount.Margin = new System.Windows.Forms.Padding(4);
             this.saveIfGemCount.Name = "saveIfGemCount";
-            this.saveIfGemCount.Size = new System.Drawing.Size(323, 21);
+            this.saveIfGemCount.Size = new System.Drawing.Size(335, 24);
             this.saveIfGemCount.TabIndex = 5;
             this.saveIfGemCount.Text = "Save account if gem count is higher than 8000";
             this.saveIfGemCount.UseVisualStyleBackColor = true;
@@ -1528,11 +1634,12 @@
             this.groupBox1.Controls.Add(this.tokenCountLabel);
             this.groupBox1.Controls.Add(this.gemCountLabel);
             this.groupBox1.Controls.Add(this.wlCountLabel);
-            this.groupBox1.Location = new System.Drawing.Point(511, 172);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.groupBox1.Location = new System.Drawing.Point(517, 180);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(160, 98);
+            this.groupBox1.Size = new System.Drawing.Size(163, 97);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Loot Box (coming soon)";
@@ -1544,7 +1651,7 @@
             this.checkedAccsCountLabel.Location = new System.Drawing.Point(9, 79);
             this.checkedAccsCountLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.checkedAccsCountLabel.Name = "checkedAccsCountLabel";
-            this.checkedAccsCountLabel.Size = new System.Drawing.Size(67, 17);
+            this.checkedAccsCountLabel.Size = new System.Drawing.Size(58, 15);
             this.checkedAccsCountLabel.TabIndex = 6;
             this.checkedAccsCountLabel.Text = "Checked:";
             // 
@@ -1554,7 +1661,7 @@
             this.tokenCountLabel.Location = new System.Drawing.Point(9, 63);
             this.tokenCountLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.tokenCountLabel.Name = "tokenCountLabel";
-            this.tokenCountLabel.Size = new System.Drawing.Size(153, 17);
+            this.tokenCountLabel.Size = new System.Drawing.Size(132, 15);
             this.tokenCountLabel.TabIndex = 5;
             this.tokenCountLabel.Text = "Tokens (coming soon):";
             // 
@@ -1564,7 +1671,7 @@
             this.gemCountLabel.Location = new System.Drawing.Point(9, 47);
             this.gemCountLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.gemCountLabel.Name = "gemCountLabel";
-            this.gemCountLabel.Size = new System.Drawing.Size(143, 17);
+            this.gemCountLabel.Size = new System.Drawing.Size(125, 15);
             this.gemCountLabel.TabIndex = 1;
             this.gemCountLabel.Text = "Gems (coming soon):";
             // 
@@ -1574,7 +1681,7 @@
             this.wlCountLabel.Location = new System.Drawing.Point(9, 31);
             this.wlCountLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.wlCountLabel.Name = "wlCountLabel";
-            this.wlCountLabel.Size = new System.Drawing.Size(90, 17);
+            this.wlCountLabel.Size = new System.Drawing.Size(77, 15);
             this.wlCountLabel.TabIndex = 0;
             this.wlCountLabel.Text = "World Locks:";
             // 
@@ -1592,10 +1699,11 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(12, 4);
+            this.label17.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label17.Location = new System.Drawing.Point(12, -2);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(481, 51);
+            this.label17.Size = new System.Drawing.Size(466, 57);
             this.label17.TabIndex = 2;
             this.label17.Text = resources.GetString("label17.Text");
             // 
@@ -1615,7 +1723,7 @@
             this.accsDirTextBox.Location = new System.Drawing.Point(12, 62);
             this.accsDirTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.accsDirTextBox.Name = "accsDirTextBox";
-            this.accsDirTextBox.Size = new System.Drawing.Size(451, 22);
+            this.accsDirTextBox.Size = new System.Drawing.Size(451, 27);
             this.accsDirTextBox.TabIndex = 0;
             // 
             // autofarmPage
@@ -1629,11 +1737,12 @@
             this.autofarmPage.Controls.Add(this.detItemLabel);
             this.autofarmPage.Controls.Add(this.label19);
             this.autofarmPage.Controls.Add(this.itemIDBox);
-            this.autofarmPage.Location = new System.Drawing.Point(4, 25);
+            this.autofarmPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.autofarmPage.Location = new System.Drawing.Point(4, 29);
             this.autofarmPage.Margin = new System.Windows.Forms.Padding(4);
             this.autofarmPage.Name = "autofarmPage";
             this.autofarmPage.Padding = new System.Windows.Forms.Padding(4);
-            this.autofarmPage.Size = new System.Drawing.Size(684, 281);
+            this.autofarmPage.Size = new System.Drawing.Size(684, 277);
             this.autofarmPage.TabIndex = 4;
             this.autofarmPage.Text = "Autofarm";
             this.autofarmPage.UseVisualStyleBackColor = true;
@@ -1644,7 +1753,7 @@
             this.startFromOwnTilePos.Location = new System.Drawing.Point(280, 53);
             this.startFromOwnTilePos.Margin = new System.Windows.Forms.Padding(4);
             this.startFromOwnTilePos.Name = "startFromOwnTilePos";
-            this.startFromOwnTilePos.Size = new System.Drawing.Size(170, 21);
+            this.startFromOwnTilePos.Size = new System.Drawing.Size(179, 22);
             this.startFromOwnTilePos.TabIndex = 16;
             this.startFromOwnTilePos.Text = "Start from own tile pos";
             this.startFromOwnTilePos.UseVisualStyleBackColor = true;
@@ -1656,7 +1765,7 @@
             this.checkBox10.Location = new System.Drawing.Point(280, 25);
             this.checkBox10.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(180, 21);
+            this.checkBox10.Size = new System.Drawing.Size(189, 22);
             this.checkBox10.TabIndex = 15;
             this.checkBox10.Text = "Magplant Remote Mode";
             this.checkBox10.UseVisualStyleBackColor = true;
@@ -1668,7 +1777,7 @@
             this.oneblockmode.Location = new System.Drawing.Point(475, 25);
             this.oneblockmode.Margin = new System.Windows.Forms.Padding(4);
             this.oneblockmode.Name = "oneblockmode";
-            this.oneblockmode.Size = new System.Drawing.Size(114, 21);
+            this.oneblockmode.Size = new System.Drawing.Size(120, 22);
             this.oneblockmode.TabIndex = 14;
             this.oneblockmode.Text = "1 block mode";
             this.oneblockmode.UseVisualStyleBackColor = true;
@@ -1680,7 +1789,7 @@
             this.label26.Location = new System.Drawing.Point(557, 4);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(119, 17);
+            this.label26.Size = new System.Drawing.Size(122, 18);
             this.label26.TabIndex = 13;
             this.label26.Text = "Made by playingo";
             // 
@@ -1690,7 +1799,7 @@
             this.label20.Location = new System.Drawing.Point(12, 82);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(588, 34);
+            this.label20.Size = new System.Drawing.Size(614, 36);
             this.label20.TabIndex = 4;
             this.label20.Text = "NOTE: This superior Growbrew Autofarmer uses packets rather than keyboard/mouse i" +
     "nput,\r\nwhich means you can still continue doing stuff in the background :D";
@@ -1712,7 +1821,7 @@
             this.detItemLabel.Location = new System.Drawing.Point(12, 54);
             this.detItemLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.detItemLabel.Name = "detItemLabel";
-            this.detItemLabel.Size = new System.Drawing.Size(138, 17);
+            this.detItemLabel.Size = new System.Drawing.Size(144, 18);
             this.detItemLabel.TabIndex = 2;
             this.detItemLabel.Text = "Detected Item: Blank";
             // 
@@ -1722,16 +1831,16 @@
             this.label19.Location = new System.Drawing.Point(12, 26);
             this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(177, 17);
+            this.label19.Size = new System.Drawing.Size(187, 18);
             this.label19.TabIndex = 1;
             this.label19.Text = "Item ID of item to autofarm:";
             // 
             // itemIDBox
             // 
-            this.itemIDBox.Location = new System.Drawing.Point(199, 22);
+            this.itemIDBox.Location = new System.Drawing.Point(200, 23);
             this.itemIDBox.Margin = new System.Windows.Forms.Padding(4);
             this.itemIDBox.Name = "itemIDBox";
-            this.itemIDBox.Size = new System.Drawing.Size(72, 22);
+            this.itemIDBox.Size = new System.Drawing.Size(72, 24);
             this.itemIDBox.TabIndex = 0;
             this.itemIDBox.Text = "0";
             this.itemIDBox.TextChanged += new System.EventHandler(this.itemIDBox_TextChanged);
@@ -1751,14 +1860,25 @@
             this.multibottingPage.Controls.Add(this.enableMultibotcheck);
             this.multibottingPage.Controls.Add(this.label27);
             this.multibottingPage.Controls.Add(this.groupBox2);
-            this.multibottingPage.Location = new System.Drawing.Point(4, 25);
+            this.multibottingPage.Location = new System.Drawing.Point(4, 29);
             this.multibottingPage.Margin = new System.Windows.Forms.Padding(4);
             this.multibottingPage.Name = "multibottingPage";
             this.multibottingPage.Padding = new System.Windows.Forms.Padding(4);
-            this.multibottingPage.Size = new System.Drawing.Size(684, 281);
+            this.multibottingPage.Size = new System.Drawing.Size(684, 277);
             this.multibottingPage.TabIndex = 5;
             this.multibottingPage.Text = "Multibot";
             this.multibottingPage.UseVisualStyleBackColor = true;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(3, 165);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(431, 60);
+            this.label32.TabIndex = 23;
+            this.label32.Text = "Available soon in Auto-CCS or Growbrew Proxy Extreme Edition\r\n(closed source, thi" +
+    "s open source one will have no effects,\r\nnor any code left behind to enable it, " +
+    "it\'s just a GUI placeholder)";
             // 
             // button23
             // 
@@ -1777,7 +1897,7 @@
             this.label31.Location = new System.Drawing.Point(329, 102);
             this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(73, 17);
+            this.label31.Size = new System.Drawing.Size(73, 20);
             this.label31.TabIndex = 21;
             this.label31.Text = "Password:";
             // 
@@ -1787,7 +1907,7 @@
             this.label30.Location = new System.Drawing.Point(329, 74);
             this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(77, 17);
+            this.label30.Size = new System.Drawing.Size(78, 20);
             this.label30.TabIndex = 20;
             this.label30.Text = "Username:";
             // 
@@ -1796,7 +1916,7 @@
             this.passwordBotBox.Location = new System.Drawing.Point(412, 98);
             this.passwordBotBox.Margin = new System.Windows.Forms.Padding(4);
             this.passwordBotBox.Name = "passwordBotBox";
-            this.passwordBotBox.Size = new System.Drawing.Size(149, 22);
+            this.passwordBotBox.Size = new System.Drawing.Size(149, 27);
             this.passwordBotBox.TabIndex = 19;
             // 
             // usernameBotBox
@@ -1804,7 +1924,7 @@
             this.usernameBotBox.Location = new System.Drawing.Point(412, 70);
             this.usernameBotBox.Margin = new System.Windows.Forms.Padding(4);
             this.usernameBotBox.Name = "usernameBotBox";
-            this.usernameBotBox.Size = new System.Drawing.Size(149, 22);
+            this.usernameBotBox.Size = new System.Drawing.Size(149, 27);
             this.usernameBotBox.TabIndex = 18;
             // 
             // addBotAcc
@@ -1824,19 +1944,19 @@
             this.label23.Location = new System.Drawing.Point(307, 9);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(94, 17);
+            this.label23.Size = new System.Drawing.Size(97, 20);
             this.label23.TabIndex = 16;
             this.label23.Text = "Bot accounts:";
             // 
             // botAccsList
             // 
             this.botAccsList.FormattingEnabled = true;
-            this.botAccsList.ItemHeight = 16;
+            this.botAccsList.ItemHeight = 20;
             this.botAccsList.Location = new System.Drawing.Point(411, 0);
             this.botAccsList.Margin = new System.Windows.Forms.Padding(4);
             this.botAccsList.Name = "botAccsList";
             this.botAccsList.ScrollAlwaysVisible = true;
-            this.botAccsList.Size = new System.Drawing.Size(257, 68);
+            this.botAccsList.Size = new System.Drawing.Size(257, 64);
             this.botAccsList.TabIndex = 15;
             // 
             // enableMultibotcheck
@@ -1845,7 +1965,7 @@
             this.enableMultibotcheck.Location = new System.Drawing.Point(8, 7);
             this.enableMultibotcheck.Margin = new System.Windows.Forms.Padding(4);
             this.enableMultibotcheck.Name = "enableMultibotcheck";
-            this.enableMultibotcheck.Size = new System.Drawing.Size(192, 21);
+            this.enableMultibotcheck.Size = new System.Drawing.Size(205, 24);
             this.enableMultibotcheck.TabIndex = 14;
             this.enableMultibotcheck.Text = "Enable Super Multibotting";
             this.enableMultibotcheck.UseVisualStyleBackColor = true;
@@ -1857,7 +1977,7 @@
             this.label27.Location = new System.Drawing.Point(4, 258);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(403, 17);
+            this.label27.Size = new System.Drawing.Size(428, 20);
             this.label27.TabIndex = 13;
             this.label27.Text = "Made by playingo (aka DEERUX) crossbot/multibot still in beta.";
             // 
@@ -1884,7 +2004,7 @@
             this.randomizeIntervalCheckbox.Location = new System.Drawing.Point(12, 124);
             this.randomizeIntervalCheckbox.Margin = new System.Windows.Forms.Padding(4);
             this.randomizeIntervalCheckbox.Name = "randomizeIntervalCheckbox";
-            this.randomizeIntervalCheckbox.Size = new System.Drawing.Size(151, 21);
+            this.randomizeIntervalCheckbox.Size = new System.Drawing.Size(159, 24);
             this.randomizeIntervalCheckbox.TabIndex = 6;
             this.randomizeIntervalCheckbox.Text = "Randomize Interval";
             this.randomizeIntervalCheckbox.UseVisualStyleBackColor = true;
@@ -1895,7 +2015,7 @@
             this.label25.Location = new System.Drawing.Point(8, 94);
             this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(58, 17);
+            this.label25.Size = new System.Drawing.Size(61, 20);
             this.label25.TabIndex = 5;
             this.label25.Text = "Interval:";
             // 
@@ -1904,7 +2024,7 @@
             this.spamIntervalBox.Location = new System.Drawing.Point(76, 90);
             this.spamIntervalBox.Margin = new System.Windows.Forms.Padding(4);
             this.spamIntervalBox.Name = "spamIntervalBox";
-            this.spamIntervalBox.Size = new System.Drawing.Size(97, 22);
+            this.spamIntervalBox.Size = new System.Drawing.Size(97, 27);
             this.spamIntervalBox.TabIndex = 4;
             this.spamIntervalBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.spamIntervalBox_KeyPress);
             // 
@@ -1925,7 +2045,7 @@
             this.label12.Location = new System.Drawing.Point(8, 19);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(39, 17);
+            this.label12.Size = new System.Drawing.Size(39, 20);
             this.label12.TabIndex = 2;
             this.label12.Text = "Text:";
             // 
@@ -1938,20 +2058,6 @@
             this.spamtextBox.Size = new System.Drawing.Size(248, 45);
             this.spamtextBox.TabIndex = 1;
             // 
-            // aboutlabel
-            // 
-            this.aboutlabel.AutoSize = true;
-            this.aboutlabel.BackColor = System.Drawing.SystemColors.Control;
-            this.aboutlabel.Location = new System.Drawing.Point(0, 309);
-            this.aboutlabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.aboutlabel.Name = "aboutlabel";
-            this.aboutlabel.Size = new System.Drawing.Size(458, 51);
-            this.aboutlabel.TabIndex = 7;
-            this.aboutlabel.TabStop = true;
-            this.aboutlabel.Text = resources.GetString("aboutlabel.Text");
-            this.aboutlabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutlabel_LinkClicked);
-            this.aboutlabel.Paint += new System.Windows.Forms.PaintEventHandler(this.aboutlabel_Paint);
-            // 
             // playerLogicUpdate
             // 
             this.playerLogicUpdate.Tick += new System.EventHandler(this.playerLogicUpdate_Tick);
@@ -1960,65 +2066,75 @@
             // 
             this.label14.AutoSize = true;
             this.label14.BackColor = System.Drawing.SystemColors.Control;
-            this.label14.Location = new System.Drawing.Point(452, 309);
+            this.label14.Location = new System.Drawing.Point(2, 310);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(169, 51);
+            this.label14.Size = new System.Drawing.Size(0, 20);
             this.label14.TabIndex = 9;
-            this.label14.Text = "Creator: playingo \r\nalias DEERUX or discord:\r\nDEERUX#1551";
-            // 
-            // vLabel
-            // 
-            this.vLabel.AutoSize = true;
-            this.vLabel.BackColor = System.Drawing.Color.Transparent;
-            this.vLabel.Font = new System.Drawing.Font("Times New Roman", 11F);
-            this.vLabel.Location = new System.Drawing.Point(22, 30);
-            this.vLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.vLabel.Name = "vLabel";
-            this.vLabel.Size = new System.Drawing.Size(46, 21);
-            this.vLabel.TabIndex = 8;
-            this.vLabel.Text = "V2.1";
-            // 
-            // whitepanel
-            // 
-            this.whitepanel.BackColor = System.Drawing.SystemColors.Control;
-            this.whitepanel.Controls.Add(this.vLabel);
-            this.whitepanel.Location = new System.Drawing.Point(619, 309);
-            this.whitepanel.Margin = new System.Windows.Forms.Padding(4);
-            this.whitepanel.Name = "whitepanel";
-            this.whitepanel.Size = new System.Drawing.Size(81, 59);
-            this.whitepanel.TabIndex = 10;
             // 
             // spammerTimer
             // 
             this.spammerTimer.Interval = 1000;
             this.spammerTimer.Tick += new System.EventHandler(this.spammerTimer_Tick);
             // 
-            // label32
+            // vLabel
             // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(3, 165);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(409, 51);
-            this.label32.TabIndex = 23;
-            this.label32.Text = "Available soon in Auto-CCS or Growbrew Proxy Extreme Edition\r\n(closed source, thi" +
-    "s open source one will have no effects,\r\nnor any code left behind to enable it, " +
-    "it\'s just a GUI placeholder)";
+            this.vLabel.AutoSize = true;
+            this.vLabel.BackColor = System.Drawing.Color.Transparent;
+            this.vLabel.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.vLabel.Location = new System.Drawing.Point(3, 38);
+            this.vLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.vLabel.Name = "vLabel";
+            this.vLabel.Size = new System.Drawing.Size(60, 21);
+            this.vLabel.TabIndex = 8;
+            this.vLabel.Text = "V2.2.1";
+            // 
+            // whitepanel
+            // 
+            this.whitepanel.BackColor = System.Drawing.SystemColors.Control;
+            this.whitepanel.Controls.Add(this.vLabel);
+            this.whitepanel.Location = new System.Drawing.Point(628, 318);
+            this.whitepanel.Margin = new System.Windows.Forms.Padding(4);
+            this.whitepanel.Name = "whitepanel";
+            this.whitepanel.Size = new System.Drawing.Size(72, 59);
+            this.whitepanel.TabIndex = 10;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(3, 325);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(602, 40);
+            this.label33.TabIndex = 11;
+            this.label33.Text = "Creator: @playingoDEERUX          Developer(s): @iProgramInCpp, @DEERUX, @mar4ell" +
+    "o6\r\ngithub.com/playingoDEERUX/GrowbrewProxy      Made with ENet.Managed by moien" +
+    "007";
+            this.label33.Click += new System.EventHandler(this.label33_Click);
+            // 
+            // modifyIconStatusTimer
+            // 
+            this.modifyIconStatusTimer.Interval = 300;
+            this.modifyIconStatusTimer.Tick += new System.EventHandler(this.modifyIconStatusTimer_Tick);
+            // 
+            // annoyPlayers
+            // 
+            this.annoyPlayers.Interval = 180;
+            this.annoyPlayers.Tick += new System.EventHandler(this.annoyPlayers_Tick);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(688, 361);
+            this.ClientSize = new System.Drawing.Size(688, 374);
+            this.Controls.Add(this.label33);
             this.Controls.Add(this.whitepanel);
             this.Controls.Add(this.label14);
-            this.Controls.Add(this.aboutlabel);
-            this.Controls.Add(this.mainPages);
+            this.Controls.Add(this.proxyPages);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(706, 408);
-            this.MinimumSize = new System.Drawing.Size(706, 408);
+            this.MaximumSize = new System.Drawing.Size(706, 421);
+            this.MinimumSize = new System.Drawing.Size(706, 421);
             this.Name = "MainForm";
             this.Opacity = 0.97D;
             this.ShowIcon = false;
@@ -2027,7 +2143,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
-            this.mainPages.ResumeLayout(false);
+            this.proxyPages.ResumeLayout(false);
             this.proxyPage.ResumeLayout(false);
             this.proxyPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.portBox)).EndInit();
@@ -2071,19 +2187,16 @@
         private System.Windows.Forms.Label labelclientrunning;
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.RichTextBox logBox;
-        private System.Windows.Forms.TabControl mainPages;
+        private System.Windows.Forms.TabControl proxyPages;
         private System.Windows.Forms.TabPage proxyPage;
         private System.Windows.Forms.TabPage cheatPage;
         private System.Windows.Forms.TabPage extraPage;
-        private System.Windows.Forms.LinkLabel aboutlabel;
         public System.Windows.Forms.RichTextBox entireLog;
         private System.Windows.Forms.Button reloadLogs;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox ipaddrBox;
         private System.Windows.Forms.Button updateAddress;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.NumericUpDown portBox;
         private System.Windows.Forms.Timer playerLogicUpdate;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button button11;
@@ -2187,8 +2300,6 @@
         private System.Windows.Forms.Label parsedAccountNoLabel;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Button button21;
-        private System.Windows.Forms.Label vLabel;
-        private System.Windows.Forms.Panel whitepanel;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TextBox spamIntervalBox;
@@ -2217,9 +2328,24 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox passwordBotBox;
         private System.Windows.Forms.TextBox usernameBotBox;
-        private System.Windows.Forms.CheckBox disableSilentReconnect;
+        private System.Windows.Forms.CheckBox enableSilentReconnect;
         private System.Windows.Forms.Button button23;
         private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label vLabel;
+        private System.Windows.Forms.Panel whitepanel;
+        private System.Windows.Forms.Label accessLabel;
+        public System.Windows.Forms.TextBox ipaddrBox;
+        public System.Windows.Forms.NumericUpDown portBox;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.CheckBox broadcastIconStatus;
+        private System.Windows.Forms.Timer modifyIconStatusTimer;
+        private System.Windows.Forms.Label wrenchXYlabel;
+        private System.Windows.Forms.Button reapplyLockBtn;
+        private System.Windows.Forms.Timer annoyPlayers;
+        private System.Windows.Forms.CheckBox annoyPlayerBox;
+        private System.Windows.Forms.CheckBox enableAutoReconnectBox;
+        private System.Windows.Forms.TextBox autoWorldTextBox;
+        private System.Windows.Forms.CheckBox autoEnterWorldBox;
     }
 }
 
