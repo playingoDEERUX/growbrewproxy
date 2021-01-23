@@ -63,11 +63,11 @@ This update focused mostly on performance/stability. Would highly recommend this
 - Optimized few other things.
 
 ADDED SINCE V2.2.1:
-This update focused mostly on performance/stability. Would highly recommend this one over V2.0.
+This update fixes what Ubisoft has done to prevent proxies lately.
 - Add HashString to C# (func name is "HashBytes" - credits iProgramInCpp)
 - Upgraded ENet wrapper to ENet.Managed v5 + ENet protocol fix for server and client side (type2|1)
 - Prepare dll injector code for future usage of our own internal
-- 3 *NEW* exploits: BRB status change and ghost slime spam (on_step_on_tile_mod) and the doorid "exploit"
+- 3 *NEW* exploits: BRB status change and ghost slime spam (on_step_on_tile_mod, credits iProgramInCpp) and the doorid "exploit"
 - Fix other stuff
 - Extreme version will be sold again soon, especially with our new multibotting feature.
 - Crosscompatible with MacOS and Linux due to .NET 5 switch
