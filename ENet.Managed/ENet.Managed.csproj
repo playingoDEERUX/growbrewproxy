@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net46;net50</TargetFrameworks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    
+    <!--CS1591 warns us to comment every publicly accessible method\field\property, in future we may remove it-->
+    <!--CA2101 warns us to specifiy string encoding for every P\Invoke definition which I find it annoying-->
+    <!--CA1063 warns us to implement IDisposable correctly-->
+    <NoWarn>CS1591,CA2101,CA1063</NoWarn>
+    
+    <!--Nuget package properties-->
+    <Authors>Moien007</Authors>
+    <RepositoryUrl>https://github.com/moien007/ENet.Managed</RepositoryUrl>
+    <Description>
+      A cross-platform managed wrapper for ENet UDP Networking library.
+      Platforms: Win32/64|ARM64 - Linux X86/64|ARM32/64.
+    </Description>
+    <PackageProjectUrl>https://github.com/moien007/ENet.Managed</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/moien007/ENet.Managed/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageReleaseNotes>
+      - Introduced ENetStartupOptions
+      - Allowing custom ENet versions.
+      - Added Async TPL interface.
+      - Added IPv6 support.
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Memory" Version="[4.5,5.0)" />
+    <PackageReference Include="System.Buffers" Version="[4.5,5.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net50'">
+    <PackageReference Include="System.Threading.Channels" Version="[5.0,6.0)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="ENetBinariesResource.resx" />
+  </ItemGroup>
+  
+</Project>
