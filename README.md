@@ -3,7 +3,7 @@ Growbrew - An advanced Growtopia ENet Proxy made in C#, giving you the advantage
 
 # Compatibility:
 - Windows 7 - Windows 10 (windows versions older than than that may work with modifications and such, this is not supported by default though.)
-.NET requirements: .NET Framework 4.7.2, I have heard reports from people that this does not work on .NET Framework 4.8, it may work on older .NET Framework versions but this has been tested without any issues on .NET 4.5
+.NET requirements: .NET 5.0+ (ATTENTION, THIS IS NECESSARY NOW!)
 If you have issues with ENet.Managed, try reinstalling the NuGet packet ENet.Managed please!
 
 # Features:
@@ -62,6 +62,18 @@ This update focused mostly on performance/stability. Would highly recommend this
 - Fixed some other minor bugs, such as UI bugs etc.
 - Optimized few other things.
 
+ADDED SINCE V2.2.1:
+This update focused mostly on performance/stability. Would highly recommend this one over V2.0.
+- Add HashString to C# (func name is "HashBytes" - credits iProgramInCpp)
+- Upgraded ENet wrapper to ENet.Managed v5 + ENet protocol fix for server and client side (type2|1)
+- Prepare dll injector code for future usage of our own internal
+- 2 *NEW* exploits: BRB status change and ghost slime spam (on_step_on_tile_mod)
+- Fix other stuff
+- Extreme version will be sold again soon, especially with our new multibotting feature.
+- Crosscompatible with MacOS and Linux due to .NET 5 switch
+- Enjoy!
+
+
 ---------------------------------------------------------------
 
 
@@ -98,10 +110,10 @@ https://gyazo.com/8093ffccfa65574be9105bb081a0c7c5
 Other versions may work too, they are not tested. Credits to moien007 for ENet.Managed and kernys for Kernys.Bson
 
 
-current version: V2.1
-# MADE BY DEERUX (quit) AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
+current version: V2.2.1
+# MADE BY DEERUX (quit) AND iProgramInCpp - YouTube (me): https://www.youtube.com/channel/UC0htMnKS9EGPlaeIkcVkxhw
 
-(IMPORTANT: THIS DEERUX IS A FAKER/IMPERSONATOR): https://www.youtube.com/channel/UCjUmKOedwc7gDa8Fl9E5HMA If you have subbed to him, unsubscribe now and this is my real channel: https://www.youtube.com/channel/UCi88IU-vDvVr6Tay9CT20Gw?view_as=subscriber
+(IMPORTANT: THIS DEERUX IS A FAKER/IMPERSONATOR): https://www.youtube.com/channel/UCjUmKOedwc7gDa8Fl9E5HMA If you have subbed to him, unsubscribe now and this is my real channel: https://www.youtube.com/channel/UC0htMnKS9EGPlaeIkcVkxhw
 
 (UPDATE: second channel is terminated too, dont trust anyone called DEERUX or playingo on youtube for now, youtube copyright system is great at this!11)
 
