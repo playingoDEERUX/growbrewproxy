@@ -71,7 +71,6 @@ This update fixes what Ubisoft has done to prevent proxies lately.
 - 3 *NEW* exploits: BRB status change credits ama6nen and ghost slime spam (on_step_on_tile_mod, credits iProgramInCpp) and the doorid "exploit"
 - Fix other stuff
 - Extreme version will be sold again soon, especially with our new multibotting feature.
-- Crosscompatible with MacOS and Linux due to .NET 5 switch
 - Enjoy!
 
 
