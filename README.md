@@ -72,7 +72,7 @@ This update fixes what Ubisoft has done to prevent proxies lately.
 - Fix other stuff
 - Extreme version will be sold again soon, especially with our new multibotting feature.
 - Enjoy!
-ADDED SINCE V2.2.1:
+ADDED SINCE V2.3:
 - *NEW* Item price checker
 - More cheats
 - Fix random disconnects
