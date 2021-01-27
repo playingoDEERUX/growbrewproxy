@@ -536,8 +536,8 @@ namespace GrowbrewProxy
                                 break;
                             case NetTypes.PacketTypes.PING_REPLY:
                                 {
-                                    SpoofedPingReply(p);
-                                    return "Spoofed ping reply!";
+                                    //SpoofedPingReply(p);
+                                    return "Blocked ping reply!";
                                 }
                             case NetTypes.PacketTypes.TILE_CHANGE_REQ:
                                 respondToBotPeers = true;
