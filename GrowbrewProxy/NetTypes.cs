@@ -49,7 +49,15 @@ namespace GrowbrewProxy
             PARTICLE_EFFECT_V2,
             ARROW_TO_ITEM,
             TILE_INDEX_SELECTION,
-            UPDATE_PLAYER_TRIBUTE
+            UPDATE_PLAYER_TRIBUTE,
+            PVE_UPDATE_MODE,
+            PVE_NPC,
+            PVP_CARD_BATTLE,
+            PVE_ATTACKED,
+            PVE_LOGIC_UPDATE,
+            PVE_BOSS, // not actually ingame, making a prediction though that it's related to some boss stuff or replaced with varlist call.
+            SET_EXTRA_MODS,
+            ON_STEP_ON_TILE_MOD
         };
 
         public enum NetMessages

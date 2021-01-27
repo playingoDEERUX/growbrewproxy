@@ -23,7 +23,11 @@ namespace GrowbrewProxy
         }
 
         public void SendPacketRaw(int type, byte[] data, ENetPeer peer, ENetPacketFlags flag = ENetPacketFlags.Reliable)
-        {           
+        {
+            if (peer == null) return;
+            if (peer.IsNull) return;
+            if (peer.State != ENetPeerState.Connected) return;
+
             byte[] packetData = new byte[data.Length + 5];
             Array.Copy(BitConverter.GetBytes(type), packetData, 4);
             Array.Copy(data, 0, packetData, 4, data.Length);

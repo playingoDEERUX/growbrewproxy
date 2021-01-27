@@ -1,4 +1,6 @@
-﻿using System;
+﻿// thanks to iProgramInCpp#0489, most things are made by him in the GrowtopiaCustomClient, 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

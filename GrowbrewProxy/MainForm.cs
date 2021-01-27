@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -93,6 +94,7 @@ namespace GrowbrewProxy
             public bool isSwitchingServer = false;
             public bool blockEnterGame = false;
             public bool serializeWorldsAdvanced = true;
+            public bool bypass10PlayerMax = true;
 
             // internal variables =>
             public string tankIDName = "";
@@ -121,6 +123,9 @@ namespace GrowbrewProxy
                                                   // CHEAT VARS/DEFS
             public string macc = "02:15:01:20:30:05";
             public string doorid = "";
+            public string rid = "", sid = "";
+            
+
             public bool ignoreonsetpos = false;
             public bool unlimitedZoom = false;
             public bool isFacingSwapped = false;
@@ -130,6 +135,8 @@ namespace GrowbrewProxy
             public bool awaitingReconnect = false;
             public bool enableAutoreconnect = false;
             public string autoEnterWorld = "";
+            public bool dontSerializeInventory = false;
+            public bool skipGazette = false;
         }
 
         public static UserData globalUserData = new UserData();
@@ -305,14 +312,14 @@ namespace GrowbrewProxy
             p += "country|" + (globalUserData.country + "\n");
             p += "hash|" + rand.Next(-777777776, 777777776).ToString() + "\n";
             p += "mac|" + globalUserData.macc + "\n";
-            p += "rid|" + GenerateRID() + "\n";
+            p += ("rid|" + (globalUserData.rid == "" ? GenerateRID() : globalUserData.rid) + "\n");
             if (requireAdditionalData) p += "user|" + (globalUserData.userID.ToString() + "\n");
             if (requireAdditionalData) p += "token|" + (globalUserData.token.ToString() + "\n");
             if (customUserID > 0) p += "user|" + (customUserID.ToString() + "\n");
             if (customToken > 0) p += "token|" + (customToken.ToString() + "\n");
             if (globalUserData.doorid != "" && doorID == "") p += "doorID|" + globalUserData.doorid + "\n";
             else if (doorID != "") p += "doorID|" + doorID + "\n";
-            p += "wk|" + GenerateUniqueWinKey() + "\n";
+            p += ("wk|" + (globalUserData.sid == "" ? GenerateUniqueWinKey() : globalUserData.sid) + "\n");
             p += "fz|1331849031";
             Console.WriteLine(p);
             p += "zf|-1331849031";
@@ -716,6 +723,8 @@ namespace GrowbrewProxy
                 Environment.Exit(-1);
             }
 
+            PriceChecker.SetHTTPS();
+
             if (File.Exists("stored/config.gbrw"))
             {
                 try
@@ -756,7 +765,7 @@ namespace GrowbrewProxy
 
             // hackernetwork is discontinued / servers shutdown, it was good to have it when the proxy was paid, now its abusive and just a big bug mess.
 
-
+            patUpDown.Maximum = patTrackBar.Maximum;
             playerLogicUpdate.Start();
             itemDB.SetupItemDefs();
 
@@ -1248,7 +1257,7 @@ namespace GrowbrewProxy
 
         private void button12_Click(object sender, EventArgs e)
         {
-            globalUserData.game_version = textBox2.Text;
+            globalUserData.game_version = setVersion.Text;
         }
 
         private void proxyPage_Click(object sender, EventArgs e)
@@ -1293,6 +1302,13 @@ namespace GrowbrewProxy
         private void changelog_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Growbrew Proxy Changelogs:\n" +
+                "\n2.3\n" +
+                "- Fix ping reply and random disconnects\n" +
+                "- Add Item Price Checker, go check it out :D\n" +
+                "- Added particle spawner (visual)\n" +
+                "- Misc fixes\n" +
+                "- Prepare internal, done research for android compilation\n" +
+                "- Extreme edition is for sale now again, contact me on discord DEERUX#1551.\n" +
                 "\n2.2.1\n" +
                 "- Upgrade to .NET 5 and C# 9.0\n" +
                 "- extreme version will contain an entire bundle of tools for GT (android stealer, growalts, cross/multibotting), including our own gt internal.\n" +
@@ -1329,10 +1345,6 @@ namespace GrowbrewProxy
                 "- Fixed doorID with subserver switching and entering through door/portal will not link to correct door in other world\n" +
                 "- Many more fixes from previous builds, and optimizations.\n" +
                 "- Removed many left over parts for Hacker Network, as the servers closed, I decided to remove some client code to keep the code a little more clean.\n" +
-                "\n1.5.3\n--------------------------\n" +
-                "- Added usage of 2 channels instead of 1 (stability)\n" +
-                "- Removed Hacker Network, discontinued, won't ever add again\n" +
-                "- General bug fixes and changes done in earlier build versions, but didn't update the version before already\n" +
                 "\nFull changelog in changelog.txt, too old versions wont be shown anymore. ~playingo/DEERUX");
         }
 
@@ -1364,7 +1376,7 @@ namespace GrowbrewProxy
         void doTakeAll()
         {
             int startingfrom = 0;
-            int.TryParse(textBox3.Text, out startingfrom);
+            int.TryParse(setRID.Text, out startingfrom);
 
             for (int i = 0; i < 10000; i++)
             {
@@ -1553,6 +1565,7 @@ namespace GrowbrewProxy
             if (inventory.items == null)
             {
                 Console.WriteLine("inventory.items was null!");
+                return;
             }
 
             int ctr = 0;
@@ -1945,6 +1958,206 @@ namespace GrowbrewProxy
             {
                 globalUserData.autoEnterWorld = autoWorldTextBox.Text;
             }
+        }
+
+        private void ridUpdate_Click(object sender, EventArgs e)
+        {
+            globalUserData.rid = setRID.Text;
+        }
+
+        private void sidUpdate_Click(object sender, EventArgs e)
+        {
+            globalUserData.sid = setSID.Text;
+        }
+
+        private void spawnParticleBtn_Click(object sender, EventArgs e)
+        {
+            TankPacket datx = new TankPacket();
+            datx.PacketType = (int)NetTypes.PacketTypes.PARTICLE_EFF;
+            datx.X = messageHandler.worldMap.player.X;
+            datx.Y = messageHandler.worldMap.player.Y;
+            datx.YSpeed = (int)patUpDown.Value;
+            datx.XSpeed = (float)patSizeUpDown.Value;
+            datx.MainValue = (int)patDelayUpDown.Value;
+            messageHandler.packetSender.SendPacketRaw(4, datx.PackForSendingRaw(), MainForm.proxyPeer);
+        }
+
+        private void patTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            patUpDown.Value = patTrackBar.Value;
+
+            spawnParticleBtn.PerformClick();
+        }
+
+
+        [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 1)]
+        struct CharacterExtraMods
+        {
+            [FieldOffset(0)] public byte cancel; // they act as bits
+            [FieldOffset(0)] public byte dash;
+            [FieldOffset(0)] public byte jump;
+        }
+
+        public static unsafe byte[] ConvertToBytes<T>(T value) where T : unmanaged
+        {
+            byte* pointer = (byte*)&value;
+
+            byte[] bytes = new byte[sizeof(T)];
+            for (int i = 0; i < sizeof(T); i++)
+            {
+                bytes[i] = pointer[i];
+            }
+
+            return bytes;
+        }
+
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+        }
+
+        private void UpdateItemPriceBox(bool showAll, bool doInv = false)
+        {
+            PriceChecker.ItemPriceList iPriceList = PriceChecker.GetItemPriceListFromUrl("http://168.119.93.204/"); // giving this away free for 1 month in opensrc / free version, but after that you will require to use paid. Constantly updated.
+
+            string toDisplay = "";
+            double invWealth = -1;
+
+            PriceChecker.ItemPrice[] fetchedItems = null;
+
+            if (!doInv)
+            {
+                fetchedItems = showAll ? iPriceList.itemPrices.ToArray() : iPriceList.FindByNameIgnoreCase(findPriceByNameBox.Text);
+            }
+            else
+            {
+                invWealth = 0;
+                Inventory inven = messageHandler.worldMap.player.inventory;
+                List<PriceChecker.ItemPrice> invFetchedItems = new List<PriceChecker.ItemPrice>();
+
+                if (inven.items != null)
+                {
+                    foreach (InventoryItem invItem in inven.items)
+                    {
+                        //MessageBox.Show(invItem.itemID.ToString());
+                        string itemName = ItemDatabase.GetItemDef(invItem.itemID).itemName;
+                        
+                        invFetchedItems.AddRange(iPriceList.FindByNameIgnoreCase(itemName, true));
+                    }
+                }
+                fetchedItems = invFetchedItems.ToArray();
+            }
+
+            if (fetchedItems != null)
+            {
+                foreach (PriceChecker.ItemPrice iPrice in fetchedItems)
+                {
+                    toDisplay += $"Item: '{iPrice.name}' with quantity: '{iPrice.quantity}' costs: '{iPrice.price} WLS'\n";
+
+                    if (doInv)
+                        invWealth += (iPrice.price / iPrice.quantity);
+                }
+            }
+
+            if (itemPricesBox.InvokeRequired || loadingPricesLabel.InvokeRequired || inventoryWealthLabel.InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    loadingPricesLabel.Visible = false;
+                    itemPricesBox.Text = toDisplay;
+                    if (invWealth > -1) inventoryWealthLabel.Text = $"Your inventory is worth (rounded in WLS): {(int)Math.Round(invWealth)}";
+                }));
+            }
+            else
+            {
+                loadingPricesLabel.Visible = false;
+                itemPricesBox.Text = toDisplay;
+                if (invWealth > -1) inventoryWealthLabel.Text = $"Your inventory is worth (rounded in WLS): {(int)Math.Round(invWealth)}";
+            }
+        }
+
+        private void searchBtn_Click(object sender, EventArgs e)
+        {
+            loadingPricesLabel.Visible = true;
+            Task.Run(() => UpdateItemPriceBox(showAllPricesBox.Checked, inventoryWealthCheckbox.Checked));
+        }
+
+        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        // credits stackoverflow
+        private void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", url);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        private void ytlinklabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenUrl("https://youtube.com/channel/UC0htMnKS9EGPlaeIkcVkxhw");
+        }
+
+        private void showAllPricesBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void syncPricesBtn_Click(object sender, EventArgs e)
+        {
+            if (!loadingPricesLabel.Visible)
+            {
+                string raw = PriceChecker.RefreshPrices("http://168.119.93.204/");
+                PriceChecker.iPriceList = PriceChecker.ItemPriceList.Deserialize(raw);
+                MessageBox.Show("Updated item prices successfully!");
+            }
+            else
+            {
+                MessageBox.Show("Items are currently loading internally, please try again when 'Loading...' is gone!");
+            }
+        }
+
+        private void dontSerializeInvBox_CheckedChanged(object sender, EventArgs e)
+        {
+            globalUserData.dontSerializeInventory = dontSerializeInvBox.Checked;
+        }
+
+        private void inventoryWealthCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
+        private void skipGazetteBox_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         void doAutofarm(int itemID, bool remote_mode = false, bool oneblockmode = false, bool selfblockstart = false)

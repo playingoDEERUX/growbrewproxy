@@ -87,24 +87,25 @@
             this.rgbSkinHack = new System.Windows.Forms.CheckBox();
             this.internalextrapage = new System.Windows.Forms.TabPage();
             this.spoofBox = new System.Windows.Forms.GroupBox();
+            this.sidUpdate = new System.Windows.Forms.Button();
+            this.setSID = new System.Windows.Forms.TextBox();
+            this.ridUpdate = new System.Windows.Forms.Button();
+            this.setRID = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button12 = new System.Windows.Forms.Button();
+            this.setVersion = new System.Windows.Forms.TextBox();
+            this.versionUpdate = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.setMac = new System.Windows.Forms.TextBox();
             this.macUpdate = new System.Windows.Forms.Button();
             this.tileX = new System.Windows.Forms.TextBox();
             this.button19 = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.itemid = new System.Windows.Forms.TextBox();
             this.tileY = new System.Windows.Forms.TextBox();
             this.custom_collect_y = new System.Windows.Forms.TextBox();
             this.custom_collect_x = new System.Windows.Forms.TextBox();
             this.custom_collect_uid = new System.Windows.Forms.TextBox();
-            this.button17 = new System.Windows.Forms.Button();
             this.button15 = new System.Windows.Forms.Button();
-            this.label18 = new System.Windows.Forms.Label();
             this.button14 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
@@ -116,6 +117,7 @@
             this.expllabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.configPage = new System.Windows.Forms.TabPage();
+            this.dontSerializeInvBox = new System.Windows.Forms.CheckBox();
             this.enableAutoReconnectBox = new System.Windows.Forms.CheckBox();
             this.enableSilentReconnect = new System.Windows.Forms.CheckBox();
             this.logallpackets = new System.Windows.Forms.CheckBox();
@@ -137,6 +139,15 @@
             this.reapplyLockBtn = new System.Windows.Forms.Button();
             this.broadcastIconStatus = new System.Windows.Forms.CheckBox();
             this.checkBox8 = new System.Windows.Forms.CheckBox();
+            this.cheatPage3 = new System.Windows.Forms.TabPage();
+            this.label35 = new System.Windows.Forms.Label();
+            this.patDelayUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label34 = new System.Windows.Forms.Label();
+            this.patSizeUpDown = new System.Windows.Forms.NumericUpDown();
+            this.spawnParticleBtn = new System.Windows.Forms.Button();
+            this.patUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.patTrackBar = new System.Windows.Forms.TrackBar();
             this.extraPage = new System.Windows.Forms.TabPage();
             this.reloadLogs = new System.Windows.Forms.Button();
             this.entireLog = new System.Windows.Forms.RichTextBox();
@@ -169,6 +180,7 @@
             this.label19 = new System.Windows.Forms.Label();
             this.itemIDBox = new System.Windows.Forms.TextBox();
             this.multibottingPage = new System.Windows.Forms.TabPage();
+            this.bypass10PlayerCount = new System.Windows.Forms.CheckBox();
             this.label32 = new System.Windows.Forms.Label();
             this.button23 = new System.Windows.Forms.Button();
             this.label31 = new System.Windows.Forms.Label();
@@ -187,6 +199,16 @@
             this.spamStartStopBtn = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.spamtextBox = new System.Windows.Forms.TextBox();
+            this.priceChecker = new System.Windows.Forms.TabPage();
+            this.inventoryWealthCheckbox = new System.Windows.Forms.CheckBox();
+            this.syncPricesBtn = new System.Windows.Forms.Button();
+            this.loadingPricesLabel = new System.Windows.Forms.Label();
+            this.inventoryWealthLabel = new System.Windows.Forms.Label();
+            this.showAllPricesBox = new System.Windows.Forms.CheckBox();
+            this.itemPricesBox = new System.Windows.Forms.RichTextBox();
+            this.searchBtn = new System.Windows.Forms.Button();
+            this.label37 = new System.Windows.Forms.Label();
+            this.findPriceByNameBox = new System.Windows.Forms.TextBox();
             this.playerLogicUpdate = new System.Windows.Forms.Timer(this.components);
             this.label14 = new System.Windows.Forms.Label();
             this.spammerTimer = new System.Windows.Forms.Timer(this.components);
@@ -195,6 +217,9 @@
             this.label33 = new System.Windows.Forms.Label();
             this.modifyIconStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.annoyPlayers = new System.Windows.Forms.Timer(this.components);
+            this.ytlinklabel = new System.Windows.Forms.LinkLabel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.skipGazetteBox = new System.Windows.Forms.CheckBox();
             this.proxyPages.SuspendLayout();
             this.proxyPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.portBox)).BeginInit();
@@ -206,12 +231,18 @@
             this.configPage.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.cheatExtra2Page.SuspendLayout();
+            this.cheatPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.patDelayUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patSizeUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patTrackBar)).BeginInit();
             this.extraPage.SuspendLayout();
             this.accountCheckerPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.autofarmPage.SuspendLayout();
             this.multibottingPage.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.priceChecker.SuspendLayout();
             this.whitepanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -287,6 +318,7 @@
             this.proxyPages.Controls.Add(this.accountCheckerPage);
             this.proxyPages.Controls.Add(this.autofarmPage);
             this.proxyPages.Controls.Add(this.multibottingPage);
+            this.proxyPages.Controls.Add(this.priceChecker);
             this.proxyPages.Location = new System.Drawing.Point(-1, 0);
             this.proxyPages.Margin = new System.Windows.Forms.Padding(4);
             this.proxyPages.Name = "proxyPages";
@@ -331,9 +363,9 @@
             this.accessLabel.AutoSize = true;
             this.accessLabel.Location = new System.Drawing.Point(276, 217);
             this.accessLabel.Name = "accessLabel";
-            this.accessLabel.Size = new System.Drawing.Size(123, 20);
+            this.accessLabel.Size = new System.Drawing.Size(119, 20);
             this.accessLabel.TabIndex = 20;
-            this.accessLabel.Text = "Access: EXTREME";
+            this.accessLabel.Text = "Access: DEFAULT";
             this.accessLabel.Visible = false;
             // 
             // button21
@@ -497,6 +529,7 @@
             this.cheattabs.Controls.Add(this.internalextrapage);
             this.cheattabs.Controls.Add(this.configPage);
             this.cheattabs.Controls.Add(this.cheatExtra2Page);
+            this.cheattabs.Controls.Add(this.cheatPage3);
             this.cheattabs.Location = new System.Drawing.Point(0, 0);
             this.cheattabs.Margin = new System.Windows.Forms.Padding(4);
             this.cheattabs.Name = "cheattabs";
@@ -888,16 +921,13 @@
             this.internalextrapage.Controls.Add(this.spoofBox);
             this.internalextrapage.Controls.Add(this.tileX);
             this.internalextrapage.Controls.Add(this.button19);
-            this.internalextrapage.Controls.Add(this.textBox3);
             this.internalextrapage.Controls.Add(this.textBox1);
             this.internalextrapage.Controls.Add(this.itemid);
             this.internalextrapage.Controls.Add(this.tileY);
             this.internalextrapage.Controls.Add(this.custom_collect_y);
             this.internalextrapage.Controls.Add(this.custom_collect_x);
             this.internalextrapage.Controls.Add(this.custom_collect_uid);
-            this.internalextrapage.Controls.Add(this.button17);
             this.internalextrapage.Controls.Add(this.button15);
-            this.internalextrapage.Controls.Add(this.label18);
             this.internalextrapage.Controls.Add(this.button14);
             this.internalextrapage.Controls.Add(this.button3);
             this.internalextrapage.Controls.Add(this.label11);
@@ -920,55 +950,97 @@
             // 
             // spoofBox
             // 
+            this.spoofBox.Controls.Add(this.sidUpdate);
+            this.spoofBox.Controls.Add(this.setSID);
+            this.spoofBox.Controls.Add(this.ridUpdate);
+            this.spoofBox.Controls.Add(this.setRID);
             this.spoofBox.Controls.Add(this.label16);
-            this.spoofBox.Controls.Add(this.textBox2);
-            this.spoofBox.Controls.Add(this.button12);
+            this.spoofBox.Controls.Add(this.setVersion);
+            this.spoofBox.Controls.Add(this.versionUpdate);
             this.spoofBox.Controls.Add(this.label7);
             this.spoofBox.Controls.Add(this.setMac);
             this.spoofBox.Controls.Add(this.macUpdate);
-            this.spoofBox.Location = new System.Drawing.Point(425, 39);
+            this.spoofBox.Location = new System.Drawing.Point(339, 39);
             this.spoofBox.Margin = new System.Windows.Forms.Padding(4);
             this.spoofBox.Name = "spoofBox";
             this.spoofBox.Padding = new System.Windows.Forms.Padding(4);
-            this.spoofBox.Size = new System.Drawing.Size(237, 124);
+            this.spoofBox.Size = new System.Drawing.Size(323, 175);
             this.spoofBox.TabIndex = 37;
             this.spoofBox.TabStop = false;
             this.spoofBox.Text = "Spoofing";
             // 
+            // sidUpdate
+            // 
+            this.sidUpdate.Location = new System.Drawing.Point(230, 142);
+            this.sidUpdate.Margin = new System.Windows.Forms.Padding(4);
+            this.sidUpdate.Name = "sidUpdate";
+            this.sidUpdate.Size = new System.Drawing.Size(85, 28);
+            this.sidUpdate.TabIndex = 26;
+            this.sidUpdate.Text = "Apply";
+            this.sidUpdate.UseVisualStyleBackColor = true;
+            this.sidUpdate.Click += new System.EventHandler(this.sidUpdate_Click);
+            // 
+            // setSID
+            // 
+            this.setSID.Location = new System.Drawing.Point(8, 145);
+            this.setSID.Name = "setSID";
+            this.setSID.PlaceholderText = "Spoof WK/SID";
+            this.setSID.Size = new System.Drawing.Size(216, 23);
+            this.setSID.TabIndex = 25;
+            // 
+            // ridUpdate
+            // 
+            this.ridUpdate.Location = new System.Drawing.Point(230, 114);
+            this.ridUpdate.Margin = new System.Windows.Forms.Padding(4);
+            this.ridUpdate.Name = "ridUpdate";
+            this.ridUpdate.Size = new System.Drawing.Size(85, 28);
+            this.ridUpdate.TabIndex = 24;
+            this.ridUpdate.Text = "Apply";
+            this.ridUpdate.UseVisualStyleBackColor = true;
+            this.ridUpdate.Click += new System.EventHandler(this.ridUpdate_Click);
+            // 
+            // setRID
+            // 
+            this.setRID.Location = new System.Drawing.Point(8, 117);
+            this.setRID.Name = "setRID";
+            this.setRID.PlaceholderText = "Spoof RID";
+            this.setRID.Size = new System.Drawing.Size(216, 23);
+            this.setRID.TabIndex = 23;
+            // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(4, 20);
+            this.label16.Location = new System.Drawing.Point(8, 20);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(162, 17);
             this.label16.TabIndex = 21;
             this.label16.Text = "spoof growtopia version:";
             // 
-            // textBox2
+            // setVersion
             // 
-            this.textBox2.Location = new System.Drawing.Point(8, 38);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(91, 23);
-            this.textBox2.TabIndex = 20;
-            this.textBox2.Text = "4.20";
+            this.setVersion.Location = new System.Drawing.Point(8, 41);
+            this.setVersion.Margin = new System.Windows.Forms.Padding(4);
+            this.setVersion.Name = "setVersion";
+            this.setVersion.Size = new System.Drawing.Size(91, 23);
+            this.setVersion.TabIndex = 20;
+            this.setVersion.Text = "4.20";
             // 
-            // button12
+            // versionUpdate
             // 
-            this.button12.Location = new System.Drawing.Point(147, 36);
-            this.button12.Margin = new System.Windows.Forms.Padding(4);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(85, 28);
-            this.button12.TabIndex = 22;
-            this.button12.Text = "Apply";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
+            this.versionUpdate.Location = new System.Drawing.Point(230, 38);
+            this.versionUpdate.Margin = new System.Windows.Forms.Padding(4);
+            this.versionUpdate.Name = "versionUpdate";
+            this.versionUpdate.Size = new System.Drawing.Size(85, 28);
+            this.versionUpdate.TabIndex = 22;
+            this.versionUpdate.Text = "Apply";
+            this.versionUpdate.UseVisualStyleBackColor = true;
+            this.versionUpdate.Click += new System.EventHandler(this.button12_Click);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 68);
+            this.label7.Location = new System.Drawing.Point(8, 69);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(89, 17);
@@ -986,7 +1058,7 @@
             // 
             // macUpdate
             // 
-            this.macUpdate.Location = new System.Drawing.Point(147, 85);
+            this.macUpdate.Location = new System.Drawing.Point(230, 84);
             this.macUpdate.Margin = new System.Windows.Forms.Padding(4);
             this.macUpdate.Name = "macUpdate";
             this.macUpdate.Size = new System.Drawing.Size(85, 28);
@@ -1013,15 +1085,6 @@
             this.button19.Text = "Drop entire inventory";
             this.button19.UseVisualStyleBackColor = true;
             this.button19.Click += new System.EventHandler(this.button19_Click);
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(317, 39);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(85, 23);
-            this.textBox3.TabIndex = 33;
-            this.textBox3.Visible = false;
             // 
             // textBox1
             // 
@@ -1072,18 +1135,6 @@
             this.custom_collect_uid.TabIndex = 1;
             this.custom_collect_uid.Text = "1";
             // 
-            // button17
-            // 
-            this.button17.Location = new System.Drawing.Point(12, 38);
-            this.button17.Margin = new System.Windows.Forms.Padding(4);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(297, 26);
-            this.button17.TabIndex = 32;
-            this.button17.Text = "Collect all items (uid starting from):";
-            this.button17.UseVisualStyleBackColor = true;
-            this.button17.Visible = false;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
-            // 
             // button15
             // 
             this.button15.Location = new System.Drawing.Point(12, 103);
@@ -1094,16 +1145,6 @@
             this.button15.Text = "Mass account create (only on gtps)";
             this.button15.UseVisualStyleBackColor = true;
             this.button15.Click += new System.EventHandler(this.button15_Click_2);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(296, 167);
-            this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(370, 17);
-            this.label18.TabIndex = 28;
-            this.label18.Text = "for AAP Bypass, spoof mac address to 02:00:00:00:00:00";
             // 
             // button14
             // 
@@ -1210,6 +1251,8 @@
             // 
             // configPage
             // 
+            this.configPage.Controls.Add(this.skipGazetteBox);
+            this.configPage.Controls.Add(this.dontSerializeInvBox);
             this.configPage.Controls.Add(this.enableAutoReconnectBox);
             this.configPage.Controls.Add(this.enableSilentReconnect);
             this.configPage.Controls.Add(this.logallpackets);
@@ -1230,6 +1273,17 @@
             this.configPage.TabIndex = 3;
             this.configPage.Text = "Config";
             this.configPage.UseVisualStyleBackColor = true;
+            // 
+            // dontSerializeInvBox
+            // 
+            this.dontSerializeInvBox.AutoSize = true;
+            this.dontSerializeInvBox.Location = new System.Drawing.Point(273, 53);
+            this.dontSerializeInvBox.Name = "dontSerializeInvBox";
+            this.dontSerializeInvBox.Size = new System.Drawing.Size(181, 21);
+            this.dontSerializeInvBox.TabIndex = 48;
+            this.dontSerializeInvBox.Text = "Don\'t serialize inventory";
+            this.dontSerializeInvBox.UseVisualStyleBackColor = true;
+            this.dontSerializeInvBox.CheckedChanged += new System.EventHandler(this.dontSerializeInvBox_CheckedChanged);
             // 
             // enableAutoReconnectBox
             // 
@@ -1367,10 +1421,10 @@
             this.checkBox7.Location = new System.Drawing.Point(7, 7);
             this.checkBox7.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(561, 38);
+            this.checkBox7.Size = new System.Drawing.Size(524, 38);
             this.checkBox7.TabIndex = 36;
-            this.checkBox7.Text = "Disable advanced world loading in proxy [makes world entering/loading much faster" +
-    ", \r\nbut makes Magplant/Autofarm/Pickup range exploit practically unusable.]";
+            this.checkBox7.Text = "Enable advanced world loading in proxy [makes world entering/loading slower, \r\nbu" +
+    "t must be turned on if using Autofarm/Pickup range]";
             this.checkBox7.UseVisualStyleBackColor = true;
             this.checkBox7.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
             // 
@@ -1428,9 +1482,9 @@
             this.annoyPlayerBox.AutoSize = true;
             this.annoyPlayerBox.Location = new System.Drawing.Point(8, 134);
             this.annoyPlayerBox.Name = "annoyPlayerBox";
-            this.annoyPlayerBox.Size = new System.Drawing.Size(253, 24);
+            this.annoyPlayerBox.Size = new System.Drawing.Size(374, 24);
             this.annoyPlayerBox.TabIndex = 4;
-            this.annoyPlayerBox.Text = "Slime Spam Annoy Players (Burst)";
+            this.annoyPlayerBox.Text = "Slime Spam Annoy Players (Burst) [PATCHED/FIXED]";
             this.annoyPlayerBox.UseVisualStyleBackColor = true;
             this.annoyPlayerBox.CheckedChanged += new System.EventHandler(this.annoyPlayerBox_CheckedChanged);
             // 
@@ -1475,6 +1529,116 @@
             this.checkBox8.Text = "Red damage to block exploit (not visual, everyone sees it) [PATCHED]";
             this.checkBox8.UseVisualStyleBackColor = true;
             this.checkBox8.CheckedChanged += new System.EventHandler(this.checkBox8_CheckedChanged);
+            // 
+            // cheatPage3
+            // 
+            this.cheatPage3.Controls.Add(this.label35);
+            this.cheatPage3.Controls.Add(this.patDelayUpDown);
+            this.cheatPage3.Controls.Add(this.label34);
+            this.cheatPage3.Controls.Add(this.patSizeUpDown);
+            this.cheatPage3.Controls.Add(this.spawnParticleBtn);
+            this.cheatPage3.Controls.Add(this.patUpDown);
+            this.cheatPage3.Controls.Add(this.label18);
+            this.cheatPage3.Controls.Add(this.patTrackBar);
+            this.cheatPage3.Location = new System.Drawing.Point(4, 29);
+            this.cheatPage3.Name = "cheatPage3";
+            this.cheatPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.cheatPage3.Size = new System.Drawing.Size(669, 245);
+            this.cheatPage3.TabIndex = 5;
+            this.cheatPage3.Text = "Cheat Extra 3";
+            this.cheatPage3.UseVisualStyleBackColor = true;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(303, 15);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(50, 20);
+            this.label35.TabIndex = 7;
+            this.label35.Text = "Delay:";
+            // 
+            // patDelayUpDown
+            // 
+            this.patDelayUpDown.Location = new System.Drawing.Point(367, 13);
+            this.patDelayUpDown.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
+            this.patDelayUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.patDelayUpDown.Name = "patDelayUpDown";
+            this.patDelayUpDown.Size = new System.Drawing.Size(71, 27);
+            this.patDelayUpDown.TabIndex = 6;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(196, 15);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(39, 20);
+            this.label34.TabIndex = 5;
+            this.label34.Text = "Size:";
+            // 
+            // patSizeUpDown
+            // 
+            this.patSizeUpDown.Location = new System.Drawing.Point(241, 13);
+            this.patSizeUpDown.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.patSizeUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.patSizeUpDown.Name = "patSizeUpDown";
+            this.patSizeUpDown.Size = new System.Drawing.Size(56, 27);
+            this.patSizeUpDown.TabIndex = 4;
+            this.patSizeUpDown.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // spawnParticleBtn
+            // 
+            this.spawnParticleBtn.Location = new System.Drawing.Point(24, 126);
+            this.spawnParticleBtn.Name = "spawnParticleBtn";
+            this.spawnParticleBtn.Size = new System.Drawing.Size(118, 29);
+            this.spawnParticleBtn.TabIndex = 3;
+            this.spawnParticleBtn.Text = "Spawn (visual)";
+            this.spawnParticleBtn.UseVisualStyleBackColor = true;
+            this.spawnParticleBtn.Click += new System.EventHandler(this.spawnParticleBtn_Click);
+            // 
+            // patUpDown
+            // 
+            this.patUpDown.Location = new System.Drawing.Point(140, 13);
+            this.patUpDown.Name = "patUpDown";
+            this.patUpDown.Size = new System.Drawing.Size(50, 27);
+            this.patUpDown.TabIndex = 2;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(24, 15);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(110, 20);
+            this.label18.TabIndex = 1;
+            this.label18.Text = "Spawn particle:";
+            // 
+            // patTrackBar
+            // 
+            this.patTrackBar.Location = new System.Drawing.Point(24, 46);
+            this.patTrackBar.Maximum = 600;
+            this.patTrackBar.Name = "patTrackBar";
+            this.patTrackBar.Size = new System.Drawing.Size(622, 56);
+            this.patTrackBar.TabIndex = 0;
+            this.patTrackBar.ValueChanged += new System.EventHandler(this.patTrackBar_ValueChanged);
             // 
             // extraPage
             // 
@@ -1848,6 +2012,7 @@
             // 
             // multibottingPage
             // 
+            this.multibottingPage.Controls.Add(this.bypass10PlayerCount);
             this.multibottingPage.Controls.Add(this.label32);
             this.multibottingPage.Controls.Add(this.button23);
             this.multibottingPage.Controls.Add(this.label31);
@@ -1869,20 +2034,30 @@
             this.multibottingPage.Text = "Multibot";
             this.multibottingPage.UseVisualStyleBackColor = true;
             // 
+            // bypass10PlayerCount
+            // 
+            this.bypass10PlayerCount.AutoSize = true;
+            this.bypass10PlayerCount.Location = new System.Drawing.Point(8, 39);
+            this.bypass10PlayerCount.Name = "bypass10PlayerCount";
+            this.bypass10PlayerCount.Size = new System.Drawing.Size(384, 24);
+            this.bypass10PlayerCount.TabIndex = 24;
+            this.bypass10PlayerCount.Text = "Bypass Connection Count Limit (showcase 28/1/2021)";
+            this.bypass10PlayerCount.UseVisualStyleBackColor = true;
+            this.bypass10PlayerCount.CheckedChanged += new System.EventHandler(this.checkBox11_CheckedChanged);
+            // 
             // label32
             // 
             this.label32.AutoSize = true;
             this.label32.Location = new System.Drawing.Point(3, 165);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(431, 60);
+            this.label32.Size = new System.Drawing.Size(390, 60);
             this.label32.TabIndex = 23;
-            this.label32.Text = "Available soon in Auto-CCS or Growbrew Proxy Extreme Edition\r\n(closed source, thi" +
-    "s open source one will have no effects,\r\nnor any code left behind to enable it, " +
-    "it\'s just a GUI placeholder)";
+            this.label32.Text = "Available in Growbrew Proxy Extreme Edition only.\r\nUsing any of these buttons on " +
+    "open src will have no effect\r\n(except for Spammer)";
             // 
             // button23
             // 
-            this.button23.Location = new System.Drawing.Point(199, 2);
+            this.button23.Location = new System.Drawing.Point(209, 4);
             this.button23.Margin = new System.Windows.Forms.Padding(4);
             this.button23.Name = "button23";
             this.button23.Size = new System.Drawing.Size(31, 28);
@@ -1977,9 +2152,9 @@
             this.label27.Location = new System.Drawing.Point(4, 258);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(428, 20);
+            this.label27.Size = new System.Drawing.Size(228, 20);
             this.label27.TabIndex = 13;
-            this.label27.Text = "Made by playingo (aka DEERUX) crossbot/multibot still in beta.";
+            this.label27.Text = "Made by playingo (aka DEERUX).";
             // 
             // groupBox2
             // 
@@ -2058,6 +2233,112 @@
             this.spamtextBox.Size = new System.Drawing.Size(248, 45);
             this.spamtextBox.TabIndex = 1;
             // 
+            // priceChecker
+            // 
+            this.priceChecker.Controls.Add(this.inventoryWealthCheckbox);
+            this.priceChecker.Controls.Add(this.syncPricesBtn);
+            this.priceChecker.Controls.Add(this.loadingPricesLabel);
+            this.priceChecker.Controls.Add(this.inventoryWealthLabel);
+            this.priceChecker.Controls.Add(this.showAllPricesBox);
+            this.priceChecker.Controls.Add(this.itemPricesBox);
+            this.priceChecker.Controls.Add(this.searchBtn);
+            this.priceChecker.Controls.Add(this.label37);
+            this.priceChecker.Controls.Add(this.findPriceByNameBox);
+            this.priceChecker.Location = new System.Drawing.Point(4, 29);
+            this.priceChecker.Name = "priceChecker";
+            this.priceChecker.Padding = new System.Windows.Forms.Padding(3);
+            this.priceChecker.Size = new System.Drawing.Size(684, 277);
+            this.priceChecker.TabIndex = 6;
+            this.priceChecker.Text = "Item Price Checker";
+            this.priceChecker.UseVisualStyleBackColor = true;
+            // 
+            // inventoryWealthCheckbox
+            // 
+            this.inventoryWealthCheckbox.AutoSize = true;
+            this.inventoryWealthCheckbox.Location = new System.Drawing.Point(575, 37);
+            this.inventoryWealthCheckbox.Name = "inventoryWealthCheckbox";
+            this.inventoryWealthCheckbox.Size = new System.Drawing.Size(92, 24);
+            this.inventoryWealthCheckbox.TabIndex = 8;
+            this.inventoryWealthCheckbox.Text = "Inventory";
+            this.inventoryWealthCheckbox.UseVisualStyleBackColor = true;
+            this.inventoryWealthCheckbox.CheckedChanged += new System.EventHandler(this.inventoryWealthCheckbox_CheckedChanged);
+            // 
+            // syncPricesBtn
+            // 
+            this.syncPricesBtn.Location = new System.Drawing.Point(525, 238);
+            this.syncPricesBtn.Name = "syncPricesBtn";
+            this.syncPricesBtn.Size = new System.Drawing.Size(148, 29);
+            this.syncPricesBtn.TabIndex = 7;
+            this.syncPricesBtn.Text = "Sync/Update prices";
+            this.syncPricesBtn.UseVisualStyleBackColor = true;
+            this.syncPricesBtn.Click += new System.EventHandler(this.syncPricesBtn_Click);
+            // 
+            // loadingPricesLabel
+            // 
+            this.loadingPricesLabel.AutoSize = true;
+            this.loadingPricesLabel.Location = new System.Drawing.Point(612, 0);
+            this.loadingPricesLabel.Name = "loadingPricesLabel";
+            this.loadingPricesLabel.Size = new System.Drawing.Size(72, 20);
+            this.loadingPricesLabel.TabIndex = 6;
+            this.loadingPricesLabel.Text = "Loading...";
+            this.loadingPricesLabel.Visible = false;
+            // 
+            // inventoryWealthLabel
+            // 
+            this.inventoryWealthLabel.AutoSize = true;
+            this.inventoryWealthLabel.Location = new System.Drawing.Point(10, 242);
+            this.inventoryWealthLabel.Name = "inventoryWealthLabel";
+            this.inventoryWealthLabel.Size = new System.Drawing.Size(454, 20);
+            this.inventoryWealthLabel.TabIndex = 5;
+            this.inventoryWealthLabel.Text = "Your inventory is worth (in WLS): ? (do a search with \'Inventory\' first)";
+            // 
+            // showAllPricesBox
+            // 
+            this.showAllPricesBox.AutoSize = true;
+            this.showAllPricesBox.Location = new System.Drawing.Point(480, 37);
+            this.showAllPricesBox.Name = "showAllPricesBox";
+            this.showAllPricesBox.Size = new System.Drawing.Size(89, 24);
+            this.showAllPricesBox.TabIndex = 4;
+            this.showAllPricesBox.Text = "Show All";
+            this.showAllPricesBox.UseVisualStyleBackColor = true;
+            this.showAllPricesBox.CheckedChanged += new System.EventHandler(this.showAllPricesBox_CheckedChanged);
+            // 
+            // itemPricesBox
+            // 
+            this.itemPricesBox.Location = new System.Drawing.Point(10, 69);
+            this.itemPricesBox.Name = "itemPricesBox";
+            this.itemPricesBox.ReadOnly = true;
+            this.itemPricesBox.Size = new System.Drawing.Size(663, 158);
+            this.itemPricesBox.TabIndex = 3;
+            this.itemPricesBox.Text = "";
+            // 
+            // searchBtn
+            // 
+            this.searchBtn.Location = new System.Drawing.Point(400, 34);
+            this.searchBtn.Name = "searchBtn";
+            this.searchBtn.Size = new System.Drawing.Size(74, 29);
+            this.searchBtn.TabIndex = 2;
+            this.searchBtn.Text = "Search";
+            this.searchBtn.UseVisualStyleBackColor = true;
+            this.searchBtn.Click += new System.EventHandler(this.searchBtn_Click);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(10, 12);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(86, 20);
+            this.label37.TabIndex = 1;
+            this.label37.Text = "Item Name:";
+            // 
+            // findPriceByNameBox
+            // 
+            this.findPriceByNameBox.Location = new System.Drawing.Point(10, 35);
+            this.findPriceByNameBox.Name = "findPriceByNameBox";
+            this.findPriceByNameBox.PlaceholderText = "Can be left empty if \'Inventory\' is ticked.";
+            this.findPriceByNameBox.Size = new System.Drawing.Size(368, 27);
+            this.findPriceByNameBox.TabIndex = 0;
+            // 
             // playerLogicUpdate
             // 
             this.playerLogicUpdate.Tick += new System.EventHandler(this.playerLogicUpdate_Tick);
@@ -2082,12 +2363,12 @@
             this.vLabel.AutoSize = true;
             this.vLabel.BackColor = System.Drawing.Color.Transparent;
             this.vLabel.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.vLabel.Location = new System.Drawing.Point(3, 38);
+            this.vLabel.Location = new System.Drawing.Point(17, 38);
             this.vLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.vLabel.Name = "vLabel";
-            this.vLabel.Size = new System.Drawing.Size(60, 21);
+            this.vLabel.Size = new System.Drawing.Size(46, 21);
             this.vLabel.TabIndex = 8;
-            this.vLabel.Text = "V2.2.1";
+            this.vLabel.Text = "V2.3";
             // 
             // whitepanel
             // 
@@ -2102,7 +2383,7 @@
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(3, 325);
+            this.label33.Location = new System.Drawing.Point(7, 310);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(602, 40);
             this.label33.TabIndex = 11;
@@ -2121,11 +2402,46 @@
             this.annoyPlayers.Interval = 180;
             this.annoyPlayers.Tick += new System.EventHandler(this.annoyPlayers_Tick);
             // 
+            // ytlinklabel
+            // 
+            this.ytlinklabel.AutoSize = true;
+            this.ytlinklabel.Location = new System.Drawing.Point(7, 350);
+            this.ytlinklabel.Name = "ytlinklabel";
+            this.ytlinklabel.Size = new System.Drawing.Size(256, 20);
+            this.ytlinklabel.TabIndex = 25;
+            this.ytlinklabel.TabStop = true;
+            this.ytlinklabel.Text = "Subscribe us on YouTube (growmmfi)";
+            this.ytlinklabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ytlinklabel_LinkClicked);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(280, 350);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(117, 20);
+            this.linkLabel1.TabIndex = 26;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Join the discord!";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // skipGazetteBox
+            // 
+            this.skipGazetteBox.AutoSize = true;
+            this.skipGazetteBox.Location = new System.Drawing.Point(470, 39);
+            this.skipGazetteBox.Name = "skipGazetteBox";
+            this.skipGazetteBox.Size = new System.Drawing.Size(111, 21);
+            this.skipGazetteBox.TabIndex = 49;
+            this.skipGazetteBox.Text = "Skip Gazette";
+            this.skipGazetteBox.UseVisualStyleBackColor = true;
+            this.skipGazetteBox.CheckedChanged += new System.EventHandler(this.skipGazetteBox_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(688, 374);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.ytlinklabel);
             this.Controls.Add(this.label33);
             this.Controls.Add(this.whitepanel);
             this.Controls.Add(this.label14);
@@ -2161,6 +2477,12 @@
             this.groupBox3.PerformLayout();
             this.cheatExtra2Page.ResumeLayout(false);
             this.cheatExtra2Page.PerformLayout();
+            this.cheatPage3.ResumeLayout(false);
+            this.cheatPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.patDelayUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patSizeUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patTrackBar)).EndInit();
             this.extraPage.ResumeLayout(false);
             this.accountCheckerPage.ResumeLayout(false);
             this.accountCheckerPage.PerformLayout();
@@ -2172,6 +2494,8 @@
             this.multibottingPage.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.priceChecker.ResumeLayout(false);
+            this.priceChecker.PerformLayout();
             this.whitepanel.ResumeLayout(false);
             this.whitepanel.PerformLayout();
             this.ResumeLayout(false);
@@ -2237,8 +2561,7 @@
         private System.Windows.Forms.CheckBox rgbSkinHack;
         private System.Windows.Forms.TabPage internalextrapage;
         private System.Windows.Forms.Button button19;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox setVersion;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox itemid;
         private System.Windows.Forms.TextBox tileY;
@@ -2247,9 +2570,8 @@
         private System.Windows.Forms.TextBox custom_collect_x;
         private System.Windows.Forms.TextBox custom_collect_uid;
         private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Button button14;
-        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button versionUpdate;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label11;
@@ -2292,7 +2614,6 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.TextBox tileX;
         private System.Windows.Forms.GroupBox spoofBox;
-        private System.Windows.Forms.Button button17;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox ignoresetback;
         private System.Windows.Forms.TabPage multibottingPage;
@@ -2346,6 +2667,34 @@
         private System.Windows.Forms.CheckBox enableAutoReconnectBox;
         private System.Windows.Forms.TextBox autoWorldTextBox;
         private System.Windows.Forms.CheckBox autoEnterWorldBox;
+        private System.Windows.Forms.Button sidUpdate;
+        private System.Windows.Forms.TextBox setSID;
+        internal System.Windows.Forms.Button ridUpdate;
+        private System.Windows.Forms.TextBox setRID;
+        private System.Windows.Forms.TabPage cheatPage3;
+        private System.Windows.Forms.Button spawnParticleBtn;
+        private System.Windows.Forms.NumericUpDown patUpDown;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TrackBar patTrackBar;
+        private System.Windows.Forms.NumericUpDown patDelayUpDown;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.NumericUpDown patSizeUpDown;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TabPage priceChecker;
+        private System.Windows.Forms.Button searchBtn;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.TextBox findPriceByNameBox;
+        private System.Windows.Forms.CheckBox bypass10PlayerCount;
+        private System.Windows.Forms.LinkLabel ytlinklabel;
+        private System.Windows.Forms.RichTextBox itemPricesBox;
+        private System.Windows.Forms.CheckBox showAllPricesBox;
+        private System.Windows.Forms.Label inventoryWealthLabel;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label loadingPricesLabel;
+        private System.Windows.Forms.Button syncPricesBtn;
+        private System.Windows.Forms.CheckBox inventoryWealthCheckbox;
+        private System.Windows.Forms.CheckBox dontSerializeInvBox;
+        private System.Windows.Forms.CheckBox skipGazetteBox;
     }
 }
 

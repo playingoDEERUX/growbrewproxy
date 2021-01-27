@@ -72,6 +72,8 @@ namespace GrowbrewProxy
                             variantPacket2.AppendString("OnReconnect");
                             packetSender.SendData(variantPacket2.GetBytes(), MainForm.proxyPeer);
                         }
+
+
                         break;
                     }
                 case "OnRequestWorldSelectMenu":
@@ -84,6 +86,7 @@ namespace GrowbrewProxy
                     }
                 case "OnSuperMainStartAcceptLogonHrdxs47254722215a":
                     {
+                        
                         if (MainForm.skipCache && botPeer == null)
                         {
                             MainForm.LogText += ("[" + DateTime.UtcNow + "] (CLIENT): Skipping potential caching (will make world list disappear)...");
@@ -174,8 +177,6 @@ namespace GrowbrewProxy
                         int port = (int)vList.functionArgs[1];
                         int userID = (int)vList.functionArgs[3];
                         int token = (int)vList.functionArgs[2];
-                        int lmode = (int)vList.functionArgs[5];
-
                         
                         MainForm.LogText += ("[" + DateTime.UtcNow + "] (SERVER): OnSendToServer (func call used for server switching/sub-servers) " +
                                 "IP: " +
@@ -192,11 +193,11 @@ namespace GrowbrewProxy
                         MainForm.globalUserData.Growtopia_Port = token < 0 ? MainForm.globalUserData.Growtopia_Master_Port : port;
                         MainForm.globalUserData.isSwitchingServer = true;
                         MainForm.globalUserData.token = token;
-                        MainForm.globalUserData.lmode = lmode;
+                        MainForm.globalUserData.lmode = 1;
                         MainForm.globalUserData.userID = userID;
                         MainForm.globalUserData.doorid = doorid;
-                        packetSender.SendPacket(3, "action|quit", MainForm.realPeer);
 
+                        packetSender.SendPacket(3, "action|quit", MainForm.realPeer);
                         MainForm.realPeer.Disconnect(0);
 
                         return -1;
@@ -239,6 +240,13 @@ namespace GrowbrewProxy
                                 case "smstate":
                                     p.mstate = Convert.ToInt32(lineToken[1]);
                                     break;
+                                case "posXY":
+                                    if (lineToken.Length == 3) // exactly 3 not more not less
+                                    {
+                                        p.X = Convert.ToInt32(lineToken[1]);
+                                        p.Y = Convert.ToInt32(lineToken[2]);
+                                    }
+                                    break;
                                 case "type":
                                     if (lineToken[1] == "local") localplayer = true;
                                     break;
@@ -277,7 +285,7 @@ namespace GrowbrewProxy
 
                                 switch (key)
                                 {
-                                    case "mstate": // unlimited punch/place range edit smstate, but is dangerous/detectable and can autoban!
+                                    case "mstate": // unlimited punch/place range edit smstate
                                         value = "1";
                                         break;
                                 }
@@ -371,6 +379,9 @@ namespace GrowbrewProxy
         {
             return (b & (1 << pos)) != 0;
         }
+
+
+
         public string HandlePacketFromClient(ref ENetPeer peer, ENetPacket packet) // Why string? Oh yeah, it's the best thing to also return a string response for anything you want!
         {
 
@@ -523,6 +534,11 @@ namespace GrowbrewProxy
                                 worldMap.player.X = (int)p.X;
                                 worldMap.player.Y = (int)p.Y;
                                 break;
+                            case NetTypes.PacketTypes.PING_REPLY:
+                                {
+                                    SpoofedPingReply(p);
+                                    return "Spoofed ping reply!";
+                                }
                             case NetTypes.PacketTypes.TILE_CHANGE_REQ:
                                 respondToBotPeers = true;
 
@@ -603,11 +619,13 @@ namespace GrowbrewProxy
         {
             if (worldMap == null) return;
             TankPacket p = new TankPacket();
+            p.PacketType = (int)NetTypes.PacketTypes.PING_REPLY;
             p.PunchX = (int)1000.0f;
             p.PunchY = (int)250.0f;
             p.X = 64.0f;
             p.Y = 64.0f;
-            p.SecondaryNetID = (int)MainForm.HashBytes(BitConverter.GetBytes(tPacket.MainValue));
+            p.MainValue = tPacket.MainValue; // GetTickCount()
+            p.SecondaryNetID = (int)MainForm.HashBytes(BitConverter.GetBytes(tPacket.MainValue)); // HashString of it
 
             // rest is 0 by default to not get detected by ac.
             packetSender.SendPacketRaw((int)NetTypes.NetMessages.GAME_PACKET, p.PackForSendingRaw(), MainForm.realPeer);
@@ -622,12 +640,6 @@ namespace GrowbrewProxy
             if (peer.State != ENetPeerState.Connected) return "HandlePacketFromServer() -> peer.State was not ENetPeerState.Connected!";
 
             byte[] data = packet.Data.ToArray();
-
-            //else
-            //{
-            //return "_none_";
-            //}
-           
 
 
             NetTypes.NetMessages msgType = (NetTypes.NetMessages)data[0]; // more performance.
@@ -693,12 +705,16 @@ namespace GrowbrewProxy
                                 }
                                 break;
                             }
-                        
+                        case NetTypes.PacketTypes.INVENTORY_STATE:
+                            {
+                                if (!MainForm.globalUserData.dontSerializeInventory) 
+                                    worldMap.player.SerializePlayerInventory(VariantList.get_extended_data(tankPacket));
+                                break;
+                            }
                         case NetTypes.PacketTypes.TILE_CHANGE_REQ:
                             {
                                 TankPacket p = TankPacket.UnpackFromPacket(data);
 
-                                // world tile map in proxy, by playingo :)
                                 if (worldMap == null)
                                 {
                                     MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): (ERROR) World map was null." + "\n");
@@ -748,12 +764,14 @@ namespace GrowbrewProxy
                             if (VarListFetched.FunctionName == "OnSendToServer") return "Server switching forced, not continuing as Proxy Client has to deal with this.";
                             if (VarListFetched.FunctionName == "onShowCaptcha") return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
                             if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("captcha")) return "Received captcha solving request, instantly bypassed it so it doesnt show up on client side.";
+                            if (VarListFetched.FunctionName == "OnDialogRequest" && ((string)VarListFetched.functionArgs[1]).ToLower().Contains("gazette")) return "Received gazette, skipping it...";
                             if (VarListFetched.FunctionName == "OnSetPos" && MainForm.globalUserData.ignoreonsetpos && netID == worldMap.netID) return "Ignored position set by server, may corrupt doors but is used so it wont set back. (CAN BE BUGGY WITH SLOW CONNECTIONS)";
                             if (VarListFetched.FunctionName == "OnSpawn" && netID == -2)
                             {
                                 if (MainForm.globalUserData.unlimitedZoom)
                                     return "Modified OnSpawn for unlimited zoom (mstate|1)"; // only doing unlimited zoom and not unlimited punch/place to be sure that no bans occur due to this. If you wish to use unlimited punching/placing as well, change the smstate in OperateVariant function instead.
                             }
+                           
 
                             break;
                         case NetTypes.PacketTypes.SET_CHARACTER_STATE:

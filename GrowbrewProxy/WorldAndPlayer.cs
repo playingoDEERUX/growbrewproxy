@@ -493,7 +493,10 @@ namespace GrowbrewProxy
         {
             try
             {
-                if (readPos >= dataPassed.Length) return -1;
+                if (readPos >= dataPassed.Length) {
+                    MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): [" + currentWorld + "] readPos bigger than dataPassed.Length error during world serialization!\n");
+                    return -1;
+                }
                 ushort fg = BitConverter.ToUInt16(dataPassed, readPos); readPos += 2; // sizeof short
                 tiles[loc].fg = fg;
                 ushort bg = BitConverter.ToUInt16(dataPassed, readPos); readPos += 2;
@@ -571,7 +574,7 @@ namespace GrowbrewProxy
                 ResetAndInit(); // just incase, may be removed when disposing or in here, ill keep it like that tho.
                 byte[] data = VariantList.get_extended_data(packet); // agh, maybe puublically declare and use then like that but too late, too lazy  to refactor now.
                 if (data.Length < 8192) return this;
-                if (data.Length > 200000) return this; // 200kb too big not gonna do that...
+                if (data.Length > 200000) return this; // 300kb too big not gonna do that...
 
                 readPos += 6;
                 short pLen = BitConverter.ToInt16(data, readPos); readPos += sizeof(short); // 2
@@ -597,7 +600,11 @@ namespace GrowbrewProxy
                     if (Tile_Serialize(data, i) != 0) break;
                 }
                 MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): [" + currentWorld + "]" + " Tiles properly serialized (without any errors): " + tilesProperlySerialized.ToString() + "\n");
-                if (readPos >= data.Length) return this;
+                if (readPos >= data.Length)
+                {
+                    MainForm.LogText += ("[" + DateTime.UtcNow + "] (PROXY): [" + currentWorld + "] readPos error during world serialization!\n");
+                    return this;
+                }
                 //weather n dropped items:
                 droppedItems.Clear();
                 dropped_ITEMUID = BitConverter.ToInt32(data, readPos); readPos += sizeof(int);
